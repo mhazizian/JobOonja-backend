@@ -1,0 +1,119 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package co.iais.proj_ie;
+
+import com.google.gson.Gson;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import org.apache.log4j.Logger;
+
+/**
+ *
+ * @author karam
+ */
+public class Main {
+
+    public static void main(String[] args) throws Exception {
+        try (Scanner reader = new Scanner(System.in) // Reading from System.in
+                ) {
+
+            String input = reader.next();
+            String commandType = input.split(" ")[0];
+            String inputWithoutCommand = input.substring(commandType.length());
+            Gson gson = new Gson();
+            List<UserInfo> users = new ArrayList<>();
+            List<Project> projects = new ArrayList<>();
+            List<Bid> bids = new ArrayList<>();
+            switch (commandType) {
+                case "register":
+                    UserInfo userInfo = gson.fromJson(inputWithoutCommand, UserInfo.class);
+                    users.add(userInfo);
+                    break;
+                case "addProject":
+                    Project project = gson.fromJson(inputWithoutCommand, Project.class);
+                    projects.add(project);
+                    break;
+                case "bid":
+                    Bid bid = gson.fromJson(inputWithoutCommand, Bid.class);
+                    bids.add(bid);
+                    break;
+                case "auction":
+                    Auction auction = gson.fromJson(inputWithoutCommand, Auction.class);
+                    List<Bid> specBids = findSpecBidsWithProjectName(bids, auction);
+                    Project auctionedProject = findProjectWithName(auction, projects);
+                    int maxValue = 0;
+                    String winner = "";
+                    for (int i = 0; i < specBids.size(); i++) {
+                        Bid bid1 = specBids.get(i);
+                        UserInfo findUserWithName = findUserWithName(users, bid1);
+                        int val = 0;
+                        for (int j = 0; j < auctionedProject.getSkills().size(); j++) {
+                            try {
+                                Skill skillPeople = findSkill(findUserWithName, auctionedProject.getSkills().get(j).getName());
+                                val += 10000 * (auctionedProject.getSkills().get(j).getPoints() - skillPeople.getPoints()) ^ 2;
+                            } catch (Exception e) {
+                                Logger.getLogger("Main").info(e.getMessage());
+                            }
+                        }
+                        val += auctionedProject.getBudget() - bid1.getBidAmount();
+                        if(maxValue < val) {
+                            maxValue = val;
+                            winner = findUserWithName.getUsername();
+                        }
+                    }
+                    System.out.println(winner);
+                    break;
+                default:
+                    Logger.getLogger("Main").info("invalid command!");
+                    break;
+            }
+        }
+    }
+
+    private static List<Bid> findSpecBidsWithProjectName(List<Bid> bids, Auction auction) {
+        List<Bid> specBids = new ArrayList<>();
+        for (int i = 0; i < bids.size(); i++) {
+            Bid specBid = bids.get(i);
+            String projectTitle = specBid.getProjectTitle();
+            if (projectTitle.equals(auction.getProjectTitle())) {
+                specBids.add(specBid);
+            }
+        }
+        if (specBids.isEmpty()) {
+            Logger.getLogger("Main").info("not found any bid for this project!");
+        }
+        return specBids;
+    }
+
+    private static UserInfo findUserWithName(List<UserInfo> users, Bid bid1) throws Exception {
+        for (int j = 0; j < users.size(); j++) {
+            if (users.get(j).getUsername().equals(bid1.getBiddingUser())) {
+                return users.get(j);
+            }
+        }
+        throw new Exception("user not found!");
+    }
+
+    private static Project findProjectWithName(Auction auction, List<Project> projects) throws Exception {
+        for (int i = 0; i < projects.size(); i++) {
+            Project specProj = projects.get(i);
+            if (specProj.getTitle().equals(auction.getProjectTitle())) {
+                return specProj;
+            }
+        }
+        throw new Exception("project not found!");
+    }
+
+    private static Skill findSkill(UserInfo findUserWithName, String name) throws Exception {
+        for (int i = 0; i < findUserWithName.getSkills().size(); i++) {
+            if (findUserWithName.getSkills().get(i).getName().equals(name)) {
+                return findUserWithName.getSkills().get(i);
+            }
+        }
+        throw new Exception(findUserWithName.getUsername() + " not have " + name + " skill!");
+    }
+}
