@@ -6,9 +6,11 @@
 package co.iais.proj_ie;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import javafx.util.Pair;
 import org.apache.log4j.Logger;
 
 /**
@@ -17,17 +19,18 @@ import org.apache.log4j.Logger;
  */
 public class Main {
 
-    public static void main(String[] args) throws Exception {
-        try (Scanner reader = new Scanner(System.in) // Reading from System.in
-                ) {
+    private static Scanner scanner = new Scanner(System.in);
 
-            String input = reader.next();
-            String commandType = input.split(" ")[0];
-            String inputWithoutCommand = input.substring(commandType.length());
-            Gson gson = new Gson();
-            List<UserInfo> users = new ArrayList<>();
-            List<Project> projects = new ArrayList<>();
-            List<Bid> bids = new ArrayList<>();
+    public static void main(String[] args) throws Exception {
+        List<UserInfo> users = new ArrayList<>();
+        List<Project> projects = new ArrayList<>();
+        List<Bid> bids = new ArrayList<>();
+        Gson gson = new Gson();
+        whileLoop:
+        while (true) {
+            Pair<String, String> commandParts = getCommandParts();
+            String commandType = commandParts.getKey();
+            String inputWithoutCommand = commandParts.getValue();
             switch (commandType) {
                 case "register":
                     UserInfo userInfo = gson.fromJson(inputWithoutCommand, UserInfo.class);
@@ -42,36 +45,41 @@ public class Main {
                     bids.add(bid);
                     break;
                 case "auction":
-                    Auction auction = gson.fromJson(inputWithoutCommand, Auction.class);
-                    List<Bid> specBids = findSpecBidsWithProjectName(bids, auction);
-                    Project auctionedProject = findProjectWithName(auction, projects);
-                    int maxValue = 0;
-                    String winner = "";
-                    for (int i = 0; i < specBids.size(); i++) {
-                        Bid bid1 = specBids.get(i);
-                        UserInfo findUserWithName = findUserWithName(users, bid1);
-                        int val = 0;
-                        for (int j = 0; j < auctionedProject.getSkills().size(); j++) {
-                            try {
-                                Skill skillPeople = findSkill(findUserWithName, auctionedProject.getSkills().get(j).getName());
-                                val += 10000 * (auctionedProject.getSkills().get(j).getPoints() - skillPeople.getPoints()) ^ 2;
-                            } catch (Exception e) {
-                                Logger.getLogger("Main").info(e.getMessage());
-                            }
-                        }
-                        val += auctionedProject.getBudget() - bid1.getBidAmount();
-                        if(maxValue < val) {
-                            maxValue = val;
-                            winner = findUserWithName.getUsername();
-                        }
-                    }
-                    System.out.println(winner);
-                    break;
+                    auctionWork(gson, inputWithoutCommand, bids, projects, users);
+                    break whileLoop;
                 default:
                     Logger.getLogger("Main").info("invalid command!");
                     break;
             }
         }
+    }
+
+    private static void auctionWork(Gson gson, String inputWithoutCommand, List<Bid> bids, List<Project> projects, List<UserInfo> users) throws Exception, JsonSyntaxException {
+        Auction auction = gson.fromJson(inputWithoutCommand, Auction.class);
+        List<Bid> specBids = findSpecBidsWithProjectName(bids, auction);
+        Project auctionedProject = findProjectWithName(auction, projects);
+        int maxValue = 0;
+        String winner = "";
+        for (int i = 0; i < specBids.size(); i++) {
+            Bid bid1 = specBids.get(i);
+            UserInfo findUserWithName = findUserWithName(users, bid1);
+            int val = 0;
+            for (int j = 0; j < auctionedProject.getSkills().size(); j++) {
+                try {
+                    Skill skillPeople = findSkill(findUserWithName, auctionedProject.getSkills().get(j).getName());
+                    int num = auctionedProject.getSkills().get(j).getPoints() - skillPeople.getPoints();
+                    val += 10000 * num * num;
+                } catch (Exception e) {
+                    Logger.getLogger("Main").info(e.getMessage());
+                }
+            }
+            val += auctionedProject.getBudget() - bid1.getBidAmount();
+            if (maxValue < val || winner.equals("")) {
+                maxValue = val;
+                winner = findUserWithName.getUsername();
+            }
+        }
+        System.out.println(winner);
     }
 
     private static List<Bid> findSpecBidsWithProjectName(List<Bid> bids, Auction auction) {
@@ -115,5 +123,11 @@ public class Main {
             }
         }
         throw new Exception(findUserWithName.getUsername() + " not have " + name + " skill!");
+    }
+
+    private static Pair<String, String> getCommandParts() {
+        String command = scanner.nextLine();
+        int spaceIndex = command.indexOf(" ");
+        return new Pair<>(command.substring(0, spaceIndex), command.substring(spaceIndex));
     }
 }
