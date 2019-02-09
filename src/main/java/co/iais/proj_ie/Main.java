@@ -48,7 +48,7 @@ public class Main {
                     auctionWork(gson, inputWithoutCommand, bids, projects, users);
                     break whileLoop;
                 default:
-                    Logger.getLogger("Main").info("invalid command!");
+//                    Logger.getLogger("Main").info("invalid command!");
                     break;
             }
         }
@@ -60,6 +60,7 @@ public class Main {
         Project auctionedProject = findProjectWithName(auction, projects);
         int maxValue = 0;
         String winner = "";
+        outFor:
         for (int i = 0; i < specBids.size(); i++) {
             Bid bid1 = specBids.get(i);
             UserInfo findUserWithName = findUserWithName(users, bid1);
@@ -67,10 +68,15 @@ public class Main {
             for (int j = 0; j < auctionedProject.getSkills().size(); j++) {
                 try {
                     Skill skillPeople = findSkill(findUserWithName, auctionedProject.getSkills().get(j).getName());
-                    int num = auctionedProject.getSkills().get(j).getPoints() - skillPeople.getPoints();
+                    int num =  skillPeople.getPoints() - auctionedProject.getSkills().get(j).getPoints();
+                    if(num < 0) {
+//                        Logger.getLogger("Main").info(findUserWithName.getUsername() + " not have " + skillPeople.getName());
+                        continue outFor;
+                    }
                     val += 10000 * num * num;
                 } catch (Exception e) {
-                    Logger.getLogger("Main").info(e.getMessage());
+//                    Logger.getLogger("Main").info(e.getMessage());
+                    continue outFor;
                 }
             }
             val += auctionedProject.getBudget() - bid1.getBidAmount();
@@ -92,7 +98,7 @@ public class Main {
             }
         }
         if (specBids.isEmpty()) {
-            Logger.getLogger("Main").info("not found any bid for this project!");
+//            Logger.getLogger("Main").info("not found any bid for this project!");
         }
         return specBids;
     }
