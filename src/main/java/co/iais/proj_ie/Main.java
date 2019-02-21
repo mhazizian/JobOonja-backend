@@ -10,6 +10,8 @@ import com.google.gson.JsonSyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import ir.aziz.karam.server.JobOonJaHttpServer;
 import javafx.util.Pair;
 import org.apache.log4j.Logger;
 
@@ -22,10 +24,14 @@ public class Main {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws Exception {
-        List<User> users = new ArrayList<>();
+//        List<User> users = new ArrayList<>();
         List<Project> projects = ProjectManager.getInstance().getAllProject();
-        List<Bid> bids = new ArrayList<>();
-        Gson gson = new Gson();
+
+        JobOonJaHttpServer jobOonJaHttpServer = new JobOonJaHttpServer();
+        jobOonJaHttpServer.startServer();
+
+//        List<Bid> bids = new ArrayList<>();
+//        Gson gson = new Gson();
 //        whileLoop:
 //        while (true) {
 ////            Pair<String, String> commandParts = getCommandParts();
