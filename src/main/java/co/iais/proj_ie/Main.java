@@ -26,10 +26,10 @@ public class Main {
     public static void main(String[] args) throws Exception {
 //        List<User> users = new ArrayList<>();
         List<Project> projects = ProjectManager.getInstance().getAllProject();
-
+//
         JobOonJaHttpServer jobOonJaHttpServer = new JobOonJaHttpServer();
         jobOonJaHttpServer.startServer();
-
+        
 //        List<Bid> bids = new ArrayList<>();
 //        Gson gson = new Gson();
 //        whileLoop:
