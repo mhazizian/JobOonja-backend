@@ -2,7 +2,6 @@ package ir.aziz.karam.server;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.InetSocketAddress;
 import java.util.StringTokenizer;
 
@@ -37,7 +36,7 @@ public class JobOonJaHttpServer {
                     pageHandler.HandleRequest(httpExchange);
                 } else {
                     String page = tokenizer.nextToken();
-                    ProjectDetailPage projectDetailPage = new ProjectDetailPage(new Integer(page));
+                    ProjectDetailPage projectDetailPage = new ProjectDetailPage(page);
                     projectDetailPage.HandleRequest(httpExchange);
                 }
             } catch (IllegalArgumentException | SecurityException e) {
@@ -65,7 +64,7 @@ public class JobOonJaHttpServer {
 //                pageHandler.HandleRequest(httpExchange);
             } else {
                 String page = tokenizer.nextToken();
-                UserDetailPage  userDetailPage = new UserDetailPage(new Integer(page));
+                UserDetailPage  userDetailPage = new UserDetailPage(page);
                 userDetailPage.HandleRequest(httpExchange);
             }
         }

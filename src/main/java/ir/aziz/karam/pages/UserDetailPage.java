@@ -11,9 +11,9 @@ import java.io.OutputStream;
 
 public class UserDetailPage implements IPage {
 
-    private final int pageNumber;
+    private final String pageNumber;
 
-    public UserDetailPage(int pageNumber) {
+    public UserDetailPage(String pageNumber) {
         this.pageNumber = pageNumber;
     }
 

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package co.iais.proj_ie;
+package ir.aziz.karam.types;
 
 import java.io.Serializable;
 
@@ -11,7 +11,7 @@ import java.io.Serializable;
  *
  * @author karam
  */
-class Skill implements Serializable{
+public class Skill implements Serializable{
     private String name;
     private int point;
 

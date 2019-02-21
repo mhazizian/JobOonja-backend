@@ -3,23 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package co.iais.proj_ie;
+package ir.aziz.karam.manager;
 
+import ir.aziz.karam.exception.UserNotFoundException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import ir.aziz.karam.manager.DataLoader;
-import java.io.BufferedReader;
+import ir.aziz.karam.exception.SkillNotFoundException;
+import ir.aziz.karam.types.Project;
+import ir.aziz.karam.types.User;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Scanner;
 
-/**
- *
- * @author karam
- */
 public class ProjectManager {
 
     private static ProjectManager instance;
@@ -40,5 +34,21 @@ public class ProjectManager {
             }.getType());
         }
         return projects;
+    }
+    
+    public Project getProjectById(String id) throws IOException, UserNotFoundException {
+        List<Project> allProjects = getAllProject();
+        for (int i = 0; i < allProjects.size(); i++) {
+            if(allProjects.get(i).getId().equals(id)) {
+                return allProjects.get(i);
+            }
+        }
+        throw new UserNotFoundException("user not found!");
+    }
+    
+    public void userCanSolveProject(User user, Project project) throws SkillNotFoundException{
+        for (int i = 0; i < project.getSkills().size(); i++) {
+            UserManager.getInstance().getSkillOfUser(user, project.getSkills().get(i));
+        }
     }
 }
