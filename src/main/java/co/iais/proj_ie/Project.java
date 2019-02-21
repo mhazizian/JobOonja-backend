@@ -12,9 +12,16 @@ import java.util.List;
  * @author karam
  */
 public class Project {
+
+    private String id;
     private String title;
+    private String description;
+    private String imageUrl;
     private List<Skill> skills;
+    private List<Bid> bids;
     private int budget;
+    private long deadline;
+    private User winner;
 
     public String getTitle() {
         return title;
@@ -38,6 +45,54 @@ public class Project {
 
     public void setBudget(int budget) {
         this.budget = budget;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getDescrption() {
+        return description;
+    }
+
+    public void setDescrption(String descrption) {
+        this.description = descrption;
+    }
+
+    public String getImageURL() {
+        return imageUrl;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageUrl = imageURL;
+    }
+
+    public List<Bid> getBids() {
+        return bids;
+    }
+
+    public void setBids(List<Bid> bids) {
+        this.bids = bids;
+    }
+
+    public long getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(long deadline) {
+        this.deadline = deadline;
+    }
+
+    public User getWinner() {
+        return winner;
+    }
+
+    public void setWinner(User winner) {
+        this.winner = winner;
     }
 
     public Project(String title, List<Skill> skills, int budget) {

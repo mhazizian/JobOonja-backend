@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 class Skill implements Serializable{
     private String name;
-    private int points;
+    private int point;
 
     public String getName() {
         return name;
@@ -24,15 +24,15 @@ class Skill implements Serializable{
     }
 
     public int getPoints() {
-        return points;
+        return point;
     }
 
     public void setPoints(int points) {
-        this.points = points;
+        this.point = points;
     }
 
     public Skill(String name, int points) {
         this.name = name;
-        this.points = points;
+        this.point = points;
     }
 }

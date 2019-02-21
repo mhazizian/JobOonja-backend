@@ -22,39 +22,39 @@ public class Main {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws Exception {
-        List<UserInfo> users = new ArrayList<>();
-        List<Project> projects = new ArrayList<>();
+        List<User> users = new ArrayList<>();
+        List<Project> projects = ProjectManager.getInstance().getAllProject();
         List<Bid> bids = new ArrayList<>();
         Gson gson = new Gson();
-        whileLoop:
-        while (true) {
-            Pair<String, String> commandParts = getCommandParts();
-            String commandType = commandParts.getKey();
-            String inputWithoutCommand = commandParts.getValue();
-            switch (commandType) {
-                case "register":
-                    UserInfo userInfo = gson.fromJson(inputWithoutCommand, UserInfo.class);
-                    users.add(userInfo);
-                    break;
-                case "addProject":
-                    Project project = gson.fromJson(inputWithoutCommand, Project.class);
-                    projects.add(project);
-                    break;
-                case "bid":
-                    Bid bid = gson.fromJson(inputWithoutCommand, Bid.class);
-                    bids.add(bid);
-                    break;
-                case "auction":
-                    auctionWork(gson, inputWithoutCommand, bids, projects, users);
-                    break whileLoop;
-                default:
-//                    Logger.getLogger("Main").info("invalid command!");
-                    break;
-            }
-        }
+//        whileLoop:
+//        while (true) {
+////            Pair<String, String> commandParts = getCommandParts();
+////            String commandType = commandParts.getKey();
+////            String inputWithoutCommand = commandParts.getValue();
+//            switch (commandType) {
+//                case "register":
+//                    User userInfo = gson.fromJson(inputWithoutCommand, User.class);
+//                    users.add(userInfo);
+//                    break;
+//                case "addProject":
+//                    Project project = gson.fromJson(inputWithoutCommand, Project.class);
+//                    projects.add(project);
+//                    break;
+//                case "bid":
+//                    Bid bid = gson.fromJson(inputWithoutCommand, Bid.class);
+//                    bids.add(bid);
+//                    break;
+//                case "auction":
+//                    auctionWork(gson, inputWithoutCommand, bids, projects, users);
+//                    break whileLoop;
+//                default:
+////                    Logger.getLogger("Main").info("invalid command!");
+//                    break;
+//            }
+//        }
     }
 
-    private static void auctionWork(Gson gson, String inputWithoutCommand, List<Bid> bids, List<Project> projects, List<UserInfo> users) throws Exception, JsonSyntaxException {
+    private static void auctionWork(Gson gson, String inputWithoutCommand, List<Bid> bids, List<Project> projects, List<User> users) throws Exception, JsonSyntaxException {
         Auction auction = gson.fromJson(inputWithoutCommand, Auction.class);
         List<Bid> specBids = findSpecBidsWithProjectName(bids, auction);
         Project auctionedProject = findProjectWithName(auction, projects);
@@ -63,7 +63,7 @@ public class Main {
         outFor:
         for (int i = 0; i < specBids.size(); i++) {
             Bid bid1 = specBids.get(i);
-            UserInfo findUserWithName = findUserWithName(users, bid1);
+            User findUserWithName = findUserWithName(users, bid1);
             int val = 0;
             for (int j = 0; j < auctionedProject.getSkills().size(); j++) {
                 try {
@@ -103,7 +103,7 @@ public class Main {
         return specBids;
     }
 
-    private static UserInfo findUserWithName(List<UserInfo> users, Bid bid1) throws Exception {
+    private static User findUserWithName(List<User> users, Bid bid1) throws Exception {
         for (int j = 0; j < users.size(); j++) {
             if (users.get(j).getUsername().equals(bid1.getBiddingUser())) {
                 return users.get(j);
@@ -122,7 +122,7 @@ public class Main {
         throw new Exception("project not found!");
     }
 
-    private static Skill findSkill(UserInfo findUserWithName, String name) throws Exception {
+    private static Skill findSkill(User findUserWithName, String name) throws Exception {
         for (int i = 0; i < findUserWithName.getSkills().size(); i++) {
             if (findUserWithName.getSkills().get(i).getName().equals(name)) {
                 return findUserWithName.getSkills().get(i);
