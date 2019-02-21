@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author karam
  */
-public class UserInfo implements Serializable{
+public class User implements Serializable{
     private String username;
     private List<Skill> skills;
 
@@ -32,7 +32,7 @@ public class UserInfo implements Serializable{
         this.skills = skills;
     }
 
-    public UserInfo(String username, List<Skill> skills) {
+    public User(String username, List<Skill> skills) {
         this.username = username;
         this.skills = skills;
     }
