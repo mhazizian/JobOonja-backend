@@ -8,6 +8,7 @@ package ir.aziz.karam.manager;
 import ir.aziz.karam.exception.SkillNotFoundException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import ir.aziz.karam.exception.UserNotFoundException;
 import ir.aziz.karam.types.Skill;
 import ir.aziz.karam.types.User;
 import java.io.IOException;
@@ -30,7 +31,7 @@ public class UserManager {
     public List<User> getAllUsers() throws IOException {
         if (users == null) {
             users = new ArrayList<>();
-            users.add(currentUser);
+            users.add(getCurrentUser());
         }
         return users;
     }
@@ -53,6 +54,16 @@ public class UserManager {
                 return user.getSkills().get(i);
             }
         }
-        throw new SkillNotFoundException("skill not found!");
+        throw new SkillNotFoundException( skill.getName() + " skill not found!");
+    }
+
+    public User getUserById(String id) throws IOException, UserNotFoundException {
+        List<User> allUsers = getAllUsers();
+        for (int i = 0; i < allUsers.size(); i++) {
+            if(allUsers.get(i).getId().equals(id)) {
+                return allUsers.get(i);
+            }
+        }
+        throw new UserNotFoundException("user not found!");
     }
 }
