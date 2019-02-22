@@ -5,11 +5,13 @@
  */
 package ir.aziz.karam.manager;
 
+import ir.aziz.karam.exception.ProjectNotFoundException;
 import ir.aziz.karam.exception.UserNotFoundException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import ir.aziz.karam.exception.SkillNotFoundException;
 import ir.aziz.karam.types.Project;
+import ir.aziz.karam.types.Skill;
 import ir.aziz.karam.types.User;
 import java.io.IOException;
 import java.util.List;
@@ -36,19 +38,22 @@ public class ProjectManager {
         return projects;
     }
     
-    public Project getProjectById(String id) throws IOException, UserNotFoundException {
+    public Project getProjectById(String id) throws IOException, ProjectNotFoundException {
         List<Project> allProjects = getAllProject();
         for (int i = 0; i < allProjects.size(); i++) {
             if(allProjects.get(i).getId().equals(id)) {
                 return allProjects.get(i);
             }
         }
-        throw new UserNotFoundException("user not found!");
+        throw new ProjectNotFoundException("project not found!");
     }
     
-    public void userCanSolveProject(User user, Project project) throws SkillNotFoundException{
+    public void userCanSolveProject(User user, Project project) throws SkillNotFoundException, SkillPointIsNotEnoghException{
         for (int i = 0; i < project.getSkills().size(); i++) {
-            UserManager.getInstance().getSkillOfUser(user, project.getSkills().get(i));
+            Skill skillOfUser = UserManager.getInstance().getSkillOfUser(user, project.getSkills().get(i));
+            if(skillOfUser.getPoints() < project.getSkills().get(i).getPoints())  {
+                throw new SkillPointIsNotEnoghException(skillOfUser.getName() + " point is not enough for this project!");
+            }
         }
     }
 }
