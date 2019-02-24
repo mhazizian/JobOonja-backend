@@ -59,9 +59,9 @@ public class UserManager {
 
     public User getUserById(String id) throws IOException, UserNotFoundException {
         List<User> allUsers = getAllUsers();
-        for (int i = 0; i < allUsers.size(); i++) {
-            if(allUsers.get(i).getId().equals(id)) {
-                return allUsers.get(i);
+        for (User user : allUsers) {
+            if (user.getId().equals(id)) {
+                return user;
             }
         }
         throw new UserNotFoundException("user not found!");

@@ -1,18 +1,21 @@
 package ir.aziz.karam.pages;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 import com.sun.net.httpserver.HttpExchange;
 import ir.aziz.karam.manager.ProjectManager;
+import ir.aziz.karam.manager.UserManager;
 import ir.aziz.karam.types.Project;
+import ir.aziz.karam.types.User;
+
 import java.util.List;
 
-public class ProjectListPage implements IPage {
+public class ProjectListPage extends APage implements IPage {
 
     @Override
     public void HandleRequest(HttpExchange httpExchange) throws IOException {
-        List<Project> allProject = ProjectManager.getInstance().getAllProject();
+        User currentUser = UserManager.getInstance().getCurrentUser();
+        List<Project> allProject = ProjectManager.getInstance().getAllProjectsFeasibleByUser(currentUser);
         String response = "<!DOCTYPE html>\n"
                 + "<html lang=\"en\">\n"
                 + "<head>\n"
@@ -37,20 +40,17 @@ public class ProjectListPage implements IPage {
                 + "            <th>title</th>\n"
                 + "            <th>budget</th>\n"
                 + "        </tr>\n";
-        for (int i = 0; i < allProject.size(); i++) {
+        for (Project project : allProject) {
             response += "        <tr>\n"
-                    + "            <td>" + allProject.get(i).getId() + "</td>\n"
-                    + "            <td> " + allProject.get(i).getTitle() + "</td>\n"
-                    + "            <td>" + allProject.get(i).getBudget() + "</td>\n"
+                    + "            <td>" + project.getId() + "</td>\n"
+                    + "            <td> " + project.getTitle() + "</td>\n"
+                    + "            <td>" + project.getBudget() + "</td>\n"
                     + "        </tr>\n";
         }
         response += "    </table>\n"
                 + "</body>\n"
                 + "</html>";
-        httpExchange.sendResponseHeaders(200, response.length());
-        OutputStream os = httpExchange.getResponseBody();
-        os.write(response.getBytes());
-        os.close();
+        this.sendPage(httpExchange, response, 200);
     }
 
 }

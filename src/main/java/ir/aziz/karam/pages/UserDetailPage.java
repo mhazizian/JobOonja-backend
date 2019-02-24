@@ -9,12 +9,10 @@ import com.sun.net.httpserver.HttpExchange;
 import ir.aziz.karam.exception.UserNotFoundException;
 import ir.aziz.karam.manager.UserManager;
 import ir.aziz.karam.types.User;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-public class UserDetailPage implements IPage {
+import java.io.IOException;
+
+public class UserDetailPage extends APage implements IPage {
 
     private final String id;
 
@@ -42,17 +40,12 @@ public class UserDetailPage implements IPage {
                     + "    </ul>\n"
                     + "</body>\n"
                     + "</html>";
-            httpExchange.sendResponseHeaders(200, response.length());
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
+
+            this.sendPage(httpExchange, response, 200);
         } catch (UserNotFoundException ex) {
             org.apache.log4j.Logger.getLogger(UserDetailPage.class).error(ex, ex);
-            String response = "user not for this id!";
-            httpExchange.sendResponseHeaders(404, response.length());
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
+            NotFound404Page notFound404Page = new NotFound404Page("user not for this id!");
+            notFound404Page.HandleRequest(httpExchange);
         }
     }
 }

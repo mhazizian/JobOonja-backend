@@ -5,21 +5,19 @@
  */
 package ir.aziz.karam.pages;
 
-import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import ir.aziz.karam.exception.ProjectNotFoundException;
 import ir.aziz.karam.exception.SkillNotFoundException;
-import ir.aziz.karam.exception.UserNotFoundException;
 import ir.aziz.karam.manager.ProjectManager;
-import ir.aziz.karam.manager.SkillPointIsNotEnoghException;
+import ir.aziz.karam.exception.SkillPointIsNotEnoghException;
 import ir.aziz.karam.manager.UserManager;
 import ir.aziz.karam.types.Project;
 import ir.aziz.karam.types.User;
 import java.io.IOException;
-import java.io.OutputStream;
+
 import org.apache.log4j.Logger;
 
-public class ProjectDetailPage implements IPage {
+public class ProjectDetailPage extends APage implements IPage {
 
     private final String pageNumber;
 
@@ -49,24 +47,15 @@ public class ProjectDetailPage implements IPage {
                     + "    </ul>\n"
                     + "</body>\n"
                     + "</html>";
-            httpExchange.sendResponseHeaders(200, response.length());
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
+            this.sendPage(httpExchange, response, 200);
         } catch (ProjectNotFoundException ex) { // 404
             Logger.getLogger(UserDetailPage.class).error(ex, ex);
-            String response = "this project not available!!";
-            httpExchange.sendResponseHeaders(404, response.length());
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
+            NotFound404Page notFound404Page = new NotFound404Page("this project not available!!");
+            notFound404Page.HandleRequest(httpExchange);
         } catch (SkillNotFoundException | SkillPointIsNotEnoghException ex) { // 403
             Logger.getLogger(UserDetailPage.class).error(ex, ex);
-            String response = ex.getMessage();
-            httpExchange.sendResponseHeaders(403, response.length());
-            try (OutputStream os = httpExchange.getResponseBody()) {
-                os.write(response.getBytes());
-            }
+            PermissionDenied403Page permissionDenied403Page = new PermissionDenied403Page(ex.getMessage());
+            permissionDenied403Page.HandleRequest(httpExchange);
         }
     }
 }
