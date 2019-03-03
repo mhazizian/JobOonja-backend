@@ -32,18 +32,21 @@ public class ProjectServlet extends HttpServlet {
             HttpServletResponse response
     ) throws ServletException, IOException {
         String[] parts = request.getRequestURL().toString().split("/");
-        if (parts.length == 5) {
+
+        if (parts.length == 5 || parts.length == 6 && parts[5].equals("")) {
             User currentUser = UserManager.getInstance().getCurrentUser();
             List<Project> allProject = ProjectManager.getInstance().getAllProjectsFeasibleByUser(currentUser);
             request.setAttribute("allProject", allProject);
-            request.getRequestDispatcher("projects.jsp").forward(request, response);
+            request.getRequestDispatcher("/projects.jsp").forward(request, response);
         } else {
             try {
                 String projctId = parts[5];
                 Project projectById = ProjectManager.getInstance().getProjectById(projctId); // 404 maybe happend 
                 User currentUser = UserManager.getInstance().getCurrentUser();
                 ProjectManager.getInstance().userCanSolveProject(currentUser, projectById);
-                request.setAttribute("protject", projectById);
+
+                request.setAttribute("project", projectById);
+                request.setAttribute("hasBided", projectById.hasBided(currentUser));
                 request.getRequestDispatcher("/projectById.jsp").forward(request, response);
             } catch (ProjectNotFoundException ex) {
                 Logger.getLogger(ProjectServlet.class).error(ex, ex);

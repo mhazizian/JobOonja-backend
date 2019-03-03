@@ -1,21 +1,25 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <html>
     <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
         <title>JSTL!</title>
     </head>
     <body>
         <ul>
-            <li>id:<c:out value="${requestScope.protject.id}"/></li>
-            <li>title: <c:out value="${requestScope.protject.title}"/></li>
-            <li>budget: <c:out value="${requestScope.protject.budget}"/></li>
+            <li>id:<c:out value="${requestScope.project.id}"/></li>
+            <li>title: <c:out value="${requestScope.project.title}"/></li>
+            <li>budget: <c:out value="${requestScope.project.budget}"/></li>
         </ul>
         <!-- display form if user has not bidded before -->
-        <form action="" method="">
-            <label for="bidAmount">Bid Amount:</label>
-            <input type="number" name="bidAmount">
+        <c:if test="${!requestScope.hasBided}">
+            <form action="${pageContext.request.contextPath}/bid" method="POST">
+                <label for="bidAmount">Bid Amount:</label>
+                <input type="number" name="bidAmount">
+                <input type="hidden" name="projectId", value="${requestScope.project.id}">
 
-            <button>Submit</button>
-        </form>
+                <button>Submit</button>
+            </form>
+        </c:if>
     </body>
 </html>
