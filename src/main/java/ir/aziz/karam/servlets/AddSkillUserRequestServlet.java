@@ -5,12 +5,14 @@
  */
 package ir.aziz.karam.servlets;
 
+import ir.aziz.karam.exception.ReapeatSkillAddedToUserException;
 import ir.aziz.karam.exception.UserNotFoundException;
 import ir.aziz.karam.manager.SkillManager;
 import ir.aziz.karam.manager.UserManager;
 import ir.aziz.karam.types.User;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,34 +21,34 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
-@WebServlet("/user/*")
-public class UserServlet extends HttpServlet {
+@WebServlet("/addSkillUser/*")
+public class AddSkillUserRequestServlet extends HttpServlet {
 
     @Override
-    protected void doGet(
+    protected void doPost(
             HttpServletRequest request,
             HttpServletResponse response
     ) throws ServletException, IOException {
-        String[] parts = request.getRequestURL().toString().split("/");
-        if (parts.length == 5) {
-            List<User> allUsers = UserManager.getInstance().getAllUsers();
-            request.setAttribute("allUser", allUsers);
-            request.getRequestDispatcher("users.jsp").forward(request, response);
-        } else {
+        try {
+            Map<String, String[]> parameterMap = request.getParameterMap();
+            String userId = parameterMap.get("user")[0];
+            String skillName = parameterMap.get("skill")[0];
+            User userById = UserManager.getInstance().getUserById(userId);
             try {
-                String userId = parts[5];
-                User userById = UserManager.getInstance().getUserById(userId);
+                UserManager.getInstance().addASkillFromAUser(userById, skillName);
+            } catch (ReapeatSkillAddedToUserException ex) {
+                Logger.getLogger(AddSkillUserRequestServlet.class).error(ex, ex);
+            } finally {
                 request.setAttribute("user", userById);
                 request.setAttribute("skills", SkillManager.getInstance().getAllSkills());
-                request.setAttribute("currenUser", UserManager.getInstance().getCurrentUser());
                 if (UserManager.getInstance().getCurrentUser().getId().equals(userId)) {
                     request.getRequestDispatcher("/user-single-logged-in.jsp").forward(request, response);
                 } else {
                     request.getRequestDispatcher("/user-single-guest.jsp").forward(request, response);
                 }
-            } catch (UserNotFoundException ex) {
-                Logger.getLogger(UserServlet.class).error(ex, ex);
             }
+        } catch (UserNotFoundException ex) {
+            Logger.getLogger(AddSkillUserRequestServlet.class).error(ex, ex);
         }
     }
 }

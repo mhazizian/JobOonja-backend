@@ -6,6 +6,7 @@
 package ir.aziz.karam.types;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,6 +22,7 @@ public class User implements Serializable {
     private String PictureUrl;
     private List<Skill> skills;
     private String bio;
+    private List<Endorse> endorses = new ArrayList<>();
 
     public List<Skill> getSkills() {
         return skills;
@@ -76,6 +78,18 @@ public class User implements Serializable {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public List<Endorse> getEndorses() {
+        return endorses;
+    }
+
+    public void setEndorses(List<Endorse> endorses) {
+        this.endorses = endorses;
+    }
+
+    public void addEndorses(Endorse endorse) {
+        this.endorses.add(endorse);
     }
 
     public User(String id, String firstName, String lastName, String jobTitle, String PictureUrl, List<Skill> skills, String bio) {
