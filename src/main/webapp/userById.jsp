@@ -6,9 +6,9 @@
     </head>
     <body>
         <ul>
-            <li>id:<c:out value="${requestScope.protject.id}"/></li>
-            <li>title: <c:out value="${requestScope.protject.title}"/></li>
-            <li>budget: <c:out value="${requestScope.protject.budget}"/></li>
+            <li>id:<c:out value="${requestScope.user.id}"/></li>
+            <li>title: <c:out value="${requestScope.user.title}"/></li>
+            <li>budget: <c:out value="${requestScope.user.budget}"/></li>
         </ul>
         <!-- display form if user has not bidded before -->
         <form action="" method="">

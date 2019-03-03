@@ -8,6 +8,7 @@ package ir.aziz.karam.servlets;
 import ir.aziz.karam.exception.ProjectNotFoundException;
 import ir.aziz.karam.exception.SkillNotFoundException;
 import ir.aziz.karam.exception.SkillPointIsNotEnoghException;
+import ir.aziz.karam.exception.UserNotFoundException;
 import ir.aziz.karam.manager.ProjectManager;
 import ir.aziz.karam.manager.UserManager;
 import ir.aziz.karam.types.Project;
@@ -23,8 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
-@WebServlet("/project/*")
-public class ProjectServlet extends HttpServlet {
+@WebServlet("/user/*")
+public class UserServlet extends HttpServlet {
 
     @Override
     protected void doGet(
@@ -33,24 +34,17 @@ public class ProjectServlet extends HttpServlet {
     ) throws ServletException, IOException {
         String[] parts = request.getRequestURL().toString().split("/");
         if (parts.length == 5) {
-            User currentUser = UserManager.getInstance().getCurrentUser();
-            List<Project> allProject = ProjectManager.getInstance().getAllProjectsFeasibleByUser(currentUser);
-            request.setAttribute("allProject", allProject);
-            request.getRequestDispatcher("projects.jsp").forward(request, response);
+            List<User> allUsers = UserManager.getInstance().getAllUsers();
+            request.setAttribute("allUser", allUsers);
+            request.getRequestDispatcher("user.jsp").forward(request, response);
         } else {
             try {
-                String projctId = parts[5];
-                Project projectById = ProjectManager.getInstance().getProjectById(projctId); // 404 maybe happend 
-                User currentUser = UserManager.getInstance().getCurrentUser();
-                ProjectManager.getInstance().userCanSolveProject(currentUser, projectById);
-                request.setAttribute("protject", projectById);
+                String userId = parts[5];
+                User userById = UserManager.getInstance().getUserById(userId);
+                request.setAttribute("user", userById);
                 request.getRequestDispatcher("/projectById.jsp").forward(request, response);
-            } catch (ProjectNotFoundException ex) {
-                Logger.getLogger(ProjectServlet.class).error(ex, ex);
-            } catch (SkillNotFoundException ex) {
-                Logger.getLogger(ProjectServlet.class).error(ex, ex);
-            } catch (SkillPointIsNotEnoghException ex) {
-                Logger.getLogger(ProjectServlet.class).error(ex, ex);
+            } catch (UserNotFoundException ex) {
+                java.util.logging.Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
