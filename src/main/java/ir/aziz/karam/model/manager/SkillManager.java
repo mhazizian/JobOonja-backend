@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ir.aziz.karam.manager;
+package ir.aziz.karam.model.manager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import ir.aziz.karam.types.Skill;
+import ir.aziz.karam.model.types.Skill;
 
 import java.io.IOException;
 import java.util.List;

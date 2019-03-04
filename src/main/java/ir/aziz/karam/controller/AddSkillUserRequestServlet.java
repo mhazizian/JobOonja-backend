@@ -3,17 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ir.aziz.karam.servlets;
+package ir.aziz.karam.controller;
 
-import ir.aziz.karam.exception.ReapeatSkillAddedToUserException;
-import ir.aziz.karam.exception.UserNotFoundException;
-import ir.aziz.karam.manager.SkillManager;
-import ir.aziz.karam.manager.UserManager;
-import ir.aziz.karam.types.User;
+import ir.aziz.karam.model.exception.ReapeatSkillAddedToUserException;
+import ir.aziz.karam.model.exception.UserNotFoundException;
+import ir.aziz.karam.model.manager.SkillManager;
+import ir.aziz.karam.model.manager.UserManager;
+import ir.aziz.karam.model.types.User;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

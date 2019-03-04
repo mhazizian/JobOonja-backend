@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ir.aziz.karam.exception;
+package ir.aziz.karam.model.exception;
 
 public class ReapeatSkillAddedToUserException extends Exception {
 

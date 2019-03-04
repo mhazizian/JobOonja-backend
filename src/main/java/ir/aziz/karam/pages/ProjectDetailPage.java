@@ -6,13 +6,13 @@
 package ir.aziz.karam.pages;
 
 import com.sun.net.httpserver.HttpExchange;
-import ir.aziz.karam.exception.ProjectNotFoundException;
-import ir.aziz.karam.exception.SkillNotFoundException;
-import ir.aziz.karam.manager.ProjectManager;
-import ir.aziz.karam.exception.SkillPointIsNotEnoghException;
-import ir.aziz.karam.manager.UserManager;
-import ir.aziz.karam.types.Project;
-import ir.aziz.karam.types.User;
+import ir.aziz.karam.model.exception.ProjectNotFoundException;
+import ir.aziz.karam.model.exception.SkillNotFoundException;
+import ir.aziz.karam.model.manager.ProjectManager;
+import ir.aziz.karam.model.exception.SkillPointIsNotEnoghException;
+import ir.aziz.karam.model.manager.UserManager;
+import ir.aziz.karam.model.types.Project;
+import ir.aziz.karam.model.types.User;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;

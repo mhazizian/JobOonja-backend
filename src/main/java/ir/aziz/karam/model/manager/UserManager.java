@@ -3,16 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ir.aziz.karam.manager;
+package ir.aziz.karam.model.manager;
 
-import ir.aziz.karam.exception.SkillNotFoundException;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import ir.aziz.karam.exception.ReapeatSkillAddedToUserException;
-import ir.aziz.karam.exception.UserNotFoundException;
-import ir.aziz.karam.types.Endorse;
-import ir.aziz.karam.types.Skill;
-import ir.aziz.karam.types.User;
+import ir.aziz.karam.model.types.Skill;
+import ir.aziz.karam.model.types.User;
+import ir.aziz.karam.model.exception.SkillNotFoundException;
+import ir.aziz.karam.model.exception.UserNotFoundException;
+import ir.aziz.karam.model.exception.ReapeatSkillAddedToUserException;
+import ir.aziz.karam.model.types.Endorse;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

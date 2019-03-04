@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ir.aziz.karam.types;
+package ir.aziz.karam.model.types;
 
 public class Endorse {
 

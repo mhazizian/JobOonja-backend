@@ -3,10 +3,10 @@ package ir.aziz.karam.pages;
 import java.io.IOException;
 
 import com.sun.net.httpserver.HttpExchange;
-import ir.aziz.karam.manager.ProjectManager;
-import ir.aziz.karam.manager.UserManager;
-import ir.aziz.karam.types.Project;
-import ir.aziz.karam.types.User;
+import ir.aziz.karam.model.manager.ProjectManager;
+import ir.aziz.karam.model.manager.UserManager;
+import ir.aziz.karam.model.types.Project;
+import ir.aziz.karam.model.types.User;
 
 import java.util.List;
 

@@ -3,19 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ir.aziz.karam.servlets;
+package ir.aziz.karam.controller;
 
-import ir.aziz.karam.exception.ProjectNotFoundException;
-import ir.aziz.karam.exception.SkillNotFoundException;
-import ir.aziz.karam.exception.SkillPointIsNotEnoghException;
-import ir.aziz.karam.manager.ProjectManager;
-import ir.aziz.karam.manager.UserManager;
-import ir.aziz.karam.types.Project;
-import ir.aziz.karam.types.User;
+import ir.aziz.karam.model.exception.ProjectNotFoundException;
+import ir.aziz.karam.model.exception.SkillNotFoundException;
+import ir.aziz.karam.model.exception.SkillPointIsNotEnoghException;
+import ir.aziz.karam.model.manager.ProjectManager;
+import ir.aziz.karam.model.manager.UserManager;
+import ir.aziz.karam.model.types.Project;
+import ir.aziz.karam.model.types.User;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -31,6 +29,7 @@ public class ProjectServlet extends HttpServlet {
             HttpServletRequest request,
             HttpServletResponse response
     ) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
         String[] parts = request.getRequestURL().toString().split("/");
 
         if (parts.length == 5 || parts.length == 6 && parts[5].equals("")) {
@@ -44,7 +43,6 @@ public class ProjectServlet extends HttpServlet {
                 Project projectById = ProjectManager.getInstance().getProjectById(projctId); // 404 maybe happend 
                 User currentUser = UserManager.getInstance().getCurrentUser();
                 ProjectManager.getInstance().userCanSolveProject(currentUser, projectById);
-
                 request.setAttribute("project", projectById);
                 request.setAttribute("hasBided", projectById.hasBided(currentUser));
                 request.getRequestDispatcher("/projectById.jsp").forward(request, response);

@@ -3,20 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ir.aziz.karam.manager;
+package ir.aziz.karam.model.manager;
 
-import ir.aziz.karam.exception.ProjectNotFoundException;
-import ir.aziz.karam.exception.SkillPointIsNotEnoghException;
+import ir.aziz.karam.model.types.Project;
+import ir.aziz.karam.model.types.Skill;
+import ir.aziz.karam.model.types.User;
+import ir.aziz.karam.model.exception.ProjectNotFoundException;
+import ir.aziz.karam.model.exception.SkillNotFoundException;
+import ir.aziz.karam.model.exception.SkillPointIsNotEnoghException;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import ir.aziz.karam.exception.SkillNotFoundException;
-import ir.aziz.karam.types.Project;
-import ir.aziz.karam.types.Skill;
-import ir.aziz.karam.types.User;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class ProjectManager {

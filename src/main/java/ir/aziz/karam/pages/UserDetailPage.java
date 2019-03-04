@@ -6,9 +6,9 @@
 package ir.aziz.karam.pages;
 
 import com.sun.net.httpserver.HttpExchange;
-import ir.aziz.karam.exception.UserNotFoundException;
-import ir.aziz.karam.manager.UserManager;
-import ir.aziz.karam.types.User;
+import ir.aziz.karam.model.exception.UserNotFoundException;
+import ir.aziz.karam.model.manager.UserManager;
+import ir.aziz.karam.model.types.User;
 
 import java.io.IOException;
 
