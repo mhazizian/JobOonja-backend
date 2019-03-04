@@ -33,17 +33,26 @@ public class BidServlet extends HttpServlet {
             ProjectManager.getInstance().userCanSolveProject(currentUser, projectById);
             if (!projectById.hasBided(currentUser)) {
                 projectById.addBid(new Bid(currentUser.getId(), projectById.getId(), Integer.parseInt(amount)));
-                System.out.println("bid added");
+                request.setAttribute("message", "bid added.");
+                request.getRequestDispatcher("/success.jsp").forward(request, response);
+
+            } else {
+                response.setStatus(403);
+                request.setAttribute("message", "bid has already been submitted");
+                request.getRequestDispatcher("/permission-denied403.jsp").forward(request, response);
             }
-            System.out.println("already bided");
+
 
         } catch (ProjectNotFoundException ex) {
             Logger.getLogger(ProjectServlet.class).error(ex, ex);
-        } catch (SkillNotFoundException ex) {
+            response.setStatus(404);
+            request.setAttribute("message", ex.getMessage());
+            request.getRequestDispatcher("/not-found404.jsp").forward(request, response);
+        } catch (SkillPointIsNotEnoghException | SkillNotFoundException ex) {
             Logger.getLogger(ProjectServlet.class).error(ex, ex);
-        } catch (SkillPointIsNotEnoghException ex) {
-            Logger.getLogger(ProjectServlet.class).error(ex, ex);
+            response.setStatus(403);
+            request.setAttribute("message", ex.getMessage());
+            request.getRequestDispatcher("/permission-denied403.jsp").forward(request, response);
         }
-
     }
 }
