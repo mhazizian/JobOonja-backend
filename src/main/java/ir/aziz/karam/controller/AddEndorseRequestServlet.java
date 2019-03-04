@@ -49,6 +49,9 @@ public class AddEndorseRequestServlet extends HttpServlet {
             }
         } catch (UserNotFoundException | SkillNotFoundException ex) {
             Logger.getLogger(AddSkillUserRequestServlet.class).error(ex, ex);
+            response.setStatus(404);
+            request.setAttribute("message", ex.getMessage());
+            request.getRequestDispatcher("/not-found404.jsp").forward(request, response);
         }
     }
 }

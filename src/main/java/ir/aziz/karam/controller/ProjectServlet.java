@@ -12,6 +12,7 @@ import ir.aziz.karam.model.manager.ProjectManager;
 import ir.aziz.karam.model.manager.UserManager;
 import ir.aziz.karam.model.types.Project;
 import ir.aziz.karam.model.types.User;
+
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -19,6 +20,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
 
 @WebServlet("/project/*")
@@ -48,10 +50,14 @@ public class ProjectServlet extends HttpServlet {
                 request.getRequestDispatcher("/projectById.jsp").forward(request, response);
             } catch (ProjectNotFoundException ex) {
                 Logger.getLogger(ProjectServlet.class).error(ex, ex);
-            } catch (SkillNotFoundException ex) {
+                response.setStatus(404);
+                request.setAttribute("message", ex.getMessage());
+                request.getRequestDispatcher("/not-found404.jsp").forward(request, response);
+            } catch (SkillPointIsNotEnoghException | SkillNotFoundException ex) {
                 Logger.getLogger(ProjectServlet.class).error(ex, ex);
-            } catch (SkillPointIsNotEnoghException ex) {
-                Logger.getLogger(ProjectServlet.class).error(ex, ex);
+                response.setStatus(403);
+                request.setAttribute("message", ex.getMessage());
+                request.getRequestDispatcher("/permission-denied403.jsp").forward(request, response);
             }
         }
     }
