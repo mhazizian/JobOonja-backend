@@ -41,8 +41,8 @@ public class ProjectServlet extends HttpServlet {
             request.getRequestDispatcher("/projects.jsp").forward(request, response);
         } else {
             try {
-                String projctId = parts[5];
-                Project projectById = ProjectManager.getInstance().getProjectById(projctId); // 404 maybe happend 
+                String projectId = parts[5];
+                Project projectById = ProjectManager.getInstance().getProjectById(projectId); // 404 maybe happend
                 User currentUser = UserManager.getInstance().getCurrentUser();
                 ProjectManager.getInstance().userCanSolveProject(currentUser, projectById);
                 request.setAttribute("project", projectById);
