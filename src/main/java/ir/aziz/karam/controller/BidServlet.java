@@ -1,5 +1,6 @@
 package ir.aziz.karam.controller;
 
+import com.google.gson.Gson;
 import ir.aziz.karam.model.exception.ProjectNotFoundException;
 import ir.aziz.karam.model.exception.SkillNotFoundException;
 import ir.aziz.karam.model.exception.SkillPointIsNotEnoghException;
@@ -7,6 +8,7 @@ import ir.aziz.karam.model.manager.ProjectManager;
 import ir.aziz.karam.model.manager.UserManager;
 import ir.aziz.karam.model.types.Bid;
 import ir.aziz.karam.model.types.Project;
+import ir.aziz.karam.model.types.ResponsePostMessage;
 import ir.aziz.karam.model.types.User;
 import org.apache.log4j.Logger;
 
@@ -19,40 +21,62 @@ import java.io.IOException;
 
 @WebServlet("/bid")
 public class BidServlet extends HttpServlet {
+
     @Override
     protected void doPost(
             HttpServletRequest request,
             HttpServletResponse response
     ) throws ServletException, IOException {
+        Gson gson = new Gson();
         String amount = request.getParameter("bidAmount");
         String projectId = request.getParameter("projectId");
-
         try {
             Project projectById = ProjectManager.getInstance().getProjectById(projectId); // 404 maybe happend
             User currentUser = UserManager.getInstance().getCurrentUser();
             ProjectManager.getInstance().userCanSolveProject(currentUser, projectById);
             if (!projectById.hasBided(currentUser)) {
                 projectById.addBid(new Bid(currentUser.getId(), projectById.getId(), Integer.parseInt(amount)));
-                request.setAttribute("message", "bid added.");
-                request.getRequestDispatcher("/success.jsp").forward(request, response);
+                ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, "درخواست با موفقیت انجام شد.");
+                response.setCharacterEncoding("UTF-8");
+                response.setStatus(HttpServletResponse.SC_ACCEPTED);
+                response.getWriter().write(gson.toJson(responsePostMessage));
 
             } else {
-                response.setStatus(403);
-                request.setAttribute("message", "bid has already been submitted");
-                request.getRequestDispatcher("/permission-denied403.jsp").forward(request, response);
+                response.setStatus(400);
+                ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "این پروژه درخواست شده است.");
+                response.setCharacterEncoding("UTF-8");
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write(gson.toJson(responsePostMessage));
             }
 
-
         } catch (ProjectNotFoundException ex) {
-            Logger.getLogger(ProjectServlet.class).error(ex, ex);
+            Logger.getLogger(AddSkillUserRequestServlet.class).error(ex, ex);
             response.setStatus(404);
-            request.setAttribute("message", ex.getMessage());
-            request.getRequestDispatcher("/not-found404.jsp").forward(request, response);
-        } catch (SkillPointIsNotEnoghException | SkillNotFoundException ex) {
-            Logger.getLogger(ProjectServlet.class).error(ex, ex);
-            response.setStatus(403);
-            request.setAttribute("message", ex.getMessage());
-            request.getRequestDispatcher("/permission-denied403.jsp").forward(request, response);
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(404, "پروژه با این مشخصات یافت نشد.");
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            response.getWriter().write(gson.toJson(responsePostMessage));
+        } catch (SkillPointIsNotEnoghException ex) {
+            Logger.getLogger(this.getClass()).error(ex, ex);
+            response.setStatus(400);
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "مهارت برای این پروژه کافی نیست");
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write(gson.toJson(responsePostMessage));
+        } catch (SkillNotFoundException ex) {
+            Logger.getLogger(AddSkillUserRequestServlet.class).error(ex, ex);
+            response.setStatus(404);
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(404, "مهارت با این مشخصات یافت نشد.");
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            response.getWriter().write(gson.toJson(responsePostMessage));
+        } catch (Exception ex) {
+            Logger.getLogger(this.getClass()).error(ex, ex);
+            response.setStatus(400);
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "خطا در فراخوانی عملیات");
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write(gson.toJson(responsePostMessage));
         }
     }
 }

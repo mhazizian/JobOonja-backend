@@ -5,11 +5,13 @@
  */
 package ir.aziz.karam.controller;
 
+import com.google.gson.Gson;
 import ir.aziz.karam.model.exception.SkillNotFoundException;
 import ir.aziz.karam.model.exception.UserNotFoundException;
 import ir.aziz.karam.model.manager.SkillManager;
 import ir.aziz.karam.model.manager.UserManager;
 import ir.aziz.karam.model.types.Endorse;
+import ir.aziz.karam.model.types.ResponsePostMessage;
 import ir.aziz.karam.model.types.Skill;
 import ir.aziz.karam.model.types.User;
 
@@ -31,6 +33,7 @@ public class AddEndorseRequestServlet extends HttpServlet {
             HttpServletRequest request,
             HttpServletResponse response
     ) throws ServletException, IOException {
+        Gson gson = new Gson();
         try {
             Map<String, String[]> parameterMap = request.getParameterMap();
             String userId = parameterMap.get("userId")[0];
@@ -43,24 +46,41 @@ public class AddEndorseRequestServlet extends HttpServlet {
                 Skill skillOfUserBySkillName = UserManager.getInstance().getSkillOfUserBySkillName(user, skillName);
                 skillOfUserBySkillName.setPoints(skillOfUserBySkillName.getPoints() + 1);
 
-                request.setAttribute("user", user);
-                request.setAttribute("skills", SkillManager.getInstance().getAllSkills());
-                request.setAttribute("currenUser", UserManager.getInstance().getCurrentUser());
-                if (UserManager.getInstance().getCurrentUser().getId().equals(userId)) {
-                    request.getRequestDispatcher("/user-single-logged-in.jsp").forward(request, response);
-                } else {
-                    request.getRequestDispatcher("/user-single-guest.jsp").forward(request, response);
-                }
+                ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, "درخواست با موفقیت انجام شد.");
+                response.setCharacterEncoding("UTF-8");
+                response.setStatus(HttpServletResponse.SC_ACCEPTED);
+                response.getWriter().write(gson.toJson(responsePostMessage));
             } else {
-                response.setStatus(403);
-                request.setAttribute("message", "skill id already endorsed.");
-                request.getRequestDispatcher("/permission-denied403.jsp").forward(request, response);
+                response.setStatus(404);
+                ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "این مهارت تصدیق شده است.");
+                response.setCharacterEncoding("UTF-8");
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write(gson.toJson(responsePostMessage));
             }
-        } catch (UserNotFoundException | SkillNotFoundException ex) {
+        } catch (UserNotFoundException ex) {
             Logger.getLogger(AddSkillUserRequestServlet.class).error(ex, ex);
             response.setStatus(404);
             request.setAttribute("message", ex.getMessage());
-            request.getRequestDispatcher("/not-found404.jsp").forward(request, response);
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(404, "کاربری با این مشخصات یافت نشد.");
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            response.getWriter().write(gson.toJson(responsePostMessage));
+        } catch (SkillNotFoundException ex) {
+            Logger.getLogger(AddSkillUserRequestServlet.class).error(ex, ex);
+            response.setStatus(404);
+            request.setAttribute("message", ex.getMessage());
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(404, "مهارتی با این مشخصات یافت نشد.");
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            response.getWriter().write(gson.toJson(responsePostMessage));
+        } catch (Exception ex) {
+            Logger.getLogger(this.getClass()).error(ex, ex);
+            response.setStatus(400);
+            request.setAttribute("message", ex.getMessage());
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "خطا در فراخوانی عملیات");
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write(gson.toJson(responsePostMessage));
         }
     }
 }

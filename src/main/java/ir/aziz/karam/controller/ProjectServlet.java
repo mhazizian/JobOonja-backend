@@ -5,12 +5,14 @@
  */
 package ir.aziz.karam.controller;
 
+import com.google.gson.Gson;
 import ir.aziz.karam.model.exception.ProjectNotFoundException;
 import ir.aziz.karam.model.exception.SkillNotFoundException;
 import ir.aziz.karam.model.exception.SkillPointIsNotEnoghException;
 import ir.aziz.karam.model.manager.ProjectManager;
 import ir.aziz.karam.model.manager.UserManager;
 import ir.aziz.karam.model.types.Project;
+import ir.aziz.karam.model.types.ResponsePostMessage;
 import ir.aziz.karam.model.types.User;
 
 import java.io.IOException;
@@ -31,33 +33,52 @@ public class ProjectServlet extends HttpServlet {
             HttpServletRequest request,
             HttpServletResponse response
     ) throws ServletException, IOException {
+        Gson gson = new Gson();
         request.setCharacterEncoding("UTF-8");
         String[] parts = request.getRequestURL().toString().split("/");
-
         if (parts.length == 5 || parts.length == 6 && parts[5].equals("")) {
             User currentUser = UserManager.getInstance().getCurrentUser();
             List<Project> allProject = ProjectManager.getInstance().getAllProjectsFeasibleByUser(currentUser);
-            request.setAttribute("allProject", allProject);
-            request.getRequestDispatcher("/projects.jsp").forward(request, response);
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getWriter().write(gson.toJson(allProject));
         } else {
             try {
                 String projectId = parts[5];
                 Project projectById = ProjectManager.getInstance().getProjectById(projectId); // 404 maybe happend
                 User currentUser = UserManager.getInstance().getCurrentUser();
                 ProjectManager.getInstance().userCanSolveProject(currentUser, projectById);
-                request.setAttribute("project", projectById);
-                request.setAttribute("hasBided", projectById.hasBided(currentUser));
-                request.getRequestDispatcher("/projectById.jsp").forward(request, response);
+                response.setCharacterEncoding("UTF-8");
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.getWriter().write(gson.toJson(projectById));
             } catch (ProjectNotFoundException ex) {
-                Logger.getLogger(ProjectServlet.class).error(ex, ex);
+                Logger.getLogger(this.getClass()).error(ex, ex);
                 response.setStatus(404);
-                request.setAttribute("message", ex.getMessage());
-                request.getRequestDispatcher("/not-found404.jsp").forward(request, response);
-            } catch (SkillPointIsNotEnoghException | SkillNotFoundException ex) {
-                Logger.getLogger(ProjectServlet.class).error(ex, ex);
-                response.setStatus(403);
-                request.setAttribute("message", ex.getMessage());
-                request.getRequestDispatcher("/permission-denied403.jsp").forward(request, response);
+                ResponsePostMessage responsePostMessage = new ResponsePostMessage(404, "پروژه با این مشخصات یافت نشد.");
+                response.setCharacterEncoding("UTF-8");
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                response.getWriter().write(gson.toJson(responsePostMessage));
+            } catch (SkillPointIsNotEnoghException ex) {
+                Logger.getLogger(this.getClass()).error(ex, ex);
+                response.setStatus(400);
+                ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "عدم مهارت کافی");
+                response.setCharacterEncoding("UTF-8");
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write(gson.toJson(responsePostMessage));
+            } catch (SkillNotFoundException ex) {
+                Logger.getLogger(this.getClass()).error(ex, ex);
+                response.setStatus(404);
+                ResponsePostMessage responsePostMessage = new ResponsePostMessage(404, "مهارت با این مشخصات یافت نشد.");
+                response.setCharacterEncoding("UTF-8");
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                response.getWriter().write(gson.toJson(responsePostMessage));
+            } catch (Exception ex) {
+                Logger.getLogger(this.getClass()).error(ex, ex);
+                response.setStatus(400);
+                ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "خطا در فراخوانی عملیات");
+                response.setCharacterEncoding("UTF-8");
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write(gson.toJson(responsePostMessage));
             }
         }
     }
