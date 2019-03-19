@@ -1,4 +1,5 @@
-<%@page import="ir.aziz.karam.manager.UserManager"%>
+<%@page import="ir.aziz.karam.model.manager.UserManager"%>
+<%@ page import="ir.aziz.karam.model.types.User" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -21,10 +22,10 @@
                         <li>
                             ${skill.name}: ${skill.points}
                             <%
-                                ir.aziz.karam.types.User current = (ir.aziz.karam.types.User) request.getAttribute("currenUser");
+                                User current = (User) request.getAttribute("currenUser");
                                 String currentId = current.getId();
                                 String skillName = (java.lang.String) org.apache.jasper.runtime.PageContextImpl.proprietaryEvaluate("${skill.name}", java.lang.String.class, (javax.servlet.jsp.PageContext)_jspx_page_context, null);
-                                String userId = ((ir.aziz.karam.types.User)request.getAttribute("user")).getId();
+                                String userId = ((User)request.getAttribute("user")).getId();
                             %>
                             <c:if test="<%=!UserManager.getInstance().userEndorseThisEndorse(current, userId, skillName)%>">
                                 <form action="${pageContext.request.contextPath}/addEndorse" method="post">

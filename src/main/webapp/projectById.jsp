@@ -9,6 +9,8 @@
         <ul>
             <li>id:<c:out value="${requestScope.project.id}"/></li>
             <li>title: <c:out value="${requestScope.project.title}"/></li>
+            <li>description: <c:out value="${requestScope.project.getDescrption()}"/></li>
+            <li>imageUrl: <img src="<c:out value="${requestScope.project.getImageURL()}"/>" style="width: 50px; height: 50px;"></li>
             <li>budget: <c:out value="${requestScope.project.budget}"/></li>
         </ul>
         <!-- display form if user has not bidded before -->
