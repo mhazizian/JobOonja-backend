@@ -5,9 +5,10 @@
  */
 package ir.aziz.karam.controller;
 
+import com.google.gson.Gson;
 import ir.aziz.karam.model.exception.UserNotFoundException;
-import ir.aziz.karam.model.manager.SkillManager;
 import ir.aziz.karam.model.manager.UserManager;
+import ir.aziz.karam.model.types.ResponsePostMessage;
 import ir.aziz.karam.model.types.User;
 import java.io.IOException;
 import java.util.Map;
@@ -26,24 +27,31 @@ public class DeleteSkillUserRequestServlet extends HttpServlet {
             HttpServletRequest request,
             HttpServletResponse response
     ) throws ServletException, IOException {
+        Gson gson = new Gson();
         try {
             Map<String, String[]> parameterMap = request.getParameterMap();
             String userId = parameterMap.get("user")[0];
             String skillName = parameterMap.get("skill")[0];
             User userById = UserManager.getInstance().getUserById(userId);
             UserManager.getInstance().deleteASkillFromAUser(userById, skillName);
-            request.setAttribute("user", userById);
-            request.setAttribute("skills", SkillManager.getInstance().getAllSkills());
-            if (UserManager.getInstance().getCurrentUser().getId().equals(userId)) {
-                request.getRequestDispatcher("/user-single-logged-in.jsp").forward(request, response);
-            } else {
-                request.getRequestDispatcher("/user-single-guest.jsp").forward(request, response);
-            }
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, "درخواست با موفقیت انجام شد.");
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpServletResponse.SC_ACCEPTED);
+            response.getWriter().write(gson.toJson(responsePostMessage));
         } catch (UserNotFoundException ex) {
             Logger.getLogger(AddSkillUserRequestServlet.class).error(ex, ex);
             response.setStatus(404);
-            request.setAttribute("message", ex.getMessage());
-            request.getRequestDispatcher("/not-found404.jsp").forward(request, response);
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(404, "کاربری با این مشخصات یافت نشد.");
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            response.getWriter().write(gson.toJson(responsePostMessage));
+        } catch (Exception ex) {
+            Logger.getLogger(AddSkillUserRequestServlet.class).error(ex, ex);
+            response.setStatus(400);
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "خطا در فراخوانی عملیات");
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write(gson.toJson(responsePostMessage));
         }
     }
 }

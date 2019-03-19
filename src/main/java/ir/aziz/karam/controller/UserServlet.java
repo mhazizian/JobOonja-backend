@@ -5,9 +5,11 @@
  */
 package ir.aziz.karam.controller;
 
+import com.google.gson.Gson;
 import ir.aziz.karam.model.exception.UserNotFoundException;
 import ir.aziz.karam.model.manager.SkillManager;
 import ir.aziz.karam.model.manager.UserManager;
+import ir.aziz.karam.model.types.ResponsePostMessage;
 import ir.aziz.karam.model.types.User;
 import java.io.IOException;
 import java.util.List;
@@ -26,28 +28,34 @@ public class UserServlet extends HttpServlet {
             HttpServletRequest request,
             HttpServletResponse response
     ) throws ServletException, IOException {
+        Gson gson = new Gson();
         String[] parts = request.getRequestURL().toString().split("/");
         if (parts.length == 5) {
             List<User> allUsers = UserManager.getInstance().getAllUsers();
-            request.setAttribute("allUser", allUsers);
-            request.getRequestDispatcher("users.jsp").forward(request, response);
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getWriter().write(gson.toJson(allUsers));
         } else {
             try {
                 String userId = parts[5];
                 User userById = UserManager.getInstance().getUserById(userId);
-                request.setAttribute("user", userById);
-                request.setAttribute("skills", SkillManager.getInstance().getAllSkills());
-                request.setAttribute("currenUser", UserManager.getInstance().getCurrentUser());
-                if (UserManager.getInstance().getCurrentUser().getId().equals(userId)) {
-                    request.getRequestDispatcher("/user-single-logged-in.jsp").forward(request, response);
-                } else {
-                    request.getRequestDispatcher("/user-single-guest.jsp").forward(request, response);
-                }
+                response.setCharacterEncoding("UTF-8");
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.getWriter().write(gson.toJson(userById));
             } catch (UserNotFoundException ex) {
-                Logger.getLogger(UserServlet.class).error(ex, ex);
+                Logger.getLogger(this.getClass()).error(ex, ex);
                 response.setStatus(404);
-                request.setAttribute("message", ex.getMessage());
-                request.getRequestDispatcher("/not-found404.jsp").forward(request, response);
+                ResponsePostMessage responsePostMessage = new ResponsePostMessage(404, "کاربری با این مشخصات یافت نشد.");
+                response.setCharacterEncoding("UTF-8");
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                response.getWriter().write(gson.toJson(responsePostMessage));
+            } catch (Exception ex) {
+                Logger.getLogger(this.getClass()).error(ex, ex);
+                response.setStatus(400);
+                ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "خطا در فراخوانی عملیات");
+                response.setCharacterEncoding("UTF-8");
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write(gson.toJson(responsePostMessage));
             }
         }
     }
