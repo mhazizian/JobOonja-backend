@@ -6,12 +6,15 @@
 package ir.aziz.karam.model.types;
 
 public class ResponsePostMessage {
+
     private int code;
     private String message;
+    private String details;
 
-    public ResponsePostMessage(int code, String message) {
+    public ResponsePostMessage(int code, String message, String details) {
         this.code = code;
         this.message = message;
+        this.details = details;
     }
 
     public int getCode() {
@@ -29,5 +32,13 @@ public class ResponsePostMessage {
     public void setMessage(String message) {
         this.message = message;
     }
-    
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
 }

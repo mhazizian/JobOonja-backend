@@ -7,7 +7,6 @@ package ir.aziz.karam.controller;
 
 import com.google.gson.Gson;
 import ir.aziz.karam.model.exception.UserNotFoundException;
-import ir.aziz.karam.model.manager.SkillManager;
 import ir.aziz.karam.model.manager.UserManager;
 import ir.aziz.karam.model.types.ResponsePostMessage;
 import ir.aziz.karam.model.types.User;
@@ -45,14 +44,14 @@ public class UserServlet extends HttpServlet {
             } catch (UserNotFoundException ex) {
                 Logger.getLogger(this.getClass()).error(ex, ex);
                 response.setStatus(404);
-                ResponsePostMessage responsePostMessage = new ResponsePostMessage(404, "کاربری با این مشخصات یافت نشد.");
+                ResponsePostMessage responsePostMessage = new ResponsePostMessage(404, "کاربری با این مشخصات یافت نشد.", null);
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 response.getWriter().write(gson.toJson(responsePostMessage));
             } catch (Exception ex) {
                 Logger.getLogger(this.getClass()).error(ex, ex);
                 response.setStatus(400);
-                ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "خطا در فراخوانی عملیات");
+                ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "خطا در فراخوانی عملیات", null);
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.getWriter().write(gson.toJson(responsePostMessage));
