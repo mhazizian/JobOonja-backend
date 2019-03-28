@@ -37,13 +37,13 @@ public class AddSkillUserRequestServlet extends HttpServlet {
             User userById = UserManager.getInstance().getUserById(userId);
             try {
                 UserManager.getInstance().addASkillFromAUser(userById, skillName);
-                ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, "درخواست با موفقیت انجام شد.");
+                ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, "درخواست با موفقیت انجام شد.", null);
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_ACCEPTED);
                 response.getWriter().write(gson.toJson(responsePostMessage));
             } catch (ReapeatSkillAddedToUserException ex) {
                 Logger.getLogger(AddSkillUserRequestServlet.class).error(ex, ex);
-                ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "درخواست تکراری");
+                ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "درخواست تکراری", null);
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.getWriter().write(gson.toJson(responsePostMessage));
@@ -51,14 +51,14 @@ public class AddSkillUserRequestServlet extends HttpServlet {
         } catch (UserNotFoundException ex) {
             Logger.getLogger(AddSkillUserRequestServlet.class).error(ex, ex);
             response.setStatus(404);
-            ResponsePostMessage responsePostMessage = new ResponsePostMessage(404, "کاربری با این مشخصات یافت نشد.");
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(404, "کاربری با این مشخصات یافت نشد.", null);
             response.setCharacterEncoding("UTF-8");
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             response.getWriter().write(gson.toJson(responsePostMessage));
         } catch (Exception ex) {
             Logger.getLogger(AddSkillUserRequestServlet.class).error(ex, ex);
             response.setStatus(400);
-            ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "خطا در فراخوانی عملیات");
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "خطا در فراخوانی عملیات", null);
             response.setCharacterEncoding("UTF-8");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write(gson.toJson(responsePostMessage));

@@ -12,6 +12,7 @@ import ir.aziz.karam.model.exception.SkillPointIsNotEnoghException;
 import ir.aziz.karam.model.manager.ProjectManager;
 import ir.aziz.karam.model.manager.UserManager;
 import ir.aziz.karam.model.types.Project;
+import ir.aziz.karam.model.types.ProjectDetails;
 import ir.aziz.karam.model.types.ResponsePostMessage;
 import ir.aziz.karam.model.types.User;
 
@@ -50,32 +51,33 @@ public class ProjectServlet extends HttpServlet {
                 ProjectManager.getInstance().userCanSolveProject(currentUser, projectById);
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_OK);
-                response.getWriter().write(gson.toJson(projectById));
+                ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, gson.toJson(projectById), gson.toJson(new ProjectDetails(projectById.hasBided(currentUser))));
+                response.getWriter().write(gson.toJson(responsePostMessage));
             } catch (ProjectNotFoundException ex) {
                 Logger.getLogger(this.getClass()).error(ex, ex);
                 response.setStatus(404);
-                ResponsePostMessage responsePostMessage = new ResponsePostMessage(404, "پروژه با این مشخصات یافت نشد.");
+                ResponsePostMessage responsePostMessage = new ResponsePostMessage(404, "پروژه با این مشخصات یافت نشد.", null);
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 response.getWriter().write(gson.toJson(responsePostMessage));
             } catch (SkillPointIsNotEnoghException ex) {
                 Logger.getLogger(this.getClass()).error(ex, ex);
                 response.setStatus(400);
-                ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "عدم مهارت کافی");
+                ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "عدم مهارت کافی", null);
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.getWriter().write(gson.toJson(responsePostMessage));
             } catch (SkillNotFoundException ex) {
                 Logger.getLogger(this.getClass()).error(ex, ex);
                 response.setStatus(404);
-                ResponsePostMessage responsePostMessage = new ResponsePostMessage(404, "مهارت با این مشخصات یافت نشد.");
+                ResponsePostMessage responsePostMessage = new ResponsePostMessage(404, "مهارت با این مشخصات یافت نشد.", null);
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 response.getWriter().write(gson.toJson(responsePostMessage));
             } catch (Exception ex) {
                 Logger.getLogger(this.getClass()).error(ex, ex);
                 response.setStatus(400);
-                ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "خطا در فراخوانی عملیات");
+                ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "خطا در فراخوانی عملیات", null);
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.getWriter().write(gson.toJson(responsePostMessage));

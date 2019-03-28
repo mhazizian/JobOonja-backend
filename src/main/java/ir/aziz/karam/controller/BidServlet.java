@@ -31,19 +31,19 @@ public class BidServlet extends HttpServlet {
         String amount = request.getParameter("bidAmount");
         String projectId = request.getParameter("projectId");
         try {
-            Project projectById = ProjectManager.getInstance().getProjectById(projectId); // 404 maybe happend
+            Project projectById = ProjectManager.getInstance().getProjectById(projectId);
             User currentUser = UserManager.getInstance().getCurrentUser();
             ProjectManager.getInstance().userCanSolveProject(currentUser, projectById);
             if (!projectById.hasBided(currentUser)) {
                 projectById.addBid(new Bid(currentUser.getId(), projectById.getId(), Integer.parseInt(amount)));
-                ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, "درخواست با موفقیت انجام شد.");
+                ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, "درخواست با موفقیت انجام شد.", null);
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_ACCEPTED);
                 response.getWriter().write(gson.toJson(responsePostMessage));
 
             } else {
                 response.setStatus(400);
-                ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "این پروژه درخواست شده است.");
+                ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "این پروژه درخواست شده است.", null);
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.getWriter().write(gson.toJson(responsePostMessage));
@@ -52,28 +52,28 @@ public class BidServlet extends HttpServlet {
         } catch (ProjectNotFoundException ex) {
             Logger.getLogger(AddSkillUserRequestServlet.class).error(ex, ex);
             response.setStatus(404);
-            ResponsePostMessage responsePostMessage = new ResponsePostMessage(404, "پروژه با این مشخصات یافت نشد.");
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(404, "پروژه با این مشخصات یافت نشد.", null);
             response.setCharacterEncoding("UTF-8");
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             response.getWriter().write(gson.toJson(responsePostMessage));
         } catch (SkillPointIsNotEnoghException ex) {
             Logger.getLogger(this.getClass()).error(ex, ex);
             response.setStatus(400);
-            ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "مهارت برای این پروژه کافی نیست");
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "مهارت برای این پروژه کافی نیست", null);
             response.setCharacterEncoding("UTF-8");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write(gson.toJson(responsePostMessage));
         } catch (SkillNotFoundException ex) {
             Logger.getLogger(AddSkillUserRequestServlet.class).error(ex, ex);
             response.setStatus(404);
-            ResponsePostMessage responsePostMessage = new ResponsePostMessage(404, "مهارت با این مشخصات یافت نشد.");
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(404, "مهارت با این مشخصات یافت نشد.", null);
             response.setCharacterEncoding("UTF-8");
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             response.getWriter().write(gson.toJson(responsePostMessage));
         } catch (Exception ex) {
             Logger.getLogger(this.getClass()).error(ex, ex);
             response.setStatus(400);
-            ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "خطا در فراخوانی عملیات");
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "خطا در فراخوانی عملیات", null);
             response.setCharacterEncoding("UTF-8");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write(gson.toJson(responsePostMessage));
