@@ -30,11 +30,11 @@ public class IEFilter implements Filter {
         HttpServletResponse rec = (HttpServletResponse) response;
         String path = req.getServletPath();
         long st = System.currentTimeMillis();
-        MutableHttpServletRequest requestWrapper = new MutableHttpServletRequest(req);
-        MutableHttpServletResponse responseWrapper = new MutableHttpServletResponse(rec);
-        requestWrapper.putHeader("Access-Control-Allow-Methods", "*");
+//        MutableHttpServletRequest requestWrapper = new MutableHttpServletRequest(req);
+//        MutableHttpServletResponse responseWrapper = new MutableHttpServletResponse(rec);
+//        requestWrapper.putHeader("Access-Control-Allow-Methods", "*");
         chain.doFilter(request, response);
-        responseWrapper.putHeader("Access-Control-Allow-Methods", "*");
+//        responseWrapper.putHeader("Access-Control-Allow-Methods", "*");
         long et = System.currentTimeMillis();
         long tt = (et - st);
         Logger.getLogger(IEFilter.class).info("Time take to execute action " + path + "   is  :  " + tt);

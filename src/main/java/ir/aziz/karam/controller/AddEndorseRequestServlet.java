@@ -51,7 +51,7 @@ public class AddEndorseRequestServlet extends HttpServlet {
                 response.setStatus(HttpServletResponse.SC_ACCEPTED);
                 response.getWriter().write(gson.toJson(responsePostMessage));
             } else {
-                response.setStatus(404);
+                response.setStatus(400);
                 ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "این مهارت تصدیق شده است.", null);
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
