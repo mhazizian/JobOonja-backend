@@ -5,18 +5,9 @@
  */
 package ir.aziz.karam.model.types;
 
-public class ProjectDetails {
+public class projectsDetails {
 
-    private boolean hasBided;
     private String currentID;
-
-    public boolean isHasBided() {
-        return hasBided;
-    }
-
-    public void setHasBided(boolean hasBided) {
-        this.hasBided = hasBided;
-    }
 
     public String getCurrentID() {
         return currentID;
@@ -26,8 +17,7 @@ public class ProjectDetails {
         this.currentID = currentID;
     }
 
-    public ProjectDetails(boolean hasBided, String currentID) {
-        this.hasBided = hasBided;
+    public projectsDetails(String currentID) {
         this.currentID = currentID;
     }
 
