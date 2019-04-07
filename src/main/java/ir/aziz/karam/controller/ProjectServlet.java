@@ -15,6 +15,7 @@ import ir.aziz.karam.model.types.Project;
 import ir.aziz.karam.model.types.ProjectDetails;
 import ir.aziz.karam.model.types.ResponsePostMessage;
 import ir.aziz.karam.model.types.User;
+import ir.aziz.karam.model.types.projectsDetails;
 
 import java.io.IOException;
 import java.util.List;
@@ -42,7 +43,9 @@ public class ProjectServlet extends HttpServlet {
             List<Project> allProject = ProjectManager.getInstance().getAllProjectsFeasibleByUser(currentUser);
             response.setCharacterEncoding("UTF-8");
             response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().write(gson.toJson(allProject));
+            String currentID = UserManager.getInstance().getCurrentUser().getId();
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, gson.toJson(allProject), gson.toJson(new projectsDetails(currentID)));
+            response.getWriter().write(gson.toJson(responsePostMessage));
         } else {
             try {
                 String projectId = parts[5];
@@ -51,7 +54,7 @@ public class ProjectServlet extends HttpServlet {
                 ProjectManager.getInstance().userCanSolveProject(currentUser, projectById);
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_OK);
-                ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, gson.toJson(projectById), gson.toJson(new ProjectDetails(projectById.hasBided(currentUser))));
+                ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, gson.toJson(projectById), gson.toJson(new ProjectDetails(projectById.hasBided(currentUser), currentUser.getId())));
                 response.getWriter().write(gson.toJson(responsePostMessage));
             } catch (ProjectNotFoundException ex) {
                 Logger.getLogger(this.getClass()).error(ex, ex);
