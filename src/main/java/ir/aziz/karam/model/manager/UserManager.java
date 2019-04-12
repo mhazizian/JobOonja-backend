@@ -20,6 +20,7 @@ public class UserManager {
 
     private static UserManager instance;
     private static List<User> users;
+    private static List<User> usersWithOutCurrent;
     private static User currentUser;
 
     public static UserManager getInstance() {
@@ -42,6 +43,20 @@ public class UserManager {
             users.add(user);
         }
         return users;
+    }
+    
+    public List<User> getAllUsersWithoutCurrentUser() throws IOException {
+        if (usersWithOutCurrent == null) {
+            usersWithOutCurrent = new ArrayList<>();
+            List<Skill> tempSkills = new ArrayList<>();
+            tempSkills.add(new Skill("html", 5));
+            tempSkills.add(new Skill("Javascrpipt", 4));
+            tempSkills.add(new Skill("C", 1));
+            tempSkills.add(new Skill("Java", 20));
+            User user = new User("2", "مهدی", "کرمی", "برنامه نویس وب", null, tempSkills, "روی سنگ قبرم بنویسید: خدا بیامرز میخواست خیلی کارا بکنه  ولی پول نداشت");
+            usersWithOutCurrent.add(user);
+        }
+        return usersWithOutCurrent;
     }
 
     public User getCurrentUser() {

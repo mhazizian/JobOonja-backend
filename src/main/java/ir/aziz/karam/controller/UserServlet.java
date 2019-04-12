@@ -37,7 +37,7 @@ public class UserServlet extends HttpServlet {
         Gson gson = new Gson();
         String[] parts = request.getRequestURL().toString().split("/");
         if (parts.length == 5) {
-            List<User> allUsers = UserManager.getInstance().getAllUsers();
+            List<User> allUsers = UserManager.getInstance().getAllUsersWithoutCurrentUser();
             response.setCharacterEncoding("UTF-8");
             response.setStatus(HttpServletResponse.SC_OK);
             response.getWriter().write(gson.toJson(allUsers));
