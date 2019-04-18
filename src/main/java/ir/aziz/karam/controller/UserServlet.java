@@ -59,7 +59,7 @@ public class UserServlet extends HttpServlet {
                     }
                 }
                 List<String> endorses = EndorseManager.getInstance().getEndorses(userId, currentId);
-                response.getWriter().write(gson.toJson(new ResponsePostMessage(200, gson.toJson(userById), gson.toJson(new UserDetails(currentId, allSkills, endorses)))));
+                response.getWriter().write(gson.toJson(new ResponsePostMessage(200, userById, new UserDetails(currentId, allSkills, endorses))));
             } catch (UserNotFoundException ex) {
                 Logger.getLogger(this.getClass()).error(ex, ex);
                 response.setStatus(404);

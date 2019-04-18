@@ -8,10 +8,10 @@ package ir.aziz.karam.model.types;
 public class ResponsePostMessage {
 
     private int code;
-    private String message;
-    private String details;
+    private Object message;
+    private Object details;
 
-    public ResponsePostMessage(int code, String message, String details) {
+    public ResponsePostMessage(int code, Object message, Object details) {
         this.code = code;
         this.message = message;
         this.details = details;
@@ -25,19 +25,19 @@ public class ResponsePostMessage {
         this.code = code;
     }
 
-    public String getMessage() {
+    public Object getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(Object message) {
         this.message = message;
     }
 
-    public String getDetails() {
+    public Object getDetails() {
         return details;
     }
 
-    public void setDetails(String details) {
+    public void setDetails(Object details) {
         this.details = details;
     }
 

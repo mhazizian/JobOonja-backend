@@ -44,7 +44,7 @@ public class ProjectServlet extends HttpServlet {
             response.setCharacterEncoding("UTF-8");
             response.setStatus(HttpServletResponse.SC_OK);
             String currentID = UserManager.getInstance().getCurrentUser().getId();
-            ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, gson.toJson(allProject), gson.toJson(new projectsDetails(currentID)));
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, allProject, new projectsDetails(currentID));
             response.getWriter().write(gson.toJson(responsePostMessage));
         } else {
             try {
@@ -54,7 +54,7 @@ public class ProjectServlet extends HttpServlet {
                 ProjectManager.getInstance().userCanSolveProject(currentUser, projectById);
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_OK);
-                ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, gson.toJson(projectById), gson.toJson(new ProjectDetails(projectById.hasBided(currentUser), currentUser.getId())));
+                ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, projectById, new ProjectDetails(projectById.hasBided(currentUser), currentUser.getId()));
                 response.getWriter().write(gson.toJson(responsePostMessage));
             } catch (ProjectNotFoundException ex) {
                 Logger.getLogger(this.getClass()).error(ex, ex);
