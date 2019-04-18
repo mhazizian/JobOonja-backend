@@ -23,10 +23,7 @@ import org.apache.log4j.Logger;
 public class DeleteSkillUserRequestServlet extends HttpServlet {
 
     @Override
-    protected void doPost(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) throws ServletException, IOException {
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Gson gson = new Gson();
         try {
             Map<String, String[]> parameterMap = request.getParameterMap();
@@ -54,4 +51,5 @@ public class DeleteSkillUserRequestServlet extends HttpServlet {
             response.getWriter().write(gson.toJson(responsePostMessage));
         }
     }
+
 }
