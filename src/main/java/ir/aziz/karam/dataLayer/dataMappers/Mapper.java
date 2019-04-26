@@ -1,7 +1,6 @@
 package ir.aziz.karam.dataLayer.dataMappers;
 
 import ir.aziz.karam.dataLayer.DBCPDBConnectionPool;
-import ir.aziz.karam.model.types.Project;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -18,6 +17,10 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
     abstract protected String getAllStatement();
 
     abstract protected T convertResultSetToDomainModel(ResultSet rs) throws SQLException;
+
+    protected abstract void setInsertElementParamters(final PreparedStatement st, T element) throws SQLException;
+
+    protected abstract String getInsertStatement();
 
     private List<T> convertResultSetToDomainModelList(ResultSet rs) throws SQLException {
         rs.next();
@@ -67,4 +70,15 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
             }
         }
     }
+
+    @Override
+    public void insert(T element) throws SQLException {
+        String sql = getInsertStatement();
+        Connection con = DBCPDBConnectionPool.getConnection();
+        try (PreparedStatement st = con.prepareStatement(sql)) {
+            setInsertElementParamters(st, element);
+            st.executeUpdate();
+        }
+    }
+
 }

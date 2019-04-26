@@ -5,11 +5,10 @@ import ir.aziz.karam.dataLayer.dataMappers.Mapper;
 import ir.aziz.karam.model.types.Project;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ProjectMapper extends Mapper<Project, String> implements IProjectMapper {
 
@@ -56,6 +55,21 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
     protected String getAllStatement() {
         return "SELECT " + COLUMNS
                 + " FROM Project";
+    }
+
+    @Override
+    protected void setInsertElementParamters(PreparedStatement st, Project element) throws SQLException {
+        st.setString(1, element.getId());
+        st.setString(2, element.getTitle());
+        st.setString(3, element.getDescrption());
+        st.setString(4, element.getImageURL());
+        st.setInt(5, element.getBudget());
+        st.setLong(6, element.getDeadline());
+    }
+
+    @Override
+    protected String getInsertStatement() {
+        return "INSERT INTO Project (id, title, description, imageUrl, budget, deadline) VALUES (?, ?, ?, ?, ?, ?)";
     }
 
 }
