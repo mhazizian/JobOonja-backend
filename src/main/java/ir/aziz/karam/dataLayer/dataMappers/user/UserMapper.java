@@ -4,6 +4,7 @@ import ir.aziz.karam.dataLayer.DBCPDBConnectionPool;
 import ir.aziz.karam.dataLayer.dataMappers.Mapper;
 import ir.aziz.karam.dataLayer.dataMappers.project.IProjectMapper;
 import ir.aziz.karam.model.types.Project;
+import ir.aziz.karam.model.types.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,9 +12,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class UserMapper extends Mapper<Project, String> implements IProjectMapper {
+public class UserMapper extends Mapper<User, String> implements IUserMapper {
 
-    private static final String COLUMNS = " id, lastname, firstname, gpa ";
+    private static final String COLUMNS = " id, fistName, lastName, jobTitle, pictureUrl, bio";
     private static UserMapper instance;
 
     public static UserMapper getInstance() throws SQLException {
@@ -27,13 +28,13 @@ public class UserMapper extends Mapper<Project, String> implements IProjectMappe
         Connection con = DBCPDBConnectionPool.getConnection();
         Statement st
                 = con.createStatement();
-        st.executeUpdate("CREATE TABLE IF NOT EXISTS " + "Project" + " ("
+        st.executeUpdate("CREATE TABLE IF NOT EXISTS " + "User" + " ("
                 + "id TEXT PRIMARY KEY, "
-                + "title TEXT, "
-                + "description TEXT, "
-                + "imageUrl TEXT, "
-                + "budget INTEGER, "
-                + "deadline BIGINT "
+                + "firstName TEXT, "
+                + "lastName TEXT, "
+                + "jobTitle TEXT, "
+                + "pictureUrl TEXT, "
+                + "bio TEXT"
                 + ")");
         st.close();
         con.close();
@@ -43,34 +44,41 @@ public class UserMapper extends Mapper<Project, String> implements IProjectMappe
     @Override
     protected String getFindStatement() {
         return "SELECT " + COLUMNS
-                + " FROM Project"
+                + " FROM User"
                 + " WHERE id = ?";
     }
 
     @Override
-    protected Project convertResultSetToDomainModel(ResultSet rs) throws SQLException {
-        return new Project(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getLong(6));
+    protected User convertResultSetToDomainModel(ResultSet rs) throws SQLException {
+        return new User(
+                rs.getString(1),
+                rs.getString(2),
+                rs.getString(3),
+                rs.getString(4),
+                rs.getString(5),
+                rs.getString(6)
+        );
     }
 
     @Override
     protected String getAllStatement() {
         return "SELECT " + COLUMNS
-                + " FROM Project";
+                + " FROM User";
     }
 
     @Override
-    protected void setInsertElementParamters(PreparedStatement st, Project element) throws SQLException {
+    protected void setInsertElementParamters(PreparedStatement st, User element) throws SQLException {
         st.setString(1, element.getId());
-        st.setString(2, element.getTitle());
-        st.setString(3, element.getDescrption());
-        st.setString(4, element.getImageURL());
-        st.setInt(5, element.getBudget());
-        st.setLong(6, element.getDeadline());
+        st.setString(2, element.getFirstName());
+        st.setString(3, element.getLastName());
+        st.setString(4, element.getJobTitle());
+        st.setString(5, element.getPictureUrl());
+        st.setString(6, element.getBio());
     }
 
     @Override
     protected String getInsertStatement() {
-        return "INSERT INTO Project (id, title, description, imageUrl, budget, deadline) VALUES (?, ?, ?, ?, ?, ?)";
+        return "INSERT INTO User (id, firstName, lastName, jobTitle, pictureUrl, bio) VALUES (?, ?, ?, ?, ?, ?)";
     }
 
 }

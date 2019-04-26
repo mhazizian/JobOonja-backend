@@ -2,8 +2,7 @@ package ir.aziz.karam.dataLayer.dataMappers.skill;
 
 import ir.aziz.karam.dataLayer.DBCPDBConnectionPool;
 import ir.aziz.karam.dataLayer.dataMappers.Mapper;
-import ir.aziz.karam.dataLayer.dataMappers.project.IProjectMapper;
-import ir.aziz.karam.model.types.Project;
+import ir.aziz.karam.model.types.Skill;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,9 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class SkillMapper extends Mapper<Project, String> implements IProjectMapper {
+public class SkillMapper extends Mapper<Skill, String> implements ISkillMapper {
 
-    private static final String COLUMNS = " id, lastname, firstname, gpa ";
+    private static final String COLUMNS = " name ";
     private static SkillMapper instance;
 
     public static SkillMapper getInstance() throws SQLException {
@@ -27,13 +26,8 @@ public class SkillMapper extends Mapper<Project, String> implements IProjectMapp
         Connection con = DBCPDBConnectionPool.getConnection();
         Statement st
                 = con.createStatement();
-        st.executeUpdate("CREATE TABLE IF NOT EXISTS " + "Project" + " ("
-                + "id TEXT PRIMARY KEY, "
-                + "title TEXT, "
-                + "description TEXT, "
-                + "imageUrl TEXT, "
-                + "budget INTEGER, "
-                + "deadline BIGINT "
+        st.executeUpdate("CREATE TABLE IF NOT EXISTS " + "Skill" + " ("
+                + "name TEXT PRIMARY KEY"
                 + ")");
         st.close();
         con.close();
@@ -43,34 +37,29 @@ public class SkillMapper extends Mapper<Project, String> implements IProjectMapp
     @Override
     protected String getFindStatement() {
         return "SELECT " + COLUMNS
-                + " FROM Project"
-                + " WHERE id = ?";
+                + " FROM SkillUser"
+                + " WHERE name = ?";
     }
 
     @Override
-    protected Project convertResultSetToDomainModel(ResultSet rs) throws SQLException {
-        return new Project(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getLong(6));
+    protected Skill convertResultSetToDomainModel(ResultSet rs) throws SQLException {
+        return new Skill(rs.getString(1));
     }
 
     @Override
     protected String getAllStatement() {
         return "SELECT " + COLUMNS
-                + " FROM Project";
+                + " FROM SkillUser";
     }
 
     @Override
-    protected void setInsertElementParamters(PreparedStatement st, Project element) throws SQLException {
-        st.setString(1, element.getId());
-        st.setString(2, element.getTitle());
-        st.setString(3, element.getDescrption());
-        st.setString(4, element.getImageURL());
-        st.setInt(5, element.getBudget());
-        st.setLong(6, element.getDeadline());
+    protected void setInsertElementParamters(PreparedStatement st, Skill element) throws SQLException {
+        st.setString(1, element.getName());
     }
 
     @Override
     protected String getInsertStatement() {
-        return "INSERT INTO Project (id, title, description, imageUrl, budget, deadline) VALUES (?, ?, ?, ?, ?, ?)";
+        return "INSERT INTO SkillUser (name ) VALUES (?)";
     }
 
 }

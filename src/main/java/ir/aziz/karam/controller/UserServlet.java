@@ -8,16 +8,12 @@ package ir.aziz.karam.controller;
 import com.google.gson.Gson;
 import ir.aziz.karam.model.exception.UserNotFoundException;
 import ir.aziz.karam.model.manager.EndorseManager;
-import ir.aziz.karam.model.manager.ProjectManager;
 import ir.aziz.karam.model.manager.SkillManager;
 import ir.aziz.karam.model.manager.UserManager;
-import ir.aziz.karam.model.types.ProjectDetails;
-import ir.aziz.karam.model.types.ResponsePostMessage;
-import ir.aziz.karam.model.types.Skill;
-import ir.aziz.karam.model.types.User;
-import ir.aziz.karam.model.types.UserDetails;
+import ir.aziz.karam.model.types.*;
+import ir.aziz.karam.model.types.SkillUser;
+
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -48,7 +44,7 @@ public class UserServlet extends HttpServlet {
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_OK);
                 String currentId = UserManager.getInstance().getCurrentUser().getId();
-                List<Skill> allSkills = SkillManager.getInstance().getAllSkills();
+                List<SkillUser> allSkills = SkillManager.getInstance().getAllSkills();
 
                 for (int j = 0; j < userById.getSkills().size(); j++) {
                     for (int i = 0; i < allSkills.size(); i++) {

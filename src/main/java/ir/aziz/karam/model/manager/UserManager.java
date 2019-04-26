@@ -5,7 +5,7 @@
  */
 package ir.aziz.karam.model.manager;
 
-import ir.aziz.karam.model.types.Skill;
+import ir.aziz.karam.model.types.SkillUser;
 import ir.aziz.karam.model.types.User;
 import ir.aziz.karam.model.exception.SkillNotFoundException;
 import ir.aziz.karam.model.exception.UserNotFoundException;
@@ -34,11 +34,11 @@ public class UserManager {
         if (users == null) {
             users = new ArrayList<>();
             users.add(getCurrentUser());
-            List<Skill> tempSkills = new ArrayList<>();
-            tempSkills.add(new Skill("html", 5));
-            tempSkills.add(new Skill("Javascrpipt", 4));
-            tempSkills.add(new Skill("C", 1));
-            tempSkills.add(new Skill("Java", 20));
+            List<SkillUser> tempSkills = new ArrayList<>();
+            tempSkills.add(new SkillUser("html", 5));
+            tempSkills.add(new SkillUser("Javascrpipt", 4));
+            tempSkills.add(new SkillUser("C", 1));
+            tempSkills.add(new SkillUser("Java", 20));
             User user = new User("2", "مهدی", "کرمی", "برنامه نویس وب", null, tempSkills, "روی سنگ قبرم بنویسید: خدا بیامرز میخواست خیلی کارا بکنه  ولی پول نداشت");
             users.add(user);
         }
@@ -48,11 +48,11 @@ public class UserManager {
     public List<User> getAllUsersWithoutCurrentUser() throws IOException {
         if (usersWithOutCurrent == null) {
             usersWithOutCurrent = new ArrayList<>();
-            List<Skill> tempSkills = new ArrayList<>();
-            tempSkills.add(new Skill("html", 5));
-            tempSkills.add(new Skill("Javascrpipt", 4));
-            tempSkills.add(new Skill("C", 1));
-            tempSkills.add(new Skill("Java", 20));
+            List<SkillUser> tempSkills = new ArrayList<>();
+            tempSkills.add(new SkillUser("html", 5));
+            tempSkills.add(new SkillUser("Javascrpipt", 4));
+            tempSkills.add(new SkillUser("C", 1));
+            tempSkills.add(new SkillUser("Java", 20));
             User user = new User("2", "مهدی", "کرمی", "برنامه نویس وب", null, tempSkills, "روی سنگ قبرم بنویسید: خدا بیامرز میخواست خیلی کارا بکنه  ولی پول نداشت");
             usersWithOutCurrent.add(user);
         }
@@ -61,17 +61,17 @@ public class UserManager {
 
     public User getCurrentUser() {
         if (currentUser == null) {
-            List<Skill> tempSkills = new ArrayList<>();
-            tempSkills.add(new Skill("HTML", 5));
-            tempSkills.add(new Skill("Javascript", 4));
-            tempSkills.add(new Skill("C++", 3));
-            tempSkills.add(new Skill("Java", 3));
+            List<SkillUser> tempSkills = new ArrayList<>();
+            tempSkills.add(new SkillUser("HTML", 5));
+            tempSkills.add(new SkillUser("Javascript", 4));
+            tempSkills.add(new SkillUser("C++", 3));
+            tempSkills.add(new SkillUser("Java", 3));
             currentUser = new User("1", "علی", "شریف زاده", "برنامه نویس وب", null, tempSkills, "روی سنگ قبرم بنویسید: خدا بیامرز میخواست خیلی کارا بکنه  ولی پول نداشت");
         }
         return currentUser;
     }
 
-    public Skill getSkillOfUser(User user, Skill skill) throws SkillNotFoundException {
+    public SkillUser getSkillOfUser(User user, SkillUser skill) throws SkillNotFoundException {
         for (int i = 0; i < user.getSkills().size(); i++) {
             if (skill.getName().equals(user.getSkills().get(i).getName())) {
                 return user.getSkills().get(i);
@@ -80,7 +80,7 @@ public class UserManager {
         throw new SkillNotFoundException(skill.getName() + " skill not found!");
     }
     
-    public Skill getSkillOfUserBySkillName(User user, String skill) throws SkillNotFoundException {
+    public SkillUser getSkillOfUserBySkillName(User user, String skill) throws SkillNotFoundException {
         for (int i = 0; i < user.getSkills().size(); i++) {
             if (skill.equals(user.getSkills().get(i).getName())) {
                 return user.getSkills().get(i);
@@ -113,8 +113,8 @@ public class UserManager {
                 throw new ReapeatSkillAddedToUserException(skillName + " is now assigned to this user");
             }
         }
-        List<Skill> skills = user.getSkills();
-        skills.add(new Skill(skillName, 0));
+        List<SkillUser> skills = user.getSkills();
+        skills.add(new SkillUser(skillName, 0));
         user.setSkills(skills);
     }
     

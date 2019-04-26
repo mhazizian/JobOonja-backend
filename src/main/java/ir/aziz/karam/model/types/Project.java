@@ -18,7 +18,7 @@ public class Project {
     private String title;
     private String description;
     private String imageUrl;
-    private List<Skill> skills;
+    private List<SkillUser> skills;
     private List<Bid> bids;
     private int budget;
     private long deadline;
@@ -32,11 +32,11 @@ public class Project {
         this.title = title;
     }
 
-    public List<Skill> getSkills() {
+    public List<SkillUser> getSkills() {
         return skills;
     }
 
-    public void setSkills(List<Skill> skills) {
+    public void setSkills(List<SkillUser> skills) {
         this.skills = skills;
     }
 
@@ -102,7 +102,7 @@ public class Project {
         this.winner = winner;
     }
 
-    public Project(String title, List<Skill> skills, int budget) {
+    public Project(String title, List<SkillUser> skills, int budget) {
         this.title = title;
         this.skills = skills;
         this.budget = budget;
