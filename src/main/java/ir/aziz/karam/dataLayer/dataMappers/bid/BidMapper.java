@@ -44,10 +44,9 @@ public class BidMapper extends Mapper<Bid, String> implements IBidMapper {
         Statement st
                 = con.createStatement();
         st.executeUpdate("CREATE TABLE IF NOT EXISTS " + "Bid" + " ("
-                + "user_id TEXT, "
-                + "project_id TEXT, "
+                + "user_id TEXT PRIMARY KEY, "
+                + "project_id TEXT PRIMARY KEY, "
                 + "bidAmount INTEGER, "
-                + "PRIMARY KEY (user_id, project_id), "
                 + "FOREIGN KEY (user_id) REFERENCES User, "
                 + "FOREIGN KEY (project_id) REFERENCES Project "
                 + ")");

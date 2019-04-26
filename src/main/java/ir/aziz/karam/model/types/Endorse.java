@@ -9,6 +9,7 @@ public class Endorse {
 
     private String userIsEndorsed;
     private String skill;
+    private String endorser_id;
 
     public String getUserIsEndorsed() {
         return userIsEndorsed;
@@ -32,6 +33,20 @@ public class Endorse {
     }
 
     public Endorse() {
+    }
+
+    public String getEndorser_id() {
+        return endorser_id;
+    }
+
+    public void setEndorser_id(String endorser_id) {
+        this.endorser_id = endorser_id;
+    }
+
+    public Endorse(String userIsEndorsed, String skill, String endorser_id) {
+        this.userIsEndorsed = userIsEndorsed;
+        this.skill = skill;
+        this.endorser_id = endorser_id;
     }
 
 }

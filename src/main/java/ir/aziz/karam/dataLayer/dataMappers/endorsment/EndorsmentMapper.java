@@ -2,18 +2,16 @@ package ir.aziz.karam.dataLayer.dataMappers.endorsment;
 
 import ir.aziz.karam.dataLayer.DBCPDBConnectionPool;
 import ir.aziz.karam.dataLayer.dataMappers.Mapper;
-import ir.aziz.karam.dataLayer.dataMappers.project.IProjectMapper;
-import ir.aziz.karam.model.types.Project;
-
+import ir.aziz.karam.model.types.Endorse;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class EndorsmentMapper extends Mapper<Project, String> implements IProjectMapper {
+public class EndorsmentMapper extends Mapper<Endorse, String> implements IEndorsmentMapper {
 
-    private static final String COLUMNS = " id, lastname, firstname, gpa ";
+    private static final String COLUMNS = " endorser_id, endorsed_id, skill_id";
     private static EndorsmentMapper instance;
 
     public static EndorsmentMapper getInstance() throws SQLException {
@@ -23,17 +21,35 @@ public class EndorsmentMapper extends Mapper<Project, String> implements IProjec
         return instance;
     }
 
+    public Endorse find(String endorser_id, String endorsed_id, String skill_id) throws SQLException {
+        try (Connection con = DBCPDBConnectionPool.getConnection();
+                PreparedStatement st = con.prepareStatement(getFindStatement())) {
+            st.setString(1, endorser_id);
+            st.setString(2, endorsed_id);
+            st.setString(3, skill_id);
+            ResultSet resultSet;
+            try {
+                resultSet = st.executeQuery();
+                resultSet.next();
+                return convertResultSetToDomainModel(resultSet);
+            } catch (SQLException ex) {
+                System.out.println("error in Mapper.findByID query.");
+                throw ex;
+            }
+        }
+    }
+
     private EndorsmentMapper() throws SQLException {
         Connection con = DBCPDBConnectionPool.getConnection();
         Statement st
                 = con.createStatement();
-        st.executeUpdate("CREATE TABLE IF NOT EXISTS " + "Project" + " ("
-                + "id TEXT PRIMARY KEY, "
-                + "title TEXT, "
-                + "description TEXT, "
-                + "imageUrl TEXT, "
-                + "budget INTEGER, "
-                + "deadline BIGINT "
+        st.executeUpdate("CREATE TABLE IF NOT EXISTS " + "Endorse" + " ("
+                + "endorser_id TEXT PRIMARY KEY, "
+                + "endorsed_id TEXT PRIMARY KEY, "
+                + "skill_id TEXT PRIMARY KEY, "
+                + "FOREIGN KEY (endorser_id) REFERENCES User, "
+                + "FOREIGN KEY (endorsed_id) REFERENCES User, "
+                + "FOREIGN KEY (skill_id) REFERENCES Skill "
                 + ")");
         st.close();
         con.close();
@@ -43,34 +59,35 @@ public class EndorsmentMapper extends Mapper<Project, String> implements IProjec
     @Override
     protected String getFindStatement() {
         return "SELECT " + COLUMNS
-                + " FROM Project"
-                + " WHERE id = ?";
+                + " FROM Endorse"
+                + " WHERE "
+                + " endorser_id = ? AND"
+                + " endorsed_id = ? AND"
+                + " skill_id = ?";
     }
 
     @Override
-    protected Project convertResultSetToDomainModel(ResultSet rs) throws SQLException {
-        return new Project(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getLong(6));
+    protected Endorse convertResultSetToDomainModel(ResultSet rs) throws SQLException {
+        return new Endorse(rs.getString(1), rs.getString(2), rs.getString(3));
     }
 
     @Override
     protected String getAllStatement() {
         return "SELECT " + COLUMNS
-                + " FROM Project";
+                + " FROM Endorse";
     }
 
     @Override
-    protected void setInsertElementParamters(PreparedStatement st, Project element) throws SQLException {
-        st.setString(1, element.getId());
-        st.setString(2, element.getTitle());
-        st.setString(3, element.getDescrption());
-        st.setString(4, element.getImageURL());
-        st.setInt(5, element.getBudget());
-        st.setLong(6, element.getDeadline());
+    protected void setInsertElementParamters(PreparedStatement st, Endorse element) throws SQLException {
+        st.setString(1, element.getEndorser_id());
+        st.setString(2, element.getUserIsEndorsed());
+        st.setString(3, element.getSkill());
+
     }
 
     @Override
     protected String getInsertStatement() {
-        return "INSERT INTO Project (id, title, description, imageUrl, budget, deadline) VALUES (?, ?, ?, ?, ?, ?)";
+        return "INSERT INTO Endorse (endorser_id, endorsed_id, skill_id) VALUES (?, ?, ?)";
     }
 
 }
