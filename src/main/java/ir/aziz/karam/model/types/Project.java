@@ -109,6 +109,15 @@ public class Project {
         this.bids = new ArrayList<>();
     }
 
+    public Project(String id, String title, String description, String imageUrl, int budget, long deadline) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.imageUrl = imageUrl;
+        this.budget = budget;
+        this.deadline = deadline;
+    }
+
     public boolean hasBided(User user) {
         if (this.bids == null)
             return false;
