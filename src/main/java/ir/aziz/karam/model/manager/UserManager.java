@@ -13,6 +13,7 @@ import ir.aziz.karam.model.exception.ReapeatSkillAddedToUserException;
 import ir.aziz.karam.model.types.Endorse;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,14 +72,6 @@ public class UserManager {
         return currentUser;
     }
 
-    public SkillUser getSkillOfUser(User user, SkillUser skill) throws SkillNotFoundException {
-        for (int i = 0; i < user.getSkills().size(); i++) {
-            if (skill.getName().equals(user.getSkills().get(i).getName())) {
-                return user.getSkills().get(i);
-            }
-        }
-        throw new SkillNotFoundException(skill.getName() + " skill not found!");
-    }
     
     public SkillUser getSkillOfUserBySkillName(User user, String skill) throws SkillNotFoundException {
         for (int i = 0; i < user.getSkills().size(); i++) {

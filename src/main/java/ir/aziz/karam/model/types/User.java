@@ -6,6 +6,7 @@
 package ir.aziz.karam.model.types;
 
 import ir.aziz.karam.model.dataLayer.dataMappers.skillUser.SkillUserMapper;
+import ir.aziz.karam.model.exception.SkillNotFoundException;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -94,6 +95,16 @@ public class User implements Serializable {
 
     public void addEndorses(Endorse endorse) {
         this.endorses.add(endorse);
+    }
+
+    public SkillUser getUserSkillByName(String skillName) throws SkillNotFoundException, SQLException {
+        List<SkillUser> skills = this.getSkills();
+        for (int i = 0; i < skills.size(); i++) {
+            if (skillName.equals(skills.get(i).getName())) {
+                return skills.get(i);
+            }
+        }
+        throw new SkillNotFoundException(skillName + " skill not found!");
     }
 
     public User(String id, String firstName, String lastName, String jobTitle, String PictureUrl, List<SkillUser> skills, String bio) {
