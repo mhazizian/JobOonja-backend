@@ -5,12 +5,14 @@
  */
 package ir.aziz.karam.model.types;
 
+import ir.aziz.karam.model.dataLayer.dataMappers.skillUser.SkillUserMapper;
+
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author karam
  */
 public class User implements Serializable {
@@ -24,12 +26,10 @@ public class User implements Serializable {
     private String bio;
     private List<Endorse> endorses = new ArrayList<>();
 
-    public List<SkillUser> getSkills() {
+    public List<SkillUser> getSkills() throws SQLException {
+        this.skills = SkillUserMapper.getInstance().getSkillOfUser(this);
 
-
-
-//        this.skills = skills;
-        return skills;
+        return this.skills;
     }
 
     public void setSkills(List<SkillUser> skills) {
