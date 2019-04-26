@@ -12,7 +12,8 @@ import java.io.Serializable;
  * @author karam
  */
 public class SkillUser implements Serializable{
-    private String name;
+    private String name; // skill name
+    private String userId;
     private int point;
 
     public String getName() {
@@ -34,5 +35,13 @@ public class SkillUser implements Serializable{
     public SkillUser(String name, int points) {
         this.name = name;
         this.point = points;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }
