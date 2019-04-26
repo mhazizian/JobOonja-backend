@@ -7,9 +7,12 @@ package ir.aziz.karam.model.manager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import ir.aziz.karam.model.dataLayer.dataMappers.skill.SkillMapper;
+import ir.aziz.karam.model.types.Skill;
 import ir.aziz.karam.model.types.SkillUser;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 public class SkillManager {
@@ -25,13 +28,7 @@ public class SkillManager {
         return instance;
     }
 
-    public List<SkillUser> getAllSkills() throws IOException {
-        if (skills == null) {
-            Gson gson = new Gson();
-            String rawData = DataLoader.readFromUrlToString(skillsAPI);
-            skills = gson.fromJson(rawData, new TypeToken<List<SkillUser>>() {
-            }.getType());
-        }
-        return skills;
+    public List<Skill> getAllSkills() throws IOException, SQLException {
+        return SkillMapper.getInstance().getAll();
     }
 }

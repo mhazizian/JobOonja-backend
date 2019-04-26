@@ -44,7 +44,7 @@ public class UserServlet extends HttpServlet {
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_OK);
                 String currentId = UserManager.getInstance().getCurrentUser().getId();
-                List<SkillUser> allSkills = SkillManager.getInstance().getAllSkills();
+                List<Skill> allSkills = SkillManager.getInstance().getAllSkills();
 
                 for (int j = 0; j < userById.getSkills().size(); j++) {
                     for (int i = 0; i < allSkills.size(); i++) {

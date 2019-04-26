@@ -8,11 +8,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EndorsmentMapper extends Mapper<Endorse, String> implements IEndorsmentMapper {
 
     private static final String COLUMNS = " endorser_id, endorsed_id, skill_id";
     private static EndorsmentMapper instance;
+
+    private String getSkillsEndorsedByUserOnUserStatement() {
+        return "SELECT " + COLUMNS
+                + " FROM Endorse"
+                + " WHERE "
+                + " endorser_id = ? AND"
+                + " endorsed_id = ?";
+    }
+
 
     public static EndorsmentMapper getInstance() throws SQLException {
         if (instance == null) {
@@ -90,4 +101,27 @@ public class EndorsmentMapper extends Mapper<Endorse, String> implements IEndors
         return "INSERT INTO Endorse (endorser_id, endorsed_id, skill_id) VALUES (?, ?, ?)";
     }
 
+
+
+    public List<Endorse> getSkillsEndorsedByUserOnUser(String endorser, String endorsed) throws SQLException {
+        List<Endorse> skills = new ArrayList<>();
+
+        try (Connection con = DBCPDBConnectionPool.getConnection();
+             PreparedStatement st = con.prepareStatement(this.getSkillsEndorsedByUserOnUserStatement())) {
+            st.setString(1,endorser);
+            st.setString(2, endorsed);
+            ResultSet resultSet;
+            try {
+                resultSet = st.executeQuery();
+                while (resultSet.next()) {
+                    skills.add(this.convertResultSetToDomainModel(resultSet));
+                }
+
+                return skills;
+            } catch (SQLException ex) {
+                System.out.println("error in Mapper.findByID query.");
+                throw ex;
+            }
+        }
+    }
 }

@@ -99,7 +99,7 @@ public class User implements Serializable {
 
     public SkillUser getUserSkillByName(String skillName) throws SkillNotFoundException{
         try {
-            SkillUserMapper.getInstance().find(this.getId(), skillName);
+            return SkillUserMapper.getInstance().find(this.getId(), skillName);
 
         } catch (SQLException e) {
             throw new SkillNotFoundException(skillName + " skill not found!");

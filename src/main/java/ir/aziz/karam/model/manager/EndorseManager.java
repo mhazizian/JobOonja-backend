@@ -5,10 +5,12 @@
  */
 package ir.aziz.karam.model.manager;
 
+import ir.aziz.karam.model.dataLayer.dataMappers.endorsment.EndorsmentMapper;
 import ir.aziz.karam.model.exception.UserNotFoundException;
 import ir.aziz.karam.model.types.Endorse;
 import ir.aziz.karam.model.types.User;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.log4j.Logger;
@@ -25,18 +27,17 @@ public class EndorseManager {
         return instance;
     }
     
-    public List<String> getEndorses(String isEndorsed, String endorser) {
+    public List<String> getEndorses(String endorsedUser, String endorser) {
         try {
-            User userById = UserManager.getInstance().getUserById(endorser);
-            List<Endorse> endorses = userById.getEndorses();
+
+
+            List<Endorse> endorses = EndorsmentMapper.getInstance().getSkillsEndorsedByUserOnUser(endorser, endorsedUser);
             List<String> endorseNames = new ArrayList<>();
-            for (int i = 0; i < endorses.size(); i++) {
-                if(endorses.get(i).getUserIsEndorsed().equals(isEndorsed)) {
-                    endorseNames.add(endorses.get(i).getSkill());
-                }
+            for (Endorse endors : endorses) {
+                endorseNames.add(endors.getSkill());
             }
             return endorseNames;
-        } catch (IOException | UserNotFoundException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(EndorseManager.class).error(ex, ex);
             return new ArrayList<>();
         }
