@@ -37,6 +37,12 @@ public class SkillUser implements Serializable{
         this.point = points;
     }
 
+    public SkillUser(String name,String userId, int points) {
+        this.name = name;
+        this.userId = userId;
+        this.point = points;
+    }
+
     public String getUserId() {
         return userId;
     }

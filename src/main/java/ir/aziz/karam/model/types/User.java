@@ -97,14 +97,13 @@ public class User implements Serializable {
         this.endorses.add(endorse);
     }
 
-    public SkillUser getUserSkillByName(String skillName) throws SkillNotFoundException, SQLException {
-        List<SkillUser> skills = this.getSkills();
-        for (int i = 0; i < skills.size(); i++) {
-            if (skillName.equals(skills.get(i).getName())) {
-                return skills.get(i);
-            }
+    public SkillUser getUserSkillByName(String skillName) throws SkillNotFoundException{
+        try {
+            SkillUserMapper.getInstance().find(this.getId(), skillName);
+
+        } catch (SQLException e) {
+            throw new SkillNotFoundException(skillName + " skill not found!");
         }
-        throw new SkillNotFoundException(skillName + " skill not found!");
     }
 
     public User(String id, String firstName, String lastName, String jobTitle, String PictureUrl, List<SkillUser> skills, String bio) {

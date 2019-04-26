@@ -5,6 +5,9 @@
  */
 package ir.aziz.karam.model.manager;
 
+import ir.aziz.karam.model.dataLayer.dataMappers.endorsment.EndorsmentMapper;
+import ir.aziz.karam.model.dataLayer.dataMappers.skillUser.SkillUserMapper;
+import ir.aziz.karam.model.dataLayer.dataMappers.user.UserMapper;
 import ir.aziz.karam.model.types.SkillUser;
 import ir.aziz.karam.model.types.User;
 import ir.aziz.karam.model.exception.SkillNotFoundException;
@@ -31,21 +34,10 @@ public class UserManager {
         return instance;
     }
 
-    public List<User> getAllUsers() throws IOException {
-        if (users == null) {
-            users = new ArrayList<>();
-            users.add(getCurrentUser());
-            List<SkillUser> tempSkills = new ArrayList<>();
-            tempSkills.add(new SkillUser("html", 5));
-            tempSkills.add(new SkillUser("Javascrpipt", 4));
-            tempSkills.add(new SkillUser("C", 1));
-            tempSkills.add(new SkillUser("Java", 20));
-            User user = new User("2", "مهدی", "کرمی", "برنامه نویس وب", null, tempSkills, "روی سنگ قبرم بنویسید: خدا بیامرز میخواست خیلی کارا بکنه  ولی پول نداشت");
-            users.add(user);
-        }
-        return users;
+    public List<User> getAllUsers() throws IOException, SQLException {
+        return UserMapper.getInstance().getAll();
     }
-    
+
     public List<User> getAllUsersWithoutCurrentUser() throws IOException {
         if (usersWithOutCurrent == null) {
             usersWithOutCurrent = new ArrayList<>();
@@ -72,52 +64,46 @@ public class UserManager {
         return currentUser;
     }
 
-    
-    public SkillUser getSkillOfUserBySkillName(User user, String skill) throws SkillNotFoundException {
-        for (int i = 0; i < user.getSkills().size(); i++) {
-            if (skill.equals(user.getSkills().get(i).getName())) {
-                return user.getSkills().get(i);
-            }
-        }
-        throw new SkillNotFoundException(skill + " skill not found!");
+
+    public SkillUser getSkillOfUserBySkillName(User user, String skillName) throws SkillNotFoundException {
+        return user.getUserSkillByName(skillName);
     }
 
-    public User getUserById(String id) throws IOException, UserNotFoundException {
-        List<User> allUsers = getAllUsers();
-        for (User user : allUsers) {
-            if (user.getId().equals(id)) {
-                return user;
-            }
+    public User getUserById(String id) throws UserNotFoundException {
+        try {
+            return UserMapper.getInstance().find(id);
+        } catch (SQLException e) {
+            throw new UserNotFoundException("user not found!");
         }
-        throw new UserNotFoundException("user not found!");
+
     }
 
-    public void deleteASkillFromAUser(User user, String skillName) {
-        for (int i = 0; i < user.getSkills().size(); i++) {
-            if (skillName.equals(user.getSkills().get(i).getName())) {
-                user.getSkills().remove(i);
-            }
-        }
+    public void deleteASkillFromAUser(User user, String skillName) throws SQLException {
+        SkillUserMapper.getInstance().deleteSkillUser(skillName, user.getId());
     }
 
-    public void addASkillFromAUser(User user, String skillName) throws ReapeatSkillAddedToUserException {
-        for (int i = 0; i < user.getSkills().size(); i++) {
-            if (skillName.equals(user.getSkills().get(i).getName())) {
+    public void addASkillFromAUser(User user, String skillName) throws ReapeatSkillAddedToUserException, SQLException {
+        List<SkillUser> skills = user.getSkills();
+        for (SkillUser skill : skills) {
+            if (skillName.equals(skill.getName())) {
                 throw new ReapeatSkillAddedToUserException(skillName + " is now assigned to this user");
             }
         }
-        List<SkillUser> skills = user.getSkills();
-        skills.add(new SkillUser(skillName, 0));
-        user.setSkills(skills);
-    }
-    
-    public boolean userEndorseThisEndorse(User user, String userName, String skillName) {
-        Endorse endorse = new Endorse(userName, skillName);
-        for (int i = 0; i < user.getEndorses().size(); i++) {
-            if(endorse.getSkill().equals(user.getEndorses().get(i).getSkill()) && endorse.getUserIsEndorsed().equals(user.getEndorses().get(i).getUserIsEndorsed())) {
-                return true;
-            }
+
+        try {
+            SkillUserMapper.getInstance().insert(new SkillUser(skillName, user.getId(), 0));
+        } catch (SQLException e) {
+            throw new ReapeatSkillAddedToUserException(skillName + " is now assigned to this user");
         }
-        return false;
+    }
+
+    public boolean hasUserEndorsedThisUser(User endorser, String userName, String skillName) {
+        try {
+
+            EndorsmentMapper.getInstance().find(endorser.getId(), userName, skillName);
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
     }
 }

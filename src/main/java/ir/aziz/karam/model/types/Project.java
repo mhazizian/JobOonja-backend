@@ -5,6 +5,9 @@
  */
 package ir.aziz.karam.model.types;
 
+import ir.aziz.karam.model.dataLayer.dataMappers.projectSkill.ProjectSkillMapper;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +35,8 @@ public class Project {
         this.title = title;
     }
 
-    public List<ProjectSkill> getSkills() {
+    public List<ProjectSkill> getSkills() throws SQLException {
+        this.skills = ProjectSkillMapper.getInstance().getSkillsOfProject(this);
         return skills;
     }
 
@@ -102,7 +106,7 @@ public class Project {
         this.winner = winner;
     }
 
-    public Project(String title, List<SkillUser> skills, int budget) {
+    public Project(String title, List<ProjectSkill> skills, int budget) {
         this.title = title;
         this.skills = skills;
         this.budget = budget;

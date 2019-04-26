@@ -24,6 +24,12 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
         return "INSERT INTO SkillUser (skill_name, user_id, point) VALUES (?, ?, ?)";
     }
 
+    private String getDeleteSkillUserStatement() {
+        return "DELETE "
+                + " FROM SkillUser"
+                + " WHERE user_id = ? AND skill_name = ?";
+    }
+
     private String getSkillUserByUserIdStatement() {
         return "SELECT " + COLUMNS
                 + " FROM SkillUser"
@@ -53,6 +59,23 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
         st.close();
         con.close();
 
+    }
+
+    public SkillUser find(String userId, String skillId) throws SQLException {
+        try (Connection con = DBCPDBConnectionPool.getConnection();
+             PreparedStatement st = con.prepareStatement(getFindStatement())) {
+            st.setString(1, skillId);
+            st.setString(2, userId);
+            ResultSet resultSet;
+            try {
+                resultSet = st.executeQuery();
+                resultSet.next();
+                return convertResultSetToDomainModel(resultSet);
+            } catch (SQLException ex) {
+                System.out.println("error in Mapper.findByID query.");
+                throw ex;
+            }
+        }
     }
 
     @Override
@@ -89,7 +112,7 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
         List<SkillUser> skills = new ArrayList<>();
 
         try (Connection con = DBCPDBConnectionPool.getConnection();
-            PreparedStatement st = con.prepareStatement(this.getSkillUserByUserIdStatement())) {
+             PreparedStatement st = con.prepareStatement(this.getSkillUserByUserIdStatement())) {
             st.setString(1, user.getId());
             ResultSet resultSet;
             try {
@@ -101,6 +124,20 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
                 return skills;
             } catch (SQLException ex) {
                 System.out.println("error in Mapper.findByID query.");
+                throw ex;
+            }
+        }
+    }
+
+    public void deleteSkillUser(String skillName, String userId) throws SQLException {
+        try (Connection con = DBCPDBConnectionPool.getConnection();
+             PreparedStatement st = con.prepareStatement(this.getSkillUserByUserIdStatement())) {
+            st.setString(1, userId);
+            st.setString(2, skillName);
+            try {
+                st.executeQuery();
+            } catch (SQLException ex) {
+                System.out.println("error in Mapper.Delete query.");
                 throw ex;
             }
         }

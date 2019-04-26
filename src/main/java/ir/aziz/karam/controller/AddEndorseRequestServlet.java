@@ -40,7 +40,7 @@ public class AddEndorseRequestServlet extends HttpServlet {
             String skillName = parameterMap.get("skillName")[0];
             User user = UserManager.getInstance().getUserById(userId);
             User currentUser = UserManager.getInstance().getUserById(currentUserId);
-            if (!UserManager.getInstance().userEndorseThisEndorse(currentUser, user.getId(), skillName)) {
+            if (!UserManager.getInstance().hasUserEndorsedThisUser(currentUser, user.getId(), skillName)) {
                 currentUser.addEndorses(new Endorse(userId, skillName));
                 SkillUser skillOfUserBySkillName = UserManager.getInstance().getSkillOfUserBySkillName(user, skillName);
                 skillOfUserBySkillName.setPoints(skillOfUserBySkillName.getPoints() + 1);

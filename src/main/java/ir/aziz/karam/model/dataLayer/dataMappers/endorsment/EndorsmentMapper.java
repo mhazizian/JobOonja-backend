@@ -49,7 +49,7 @@ public class EndorsmentMapper extends Mapper<Endorse, String> implements IEndors
                 + "skill_id TEXT PRIMARY KEY, "
                 + "FOREIGN KEY (endorser_id) REFERENCES User, "
                 + "FOREIGN KEY (endorsed_id) REFERENCES User, "
-                + "FOREIGN KEY (skill_id) REFERENCES Skill "
+                + "FOREIGN KEY (skill_id, endorsed_id) REFERENCES SkillUser ON DELETE CASCADE "
                 + ")");
         st.close();
         con.close();
