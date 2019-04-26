@@ -2,18 +2,16 @@ package ir.aziz.karam.dataLayer.dataMappers.projectSkill;
 
 import ir.aziz.karam.dataLayer.DBCPDBConnectionPool;
 import ir.aziz.karam.dataLayer.dataMappers.Mapper;
-import ir.aziz.karam.dataLayer.dataMappers.project.IProjectMapper;
-import ir.aziz.karam.model.types.Project;
-
+import ir.aziz.karam.model.types.ProjectSkill;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class ProjectSkillMapper extends Mapper<Project, String> implements IProjectMapper {
+public class ProjectSkillMapper extends Mapper<ProjectSkill, String> implements IProjectSkillMapper {
 
-    private static final String COLUMNS = " id, lastname, firstname, gpa ";
+    private static final String COLUMNS = " project_id, skill_id, budget ";
     private static ProjectSkillMapper instance;
 
     public static ProjectSkillMapper getInstance() throws SQLException {
@@ -27,50 +25,66 @@ public class ProjectSkillMapper extends Mapper<Project, String> implements IProj
         Connection con = DBCPDBConnectionPool.getConnection();
         Statement st
                 = con.createStatement();
-        st.executeUpdate("CREATE TABLE IF NOT EXISTS " + "Project" + " ("
-                + "id TEXT PRIMARY KEY, "
-                + "title TEXT, "
-                + "description TEXT, "
-                + "imageUrl TEXT, "
+        st.executeUpdate("CREATE TABLE IF NOT EXISTS " + "ProjectSkill" + " ("
+                + "project_id TEXT PRIMARY KEY, "
+                + "skill_id TEXT PRIMARY KEY, "
                 + "budget INTEGER, "
-                + "deadline BIGINT "
+                + "FOREIGN KEY (project_id) REFERENCES Project, "
+                + "FOREIGN KEY (skill_id) REFERENCES Skill "
                 + ")");
         st.close();
         con.close();
 
     }
 
-    @Override
-    protected String getFindStatement() {
-        return "SELECT " + COLUMNS
-                + " FROM Project"
-                + " WHERE id = ?";
+    public ProjectSkill find(String project_id, String skill_id) throws SQLException {
+        try (Connection con = DBCPDBConnectionPool.getConnection();
+                PreparedStatement st = con.prepareStatement(getFindStatement())) {
+            st.setString(1, project_id);
+            st.setString(2, skill_id);
+            ResultSet resultSet;
+            try {
+                resultSet = st.executeQuery();
+                resultSet.next();
+                return convertResultSetToDomainModel(resultSet);
+            } catch (SQLException ex) {
+                System.out.println("error in Mapper.findByID query.");
+                throw ex;
+            }
+        }
     }
 
     @Override
-    protected Project convertResultSetToDomainModel(ResultSet rs) throws SQLException {
-        return new Project(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getLong(6));
+    protected String getFindStatement() {
+        return "SELECT " + COLUMNS
+                + " FROM ProjectSkill"
+                + " WHERE "
+                + " project_id = ? AND"
+                + " skill_id = ?";
+    }
+
+    @Override
+    protected ProjectSkill convertResultSetToDomainModel(ResultSet rs) throws SQLException {
+        return new ProjectSkill(rs.getString(1), rs.getString(2), rs.getInt(3));
     }
 
     @Override
     protected String getAllStatement() {
         return "SELECT " + COLUMNS
-                + " FROM Project";
+                + " FROM ProjectSkill";
     }
 
     @Override
-    protected void setInsertElementParamters(PreparedStatement st, Project element) throws SQLException {
-        st.setString(1, element.getId());
-        st.setString(2, element.getTitle());
-        st.setString(3, element.getDescrption());
-        st.setString(4, element.getImageURL());
-        st.setInt(5, element.getBudget());
-        st.setLong(6, element.getDeadline());
+    protected void setInsertElementParamters(PreparedStatement st, ProjectSkill element) throws SQLException {
+        st.setString(1, element.getProject_id());
+        st.setString(2, element.getSkill_id());
+        st.setInt(3, element.getReqPoints());
+
     }
 
     @Override
     protected String getInsertStatement() {
-        return "INSERT INTO Project (id, title, description, imageUrl, budget, deadline) VALUES (?, ?, ?, ?, ?, ?)";
+        return "INSERT INTO ProjectSkill (project_id, skill_id, reqPoints) VALUES (?, ?, ?)";
     }
 
 }

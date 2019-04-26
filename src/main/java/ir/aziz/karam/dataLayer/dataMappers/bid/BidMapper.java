@@ -47,9 +47,9 @@ public class BidMapper extends Mapper<Bid, String> implements IBidMapper {
                 + "user_id TEXT, "
                 + "project_id TEXT, "
                 + "bidAmount INTEGER, "
-                + "PRIMARY KEY (user_id, project_id),"
-                + "FOREIGN KEY (user_id) REFERENCES User"
-                + "FOREIGN KEY (project_id) REFERENCES Project"
+                + "PRIMARY KEY (user_id, project_id), "
+                + "FOREIGN KEY (user_id) REFERENCES User, "
+                + "FOREIGN KEY (project_id) REFERENCES Project "
                 + ")");
         st.close();
         con.close();
