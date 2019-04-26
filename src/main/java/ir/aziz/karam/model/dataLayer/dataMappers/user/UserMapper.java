@@ -9,6 +9,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserMapper extends Mapper<User, String> implements IUserMapper {
 
@@ -44,6 +46,28 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
         return "SELECT " + COLUMNS
                 + " FROM User"
                 + " WHERE id = ?";
+    }
+
+    protected String getAllUserWithoutCurrentStatement() {
+        return "SELECT " + COLUMNS
+                + " FROM User"
+                + " WHERE id <> ?";
+    }
+
+    public List<User> getAllUserWithoutCurrent(String userId) throws SQLException {
+        try (Connection con = DBCPDBConnectionPool.getConnection();
+                PreparedStatement st = con.prepareStatement(getAllUserWithoutCurrentStatement())) {
+            st.setString(1, userId);
+            ResultSet resultSet;
+            try {
+                resultSet = st.executeQuery();
+                resultSet.next();
+                return super.convertResultSetToDomainModelList(resultSet);
+            } catch (SQLException ex) {
+                System.out.println("error in Mapper.getAll query.");
+                throw ex;
+            }
+        }
     }
 
     @Override

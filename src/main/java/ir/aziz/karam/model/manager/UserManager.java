@@ -23,8 +23,6 @@ import java.util.List;
 public class UserManager {
 
     private static UserManager instance;
-    private static List<User> users;
-    private static List<User> usersWithOutCurrent;
     private static User currentUser;
 
     public static UserManager getInstance() {
@@ -38,18 +36,8 @@ public class UserManager {
         return UserMapper.getInstance().getAll();
     }
 
-    public List<User> getAllUsersWithoutCurrentUser() throws IOException {
-        if (usersWithOutCurrent == null) {
-            usersWithOutCurrent = new ArrayList<>();
-            List<SkillUser> tempSkills = new ArrayList<>();
-            tempSkills.add(new SkillUser("html", 5));
-            tempSkills.add(new SkillUser("Javascrpipt", 4));
-            tempSkills.add(new SkillUser("C", 1));
-            tempSkills.add(new SkillUser("Java", 20));
-            User user = new User("2", "مهدی", "کرمی", "برنامه نویس وب", null, tempSkills, "روی سنگ قبرم بنویسید: خدا بیامرز میخواست خیلی کارا بکنه  ولی پول نداشت");
-            usersWithOutCurrent.add(user);
-        }
-        return usersWithOutCurrent;
+    public List<User> getAllUsersWithoutCurrentUser() throws IOException, SQLException {
+        return UserMapper.getInstance().getAllUserWithoutCurrent(getCurrentUser().getId());
     }
 
     public User getCurrentUser() {
@@ -63,7 +51,6 @@ public class UserManager {
         }
         return currentUser;
     }
-
 
     public SkillUser getSkillOfUserBySkillName(User user, String skillName) throws SkillNotFoundException {
         return user.getUserSkillByName(skillName);

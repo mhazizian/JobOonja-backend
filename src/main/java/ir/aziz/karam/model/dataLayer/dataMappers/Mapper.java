@@ -22,7 +22,7 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
 
     protected abstract String getInsertStatement();
 
-    private List<T> convertResultSetToDomainModelList(ResultSet rs) throws SQLException {
+    protected List<T> convertResultSetToDomainModelList(ResultSet rs) throws SQLException {
         rs.next();
         List<T> results = new ArrayList<>();
         while (rs.next()) {
