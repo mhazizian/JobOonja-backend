@@ -25,6 +25,10 @@ public class User implements Serializable {
     private List<Endorse> endorses = new ArrayList<>();
 
     public List<SkillUser> getSkills() {
+
+
+
+//        this.skills = skills;
         return skills;
     }
 
