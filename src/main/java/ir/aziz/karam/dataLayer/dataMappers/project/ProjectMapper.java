@@ -33,7 +33,7 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
                 + "description TEXT, "
                 + "imageUrl TEXT, "
                 + "budget INTEGER, "
-                + "deadline BIGINT, "
+                + "deadline BIGINT "
                 + ")");
         st.close();
         con.close();
