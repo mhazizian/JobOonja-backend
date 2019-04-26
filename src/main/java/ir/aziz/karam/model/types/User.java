@@ -102,4 +102,13 @@ public class User implements Serializable {
         this.bio = bio;
     }
 
+    public User(String id, String firstName, String lastName, String jobTitle, String PictureUrl, String bio) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.jobTitle = jobTitle;
+        this.PictureUrl = PictureUrl;
+        this.bio = bio;
+    }
+
 }
