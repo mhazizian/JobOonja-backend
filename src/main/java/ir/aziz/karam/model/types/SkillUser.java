@@ -7,8 +7,13 @@ package ir.aziz.karam.model.types;
 
 import java.io.Serializable;
 
-public class Skill implements Serializable{
+/**
+ *
+ * @author karam
+ */
+public class SkillUser implements Serializable{
     private String name;
+    private int point;
 
     public String getName() {
         return name;
@@ -18,7 +23,16 @@ public class Skill implements Serializable{
         this.name = name;
     }
 
-    public Skill(String name) {
+    public int getPoints() {
+        return point;
+    }
+
+    public void setPoints(int points) {
+        this.point = points;
+    }
+
+    public SkillUser(String name, int points) {
         this.name = name;
+        this.point = points;
     }
 }

@@ -20,15 +20,15 @@ public class User implements Serializable {
     private String lastName;
     private String jobTitle;
     private String PictureUrl;
-    private List<Skill> skills;
+    private List<SkillUser> skills;
     private String bio;
     private List<Endorse> endorses = new ArrayList<>();
 
-    public List<Skill> getSkills() {
+    public List<SkillUser> getSkills() {
         return skills;
     }
 
-    public void setSkills(List<Skill> skills) {
+    public void setSkills(List<SkillUser> skills) {
         this.skills = skills;
     }
 
@@ -92,7 +92,7 @@ public class User implements Serializable {
         this.endorses.add(endorse);
     }
 
-    public User(String id, String firstName, String lastName, String jobTitle, String PictureUrl, List<Skill> skills, String bio) {
+    public User(String id, String firstName, String lastName, String jobTitle, String PictureUrl, List<SkillUser> skills, String bio) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

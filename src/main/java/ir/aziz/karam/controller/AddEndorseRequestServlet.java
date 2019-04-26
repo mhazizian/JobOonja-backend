@@ -8,11 +8,10 @@ package ir.aziz.karam.controller;
 import com.google.gson.Gson;
 import ir.aziz.karam.model.exception.SkillNotFoundException;
 import ir.aziz.karam.model.exception.UserNotFoundException;
-import ir.aziz.karam.model.manager.SkillManager;
 import ir.aziz.karam.model.manager.UserManager;
 import ir.aziz.karam.model.types.Endorse;
 import ir.aziz.karam.model.types.ResponsePostMessage;
-import ir.aziz.karam.model.types.Skill;
+import ir.aziz.karam.model.types.SkillUser;
 import ir.aziz.karam.model.types.User;
 
 import java.io.IOException;
@@ -43,7 +42,7 @@ public class AddEndorseRequestServlet extends HttpServlet {
             User currentUser = UserManager.getInstance().getUserById(currentUserId);
             if (!UserManager.getInstance().userEndorseThisEndorse(currentUser, user.getId(), skillName)) {
                 currentUser.addEndorses(new Endorse(userId, skillName));
-                Skill skillOfUserBySkillName = UserManager.getInstance().getSkillOfUserBySkillName(user, skillName);
+                SkillUser skillOfUserBySkillName = UserManager.getInstance().getSkillOfUserBySkillName(user, skillName);
                 skillOfUserBySkillName.setPoints(skillOfUserBySkillName.getPoints() + 1);
 
                 ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, "درخواست با موفقیت انجام شد.", null);

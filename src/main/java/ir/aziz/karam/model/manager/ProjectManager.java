@@ -6,7 +6,7 @@
 package ir.aziz.karam.model.manager;
 
 import ir.aziz.karam.model.types.Project;
-import ir.aziz.karam.model.types.Skill;
+import ir.aziz.karam.model.types.SkillUser;
 import ir.aziz.karam.model.types.User;
 import ir.aziz.karam.model.exception.ProjectNotFoundException;
 import ir.aziz.karam.model.exception.SkillNotFoundException;
@@ -67,7 +67,7 @@ public class ProjectManager {
 //    private boolean userCanSolveProjectWithoutExp(User user, Project project) throws SkillNotFoundException {
 //
 //        for (int i = 0; i < project.getSkills().size(); i++) {
-//            Skill skillOfUser = UserManager.getInstance().getSkillOfUser(user, project.getSkills().get(i));
+//            SkillUser skillOfUser = UserManager.getInstance().getSkillOfUser(user, project.getSkills().get(i));
 //            if (skillOfUser.getPoints() < project.getSkills().get(i).getPoints()) {
 //                return false;
 //            }
@@ -78,7 +78,7 @@ public class ProjectManager {
 
     public void userCanSolveProject(User user, Project project) throws SkillNotFoundException, SkillPointIsNotEnoghException {
         for (int i = 0; i < project.getSkills().size(); i++) {
-            Skill skillOfUser = UserManager.getInstance().getSkillOfUser(user, project.getSkills().get(i));
+            SkillUser skillOfUser = UserManager.getInstance().getSkillOfUser(user, project.getSkills().get(i));
             if (skillOfUser.getPoints() < project.getSkills().get(i).getPoints()) {
                 throw new SkillPointIsNotEnoghException(skillOfUser.getName() + " point is not enough for this project!");
             }
