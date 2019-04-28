@@ -13,6 +13,7 @@ import ir.aziz.karam.model.types.SkillUser;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SkillManager {
@@ -30,5 +31,18 @@ public class SkillManager {
 
     public List<Skill> getAllSkills() throws IOException, SQLException {
         return SkillMapper.getInstance().getAll();
+    }
+
+    public void updateSkillListFromServer() throws IOException, SQLException {
+        List<Skill> skills;
+        Gson gson = new Gson();
+        String rawData = DataLoader.readFromUrlToString(skillsAPI);
+        skills = gson.fromJson(rawData, new TypeToken<List<Skill>>() {
+        }.getType());
+
+        for (Skill skill: skills) {
+            SkillMapper.getInstance().insert(skill);
+        }
+
     }
 }

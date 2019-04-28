@@ -59,7 +59,7 @@ public class SkillMapper extends Mapper<Skill, String> implements ISkillMapper {
 
     @Override
     protected String getInsertStatement() {
-        return "INSERT INTO SkillUser (name ) VALUES (?)";
+        return "INSERT INTO Skill (name) VALUES (?)";
     }
 
 }
