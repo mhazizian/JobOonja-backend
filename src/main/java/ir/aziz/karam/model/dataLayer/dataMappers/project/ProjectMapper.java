@@ -27,7 +27,7 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
         Statement st
                 = con.createStatement();
         st.executeUpdate("CREATE TABLE IF NOT EXISTS " + "Project" + " ("
-                + "id TEXT PRIMARY KEY, "
+                + "id VARCHAR(200) PRIMARY KEY, "
                 + "title TEXT, "
                 + "description TEXT, "
                 + "imageUrl TEXT, "

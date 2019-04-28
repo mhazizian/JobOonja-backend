@@ -49,12 +49,12 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
                 = con.createStatement();
 
         st.executeUpdate("CREATE TABLE IF NOT EXISTS " + "SkillUser" + " ("
-                + "skill_name TEXT, "
-                + "user_id TEXT, "
+                + "skill_name VARCHAR(200), "
+                + "user_id VARCHAR(200), "
                 + "point INTEGER, "
                 + "PRIMARY KEY (skill_name, user_id), "
-                + "FOREIGN KEY (user_id) REFERENCES User, "
-                + "FOREIGN KEY (skill_name) REFERENCES Skill"
+                + "FOREIGN KEY (user_id) REFERENCES User(id), "
+                + "FOREIGN KEY (skill_name) REFERENCES Skill(name)"
                 + ")");
         st.close();
         con.close();
