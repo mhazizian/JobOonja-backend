@@ -5,6 +5,8 @@ import ir.aziz.karam.model.dataLayer.dataMappers.project.ProjectMapper;
 import ir.aziz.karam.model.dataLayer.dataMappers.skill.SkillMapper;
 import ir.aziz.karam.model.dataLayer.dataMappers.skillUser.SkillUserMapper;
 import ir.aziz.karam.model.dataLayer.dataMappers.user.UserMapper;
+import ir.aziz.karam.model.manager.ProjectManager;
+import ir.aziz.karam.model.manager.SkillManager;
 
 import java.sql.SQLException;
 
@@ -23,5 +25,12 @@ public class TEST {
         SkillUserMapper.getInstance();
         EndorsmentMapper.getInstance();
         BidMapper.getInstance();
+
+        try {
+            ProjectManager.getInstance().updateProjectListFromServer();
+            SkillManager.getInstance().updateSkillListFromServer();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

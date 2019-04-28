@@ -6,6 +6,7 @@ import ir.aziz.karam.model.dataLayer.dataMappers.project.ProjectMapper;
 import ir.aziz.karam.model.dataLayer.dataMappers.skill.SkillMapper;
 import ir.aziz.karam.model.dataLayer.dataMappers.skillUser.SkillUserMapper;
 import ir.aziz.karam.model.dataLayer.dataMappers.user.UserMapper;
+import ir.aziz.karam.model.manager.ProjectManager;
 import ir.aziz.karam.model.manager.SkillManager;
 
 import javax.servlet.ServletContextEvent;
@@ -31,6 +32,7 @@ public class InitializeListener implements ServletContextListener {
             BidMapper.getInstance();
 
             SkillManager.getInstance().updateSkillListFromServer();
+            ProjectManager.getInstance().updateProjectListFromServer();
 
         } catch (SQLException | IOException e) {
             e.printStackTrace();
