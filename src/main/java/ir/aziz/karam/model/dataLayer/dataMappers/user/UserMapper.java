@@ -9,7 +9,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 
 public class UserMapper extends Mapper<User, String> implements IUserMapper {
@@ -56,7 +55,7 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
 
     public List<User> getAllUserWithoutCurrent(String userId) throws SQLException {
         try (Connection con = DBCPDBConnectionPool.getConnection();
-                PreparedStatement st = con.prepareStatement(getAllUserWithoutCurrentStatement())) {
+             PreparedStatement st = con.prepareStatement(getAllUserWithoutCurrentStatement())) {
             st.setString(1, userId);
             ResultSet resultSet;
             try {
@@ -89,18 +88,38 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
     }
 
     @Override
-    protected void setInsertElementParamters(PreparedStatement st, User element) throws SQLException {
-        st.setString(1, element.getId());
-        st.setString(2, element.getFirstName());
-        st.setString(3, element.getLastName());
-        st.setString(4, element.getJobTitle());
-        st.setString(5, element.getPictureUrl());
-        st.setString(6, element.getBio());
+    protected void setInsertElementParameters(PreparedStatement st, User element, int baseIndex) throws SQLException {
+        st.setString(baseIndex, element.getId());
+        st.setString(1 + baseIndex, element.getFirstName());
+        st.setString(2 + baseIndex, element.getLastName());
+        st.setString(3 + baseIndex, element.getJobTitle());
+        st.setString(4 + baseIndex, element.getPictureUrl());
+        st.setString(5 + baseIndex, element.getBio());
     }
 
     @Override
     protected String getInsertStatement() {
         return "INSERT INTO User (id, firstName, lastName, jobTitle, pictureUrl, bio) VALUES (?, ?, ?, ?, ?, ?)";
+    }
+
+    @Override
+    protected void setInsertOrUpdateElementParameters(PreparedStatement st, User element) throws SQLException {
+        this.setInsertElementParameters(st, element, 1);
+        this.setInsertElementParameters(st, element, 7);
+    }
+
+    @Override
+    protected String getInsertOrUpdateStatement() {
+        return "INSERT INTO User (id, firstName, lastName, jobTitle, pictureUrl, bio) VALUES (?, ?, ?, ?, ?, ?)\n"
+                + "ON DUPLICATE KEY UPDATE\n"
+                + "id=?, firstName=?, lastName=?, jobTitle=?, pictureUrl=?, bio=?";
+
+//        return "IF EXISTS (SELECT * FROM User WHERE id=?)"
+//               + "    UPDATE User SET (id=?, firstName=?, lastName=?, jobTitle=?, pictureUrl=?, bio=?) WHERE id=?"
+//               + "ELSE"
+//               + "    INSERT INTO User (id, firstName, lastName, jobTitle, pictureUrl, bio) VALUES (?, ?, ?, ?, ?, ?)"
+//        ;
+
     }
 
 }

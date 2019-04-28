@@ -4,13 +4,10 @@ import ir.aziz.karam.model.dataLayer.DBCPDBConnectionPool;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public abstract class Mapper<T, I> implements IMapper<T, I> {
 
-    protected Map<I, T> loadedMap = new HashMap<>();
 
     abstract protected String getFindStatement();
 
@@ -18,9 +15,11 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
 
     abstract protected T convertResultSetToDomainModel(ResultSet rs) throws SQLException;
 
-    protected abstract void setInsertElementParamters(final PreparedStatement st, T element) throws SQLException;
+    protected abstract void setInsertElementParameters(final PreparedStatement st, T element, int baseIndex) throws SQLException;
+    protected abstract void setInsertOrUpdateElementParameters(final PreparedStatement st, T element) throws SQLException;
 
     protected abstract String getInsertStatement();
+    protected abstract String getInsertOrUpdateStatement();
 
     protected List<T> convertResultSetToDomainModelList(ResultSet rs) throws SQLException {
         rs.next();
@@ -34,11 +33,6 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
 
     @Override
     public T find(I id) throws SQLException {
-        T result = loadedMap.get(id);
-        if (result != null) {
-            return result;
-        }
-
         try (Connection con = DBCPDBConnectionPool.getConnection();
                 PreparedStatement st = con.prepareStatement(getFindStatement())) {
             st.setString(1, id.toString());
@@ -76,7 +70,17 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
         String sql = getInsertStatement();
         Connection con = DBCPDBConnectionPool.getConnection();
         try (PreparedStatement st = con.prepareStatement(sql)) {
-            setInsertElementParamters(st, element);
+            setInsertElementParameters(st, element, 1);
+            st.executeUpdate();
+        }
+    }
+
+    @Override
+    public void insertOrUpdate(T element) throws SQLException {
+        String sql = getInsertOrUpdateStatement();
+        Connection con = DBCPDBConnectionPool.getConnection();
+        try (PreparedStatement st = con.prepareStatement(sql)) {
+            setInsertOrUpdateElementParameters(st, element);
             st.executeUpdate();
         }
     }

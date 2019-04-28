@@ -4,6 +4,7 @@ import ir.aziz.karam.model.dataLayer.DBCPDBConnectionPool;
 import ir.aziz.karam.model.dataLayer.dataMappers.Mapper;
 import ir.aziz.karam.model.types.Project;
 import ir.aziz.karam.model.types.ProjectSkill;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,11 +16,13 @@ import java.util.List;
 public class ProjectSkillMapper extends Mapper<ProjectSkill, String> implements IProjectSkillMapper {
 
     private static final String COLUMNS = " project_id, skill_id, req_point ";
+
     private String getSkillProjectByProjectIdStatement() {
         return "SELECT " + COLUMNS
                 + " FROM ProjectSkill"
                 + " WHERE project_id = ?";
     }
+
     private static ProjectSkillMapper instance;
 
     public static ProjectSkillMapper getInstance() throws SQLException {
@@ -48,7 +51,7 @@ public class ProjectSkillMapper extends Mapper<ProjectSkill, String> implements 
 
     public ProjectSkill find(String project_id, String skill_id) throws SQLException {
         try (Connection con = DBCPDBConnectionPool.getConnection();
-                PreparedStatement st = con.prepareStatement(getFindStatement())) {
+             PreparedStatement st = con.prepareStatement(getFindStatement())) {
             st.setString(1, project_id);
             st.setString(2, skill_id);
             ResultSet resultSet;
@@ -84,16 +87,29 @@ public class ProjectSkillMapper extends Mapper<ProjectSkill, String> implements 
     }
 
     @Override
-    protected void setInsertElementParamters(PreparedStatement st, ProjectSkill element) throws SQLException {
-        st.setString(1, element.getProject_id());
-        st.setString(2, element.getSkill_id());
-        st.setInt(3, element.getReqPoints());
+    protected void setInsertElementParameters(PreparedStatement st, ProjectSkill element, int baseIndex) throws SQLException {
+        st.setString(baseIndex, element.getProject_id());
+        st.setString(1 + baseIndex, element.getSkill_id());
+        st.setInt(2 + baseIndex, element.getReqPoints());
 
     }
 
     @Override
     protected String getInsertStatement() {
         return "INSERT INTO ProjectSkill (project_id, skill_id, req_point) VALUES (?, ?, ?)";
+    }
+
+    @Override
+    protected void setInsertOrUpdateElementParameters(PreparedStatement st, ProjectSkill element) throws SQLException {
+        this.setInsertElementParameters(st, element, 1);
+        this.setInsertElementParameters(st, element, 4);
+    }
+
+    @Override
+    protected String getInsertOrUpdateStatement() {
+        return "INSERT INTO ProjectSkill (project_id, skill_id, req_point) VALUES (?, ?, ?)\n"
+                + "ON DUPLICATE KEY UPDATE\n"
+                + "project_id=?, skill_id=?, req_point=?";
     }
 
     public List<ProjectSkill> getSkillsOfProject(Project project) throws SQLException {

@@ -2,7 +2,6 @@ package ir.aziz.karam.model.dataLayer.dataMappers.skillUser;
 
 import ir.aziz.karam.model.dataLayer.DBCPDBConnectionPool;
 import ir.aziz.karam.model.dataLayer.dataMappers.Mapper;
-import ir.aziz.karam.model.dataLayer.dataMappers.project.IProjectMapper;
 import ir.aziz.karam.model.types.SkillUser;
 import ir.aziz.karam.model.types.User;
 
@@ -100,10 +99,10 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
     }
 
     @Override
-    protected void setInsertElementParamters(PreparedStatement st, SkillUser element) throws SQLException {
-        st.setString(1, element.getName());
-        st.setString(2, element.getUserId());
-        st.setInt(3, element.getPoints());
+    protected void setInsertElementParameters(PreparedStatement st, SkillUser element, int baseIndex) throws SQLException {
+        st.setString(baseIndex, element.getName());
+        st.setString(1 + baseIndex, element.getUserId());
+        st.setInt(2 + baseIndex, element.getPoints());
 
     }
 
@@ -141,6 +140,28 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
                 throw ex;
             }
         }
+    }
+
+    @Override
+    protected void setInsertOrUpdateElementParameters(PreparedStatement st, SkillUser element) throws SQLException {
+        st.setString(4, element.getName());
+        st.setString(5, element.getUserId());
+        this.setInsertElementParameters(st, element, 3);
+        st.setString(6, element.getName());
+        st.setString(7, element.getUserId());
+        this.setInsertElementParameters(st, element, 8);
+    }
+
+    @Override
+    protected String getInsertOrUpdateStatement() {
+        return "INSERT INTO SkillUser (skill_name, user_id, point) VALUES (?, ?, ?)\n"
+                + "ON DUPLICATE KEY UPDATE\n"
+                + "skill_name=?, user_id=?, point=?";
+
+//        return "IF EXISTS (SELECT * FROM SkillUser WHERE skill_name=? AND user_id=?)"
+//                + "    UPDATE SkillUser SET (skill_name=?, user_id=?, point=?) WHERE skill_name=? AND user_id=?"
+//                + "ELSE"
+//                + "    INSERT INTO SkillUser (skill_name, user_id, point) VALUES (?, ?, ?)";
     }
 
 }

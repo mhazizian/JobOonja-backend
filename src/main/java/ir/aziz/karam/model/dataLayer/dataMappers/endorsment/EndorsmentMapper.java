@@ -90,16 +90,26 @@ public class EndorsmentMapper extends Mapper<Endorse, String> implements IEndors
     }
 
     @Override
-    protected void setInsertElementParamters(PreparedStatement st, Endorse element) throws SQLException {
-        st.setString(1, element.getEndorser_id());
-        st.setString(2, element.getUserIsEndorsed());
-        st.setString(3, element.getSkill());
+    protected void setInsertElementParameters(PreparedStatement st, Endorse element, int baseIndex) throws SQLException {
+        st.setString(baseIndex, element.getEndorser_id());
+        st.setString(1 + baseIndex, element.getUserIsEndorsed());
+        st.setString(2 + baseIndex, element.getSkill());
 
     }
 
     @Override
     protected String getInsertStatement() {
         return "INSERT INTO Endorse (endorser_id, endorsed_id, skill_id) VALUES (?, ?, ?)";
+    }
+
+    @Override
+    protected void setInsertOrUpdateElementParameters(PreparedStatement st, Endorse element) throws SQLException {
+        this.setInsertElementParameters(st, element, 1);
+    }
+
+    @Override
+    protected String getInsertOrUpdateStatement() {
+        return  "INSERT IGNORE INTO Endorse (endorser_id, endorsed_id, skill_id) VALUES (?, ?, ?)";
     }
 
 

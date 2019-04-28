@@ -77,16 +77,30 @@ public class BidMapper extends Mapper<Bid, String> implements IBidMapper {
     }
 
     @Override
-    protected void setInsertElementParamters(PreparedStatement st, Bid element) throws SQLException {
-        st.setString(1, element.getBiddingUser());
-        st.setString(2, element.getProjectTitle());
-        st.setInt(3, element.getBidAmount());
+    protected void setInsertElementParameters(PreparedStatement st, Bid element, int baseIndex) throws SQLException {
+        st.setString(baseIndex, element.getBiddingUser());
+        st.setString(1 + baseIndex, element.getProjectTitle());
+        st.setInt(2 + baseIndex, element.getBidAmount());
 
     }
 
     @Override
     protected String getInsertStatement() {
         return "INSERT INTO Bid (user_id, project_id, bidAmount) VALUES (?, ?, ?)";
+    }
+
+    @Override
+    protected void setInsertOrUpdateElementParameters(PreparedStatement st, Bid element) throws SQLException {
+        this.setInsertElementParameters(st, element, 1);
+        this.setInsertElementParameters(st, element, 4);
+    }
+
+    @Override
+    protected String getInsertOrUpdateStatement() {
+        return  "INSERT INTO Bid (user_id, project_id, bidAmount) VALUES (?, ?, ?)\n"
+                + "ON DUPLICATE KEY UPDATE\n"
+                + "user_id=?, project_id=?, bidAmount=?";
+
     }
 
 }

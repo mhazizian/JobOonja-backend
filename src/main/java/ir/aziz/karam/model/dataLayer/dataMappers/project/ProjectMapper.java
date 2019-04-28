@@ -58,18 +58,46 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
     }
 
     @Override
-    protected void setInsertElementParamters(PreparedStatement st, Project element) throws SQLException {
-        st.setString(1, element.getId());
-        st.setString(2, element.getTitle());
-        st.setString(3, element.getDescrption());
-        st.setString(4, element.getImageURL());
-        st.setInt(5, element.getBudget());
-        st.setLong(6, element.getDeadline());
+    protected void setInsertElementParameters(PreparedStatement st, Project element, int baseIndex) throws SQLException {
+        st.setString(baseIndex, element.getId());
+        st.setString(1 + baseIndex, element.getTitle());
+        st.setString(2 + baseIndex, element.getDescrption());
+        st.setString(3 + baseIndex, element.getImageURL());
+        st.setInt(4 + baseIndex, element.getBudget());
+        st.setLong(5 + baseIndex, element.getDeadline());
     }
 
     @Override
     protected String getInsertStatement() {
         return "INSERT INTO Project (id, title, description, imageUrl, budget, deadline) VALUES (?, ?, ?, ?, ?, ?)";
     }
+
+    @Override
+    protected void setInsertOrUpdateElementParameters(PreparedStatement st, Project element) throws SQLException {
+        this.setInsertElementParameters(st, element, 1);
+        this.setInsertElementParameters(st, element, 7);
+    }
+
+    @Override
+    protected String getInsertOrUpdateStatement() {
+        return "INSERT INTO Project (id, title, description, imageUrl, budget, deadline) VALUES (?, ?, ?, ?, ?, ?)\n"
+                + "ON DUPLICATE KEY UPDATE\n"
+                + "    id=?, title=?, description=?, imageUrl=?, budget=?, deadline=?";
+
+//        return "UPDATE Project SET (id=?, title=?, description=?, imageUrl=?, budget=?, deadline=?) WHERE id=?\n"
+//                + "IF @@rowcount = 0\n"
+//                + "INSERT INTO Project (id, title, description, imageUrl, budget, deadline) VALUES (?, ?, ?, ?, ?, ?)\n"
+//                ;
+
+//        return "begin tran\n"
+//                +"IF EXISTS (SELECT * FROM Project WHERE id=?)\n"
+//                + "    UPDATE Project SET (id=?, title=?, description=?, imageUrl=?, budget=?, deadline=?) WHERE id=?\n"
+//                + "ELSE\n"
+//                + "    INSERT INTO Project (id, title, description, imageUrl, budget, deadline) VALUES (?, ?, ?, ?, ?, ?)\n"
+//                + "commit tran"
+//                ;
+
+    }
+
 
 }

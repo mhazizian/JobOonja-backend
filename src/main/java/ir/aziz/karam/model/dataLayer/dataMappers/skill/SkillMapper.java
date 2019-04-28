@@ -53,13 +53,24 @@ public class SkillMapper extends Mapper<Skill, String> implements ISkillMapper {
     }
 
     @Override
-    protected void setInsertElementParamters(PreparedStatement st, Skill element) throws SQLException {
-        st.setString(1, element.getName());
+    protected void setInsertElementParameters(PreparedStatement st, Skill element, int baseIndex) throws SQLException {
+        st.setString(baseIndex, element.getName());
     }
 
     @Override
     protected String getInsertStatement() {
         return "INSERT INTO Skill (name) VALUES (?)";
+    }
+
+    @Override
+    protected void setInsertOrUpdateElementParameters(PreparedStatement st, Skill element) throws SQLException {
+        this.setInsertElementParameters(st, element, 1);
+    }
+
+    @Override
+    protected String getInsertOrUpdateStatement() {
+        return "INSERT IGNORE INTO Skill (name) VALUES (?)";
+
     }
 
 }
