@@ -13,7 +13,6 @@ import ir.aziz.karam.model.types.SkillUser;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class SkillManager {
@@ -41,7 +40,7 @@ public class SkillManager {
         }.getType());
 
         for (Skill skill: skills) {
-            SkillMapper.getInstance().insert(skill);
+            SkillMapper.getInstance().insertOrUpdate(skill);
         }
 
     }

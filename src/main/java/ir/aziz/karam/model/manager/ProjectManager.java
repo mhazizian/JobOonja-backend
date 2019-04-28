@@ -23,7 +23,7 @@ import java.util.List;
 public class ProjectManager {
 
     private static ProjectManager instance;
-//    private static List<Project> projects;
+    //    private static List<Project> projects;
     final String ProjectsAPI = "http://142.93.134.194:8000/joboonja/project";
 
     public static ProjectManager getInstance() {
@@ -33,15 +33,19 @@ public class ProjectManager {
         return instance;
     }
 
-//    public List<Project> getAllProject() throws IOException {
-//        if (projects == null) {
-//            Gson gson = new Gson();
-//            String rawData = DataLoader.readFromUrlToString(ProjectsAPI);
-//            projects = gson.fromJson(rawData, new TypeToken<List<Project>>() {
-//            }.getType());
-//        }
-//        return projects;
-//    }
+    public void updateProjectListFromServer() throws IOException, SQLException {
+        List<Project> projects;
+
+        Gson gson = new Gson();
+        String rawData = DataLoader.readFromUrlToString(ProjectsAPI);
+        projects = gson.fromJson(rawData, new TypeToken<List<Project>>() {
+        }.getType());
+
+        for (Project project : projects) {
+            ProjectMapper.getInstance().insertOrUpdate(project);
+        }
+
+    }
 
 
     public List<Project> getAllProjectsFeasibleByUser(User user) throws IOException, SQLException {
