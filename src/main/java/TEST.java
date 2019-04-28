@@ -1,5 +1,11 @@
 
-import ir.aziz.karam.dataLayer.dataMappers.project.ProjectMapper;
+import ir.aziz.karam.model.dataLayer.dataMappers.bid.BidMapper;
+import ir.aziz.karam.model.dataLayer.dataMappers.endorsment.EndorsmentMapper;
+import ir.aziz.karam.model.dataLayer.dataMappers.project.ProjectMapper;
+import ir.aziz.karam.model.dataLayer.dataMappers.skill.SkillMapper;
+import ir.aziz.karam.model.dataLayer.dataMappers.skillUser.SkillUserMapper;
+import ir.aziz.karam.model.dataLayer.dataMappers.user.UserMapper;
+
 import java.sql.SQLException;
 
 /*
@@ -9,6 +15,13 @@ import java.sql.SQLException;
  */
 public class TEST {
     public static void main(String[] args) throws SQLException {
+        SkillMapper.getInstance();
+
         ProjectMapper.getInstance();
+        UserMapper.getInstance();
+
+        SkillUserMapper.getInstance();
+        EndorsmentMapper.getInstance();
+        BidMapper.getInstance();
     }
 }

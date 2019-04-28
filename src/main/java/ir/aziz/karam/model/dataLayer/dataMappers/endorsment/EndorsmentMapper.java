@@ -55,9 +55,10 @@ public class EndorsmentMapper extends Mapper<Endorse, String> implements IEndors
         Statement st
                 = con.createStatement();
         st.executeUpdate("CREATE TABLE IF NOT EXISTS " + "Endorse" + " ("
-                + "endorser_id TEXT PRIMARY KEY, "
-                + "endorsed_id TEXT PRIMARY KEY, "
-                + "skill_id TEXT PRIMARY KEY, "
+                + "endorser_id TEXT, "
+                + "endorsed_id TEXT, "
+                + "skill_id TEXT, "
+                + "PRIMARY KEY (endorser_id, endorsed_id, skill_id), "
                 + "FOREIGN KEY (endorser_id) REFERENCES User, "
                 + "FOREIGN KEY (endorsed_id) REFERENCES User, "
                 + "FOREIGN KEY (skill_id, endorsed_id) REFERENCES SkillUser ON DELETE CASCADE "

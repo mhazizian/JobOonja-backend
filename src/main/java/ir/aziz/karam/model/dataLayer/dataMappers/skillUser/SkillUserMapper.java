@@ -47,15 +47,15 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
         Connection con = DBCPDBConnectionPool.getConnection();
         Statement st
                 = con.createStatement();
+
         st.executeUpdate("CREATE TABLE IF NOT EXISTS " + "SkillUser" + " ("
                 + "skill_name TEXT, "
                 + "user_id TEXT, "
                 + "point INTEGER, "
                 + "PRIMARY KEY (skill_name, user_id), "
-                + "FOREIGN KEY skill_name REFERENCES Skill, "
-                + "FOREIGN KEY user_id REFERENCES User"
-                + ")"
-        );
+                + "FOREIGN KEY (user_id) REFERENCES User, "
+                + "FOREIGN KEY (skill_name) REFERENCES Skill"
+                + ")");
         st.close();
         con.close();
 

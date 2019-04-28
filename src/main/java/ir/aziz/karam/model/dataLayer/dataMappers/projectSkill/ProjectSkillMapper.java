@@ -34,9 +34,10 @@ public class ProjectSkillMapper extends Mapper<ProjectSkill, String> implements 
         Statement st
                 = con.createStatement();
         st.executeUpdate("CREATE TABLE IF NOT EXISTS " + "ProjectSkill" + " ("
-                + "project_id TEXT PRIMARY KEY, "
-                + "skill_id TEXT PRIMARY KEY, "
+                + "project_id TEXT, "
+                + "skill_id TEXT, "
                 + "req_point INTEGER, "
+                + "PRIMARY KEY (project_id, skill_id), "
                 + "FOREIGN KEY (project_id) REFERENCES Project, "
                 + "FOREIGN KEY (skill_id) REFERENCES Skill "
                 + ")");
