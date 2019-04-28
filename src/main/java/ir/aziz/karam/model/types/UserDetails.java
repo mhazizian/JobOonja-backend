@@ -10,7 +10,7 @@ import java.util.List;
 public class UserDetails {
 
     private String currentID;
-    private List<SkillUser> otherSkills;
+    private List<Skill> otherSkills;
     private List<String> endorseSkills;
 
     public String getCurrentID() {
@@ -21,11 +21,11 @@ public class UserDetails {
         this.currentID = currentID;
     }
 
-    public List<SkillUser> getOtherSkills() {
+    public List<Skill> getOtherSkills() {
         return otherSkills;
     }
 
-    public void setOtherSkills(List<SkillUser> otherSkills) {
+    public void setOtherSkills(List<Skill> otherSkills) {
         this.otherSkills = otherSkills;
     }
 
@@ -37,7 +37,7 @@ public class UserDetails {
         this.endorseSkills = endorseSkills;
     }
 
-    public UserDetails(String currentID, List<SkillUser> otherSkills, List<String> endorseSkills) {
+    public UserDetails(String currentID, List<Skill> otherSkills, List<String> endorseSkills) {
         this.currentID = currentID;
         this.otherSkills = otherSkills;
         this.endorseSkills = endorseSkills;

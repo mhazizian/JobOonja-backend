@@ -22,16 +22,16 @@ import java.util.List;
 
 public class ProjectManager {
 
-//    private static ProjectManager instance;
+    private static ProjectManager instance;
 //    private static List<Project> projects;
     final String ProjectsAPI = "http://142.93.134.194:8000/joboonja/project";
 
-//    public static ProjectManager getInstance() {
-//        if (instance == null) {
-//            instance = new ProjectManager();
-//        }
-//        return instance;
-//    }
+    public static ProjectManager getInstance() {
+        if (instance == null) {
+            instance = new ProjectManager();
+        }
+        return instance;
+    }
 
 //    public List<Project> getAllProject() throws IOException {
 //        if (projects == null) {
