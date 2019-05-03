@@ -75,20 +75,20 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
     @Override
     protected void setInsertOrUpdateElementParameters(PreparedStatement st, Project element) throws SQLException {
         this.setInsertElementParameters(st, element, 1);
-        this.setInsertElementParameters(st, element, 7);
+//        this.setInsertElementParameters(st, element, 7);
     }
 
     @Override
     protected String getInsertOrUpdateStatement() {
-        return "INSERT INTO Project (id, title, description, imageUrl, budget, deadline) VALUES (?, ?, ?, ?, ?, ?)\n"
-                + "ON DUPLICATE KEY UPDATE\n"
-                + "    id=?, title=?, description=?, imageUrl=?, budget=?, deadline=?";
+//        return "INSERT INTO Project (id, title, description, imageUrl, budget, deadline) VALUES (?, ?, ?, ?, ?, ?)\n"
+//                + "ON DUPLICATE KEY UPDATE\n"
+//                + "    id=?, title=?, description=?, imageUrl=?, budget=?, deadline=?";
+        return "INSERT OR IGNORE INTO Project (id, title, description, imageUrl, budget, deadline) VALUES (?, ?, ?, ?, ?, ?)";
 
 //        return "UPDATE Project SET (id=?, title=?, description=?, imageUrl=?, budget=?, deadline=?) WHERE id=?\n"
 //                + "IF @@rowcount = 0\n"
 //                + "INSERT INTO Project (id, title, description, imageUrl, budget, deadline) VALUES (?, ?, ?, ?, ?, ?)\n"
 //                ;
-
 //        return "begin tran\n"
 //                +"IF EXISTS (SELECT * FROM Project WHERE id=?)\n"
 //                + "    UPDATE Project SET (id=?, title=?, description=?, imageUrl=?, budget=?, deadline=?) WHERE id=?\n"
@@ -96,8 +96,6 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 //                + "    INSERT INTO Project (id, title, description, imageUrl, budget, deadline) VALUES (?, ?, ?, ?, ?, ?)\n"
 //                + "commit tran"
 //                ;
-
     }
-
 
 }
