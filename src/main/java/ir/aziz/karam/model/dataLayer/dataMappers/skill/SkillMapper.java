@@ -69,7 +69,7 @@ public class SkillMapper extends Mapper<Skill, String> implements ISkillMapper {
 
     @Override
     protected String getInsertOrUpdateStatement() {
-        return "INSERT IGNORE INTO Skill (name) VALUES (?)";
+        return "INSERT OR IGNORE INTO Skill (name) VALUES (?)";
 
     }
 
