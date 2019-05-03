@@ -73,6 +73,7 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
             setInsertElementParameters(st, element, 1);
             st.executeUpdate();
         }
+        con.close();
     }
 
     @Override
@@ -83,6 +84,7 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
             setInsertOrUpdateElementParameters(st, element);
             st.executeUpdate();
         }
+        con.close();
     }
 
 }
