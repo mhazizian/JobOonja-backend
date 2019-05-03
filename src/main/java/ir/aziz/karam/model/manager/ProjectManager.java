@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.log4j.Logger;
 
 public class ProjectManager {
 
@@ -40,13 +41,17 @@ public class ProjectManager {
         String rawData = DataLoader.readFromUrlToString(ProjectsAPI);
         projects = gson.fromJson(rawData, new TypeToken<List<Project>>() {
         }.getType());
-
         for (Project project : projects) {
-            ProjectMapper.getInstance().insertOrUpdate(project);
+            try {
+                Logger.getLogger(ProjectManager.class).info(project.getId() + "ثبت خواهد شد.");
+                ProjectMapper.getInstance().insertOrUpdate(project);
+                Logger.getLogger(ProjectManager.class).info(project.getId() + "ثبت شد.");
+            } catch (Exception ex) {
+                Logger.getLogger(ProjectManager.class).error(ex.getMessage());
+            }
         }
 
     }
-
 
     public List<Project> getAllProjectsFeasibleByUser(User user) throws IOException, SQLException {
         List<Project> projects = ProjectMapper.getInstance().getAll();
@@ -68,7 +73,6 @@ public class ProjectManager {
             throw new ProjectNotFoundException("project not found!");
         }
     }
-
 
     public void userCanSolveProject(User user, Project project) throws SkillNotFoundException, SkillPointIsNotEnoghException, SQLException {
         for (int i = 0; i < project.getSkills().size(); i++) {

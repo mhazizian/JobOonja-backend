@@ -14,6 +14,7 @@ import ir.aziz.karam.model.types.SkillUser;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import org.apache.log4j.Logger;
 
 public class SkillManager {
 
@@ -32,15 +33,21 @@ public class SkillManager {
         return SkillMapper.getInstance().getAll();
     }
 
-    public void updateSkillListFromServer() throws IOException, SQLException {
+    public void updateSkillListFromServer() throws IOException {
         List<Skill> skills;
         Gson gson = new Gson();
         String rawData = DataLoader.readFromUrlToString(skillsAPI);
         skills = gson.fromJson(rawData, new TypeToken<List<Skill>>() {
         }.getType());
 
-        for (Skill skill: skills) {
-            SkillMapper.getInstance().insertOrUpdate(skill);
+        for (Skill skill : skills) {
+            try {
+                Logger.getLogger(SkillManager.class).info(skill.getName() + "ثبت خواهد شد.");
+                SkillMapper.getInstance().insertOrUpdate(skill);
+                Logger.getLogger(SkillManager.class).info(skill.getName() + "ثبت شد.");
+            } catch (SQLException ex) {
+                Logger.getLogger(SkillManager.class).error(ex.getMessage());
+            }
         }
 
     }
