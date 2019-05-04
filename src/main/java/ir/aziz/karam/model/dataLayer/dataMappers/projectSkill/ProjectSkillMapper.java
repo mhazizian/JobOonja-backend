@@ -102,14 +102,17 @@ public class ProjectSkillMapper extends Mapper<ProjectSkill, String> implements 
     @Override
     protected void setInsertOrUpdateElementParameters(PreparedStatement st, ProjectSkill element) throws SQLException {
         this.setInsertElementParameters(st, element, 1);
-        this.setInsertElementParameters(st, element, 4);
+//        this.setInsertElementParameters(st, element, 4);
     }
 
     @Override
     protected String getInsertOrUpdateStatement() {
-        return "INSERT INTO ProjectSkill (project_id, skill_id, req_point) VALUES (?, ?, ?)\n"
-                + "ON DUPLICATE KEY UPDATE\n"
-                + "project_id=?, skill_id=?, req_point=?";
+        return "INSERT OR IGNORE INTO ProjectSkill (project_id, skill_id, req_point) VALUES (?, ?, ?)\n";
+
+
+//        return "INSERT INTO ProjectSkill (project_id, skill_id, req_point) VALUES (?, ?, ?)\n"
+//                + "ON DUPLICATE KEY UPDATE\n"
+//                + "project_id=?, skill_id=?, req_point=?";
     }
 
     public List<ProjectSkill> getSkillsOfProject(Project project) throws SQLException {

@@ -40,6 +40,12 @@ public class Project {
         return skills;
     }
 
+    public List<ProjectSkill> getSkillsPermanently() {
+        return this.skills;
+    }
+
+
+
     public void setSkills(List<ProjectSkill> skills) {
         this.skills = skills;
     }

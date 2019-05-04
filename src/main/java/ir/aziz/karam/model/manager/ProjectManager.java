@@ -6,7 +6,9 @@
 package ir.aziz.karam.model.manager;
 
 import ir.aziz.karam.model.dataLayer.dataMappers.project.ProjectMapper;
+import ir.aziz.karam.model.dataLayer.dataMappers.projectSkill.ProjectSkillMapper;
 import ir.aziz.karam.model.types.Project;
+import ir.aziz.karam.model.types.ProjectSkill;
 import ir.aziz.karam.model.types.SkillUser;
 import ir.aziz.karam.model.types.User;
 import ir.aziz.karam.model.exception.ProjectNotFoundException;
@@ -43,13 +45,27 @@ public class ProjectManager {
         }.getType());
         for (Project project : projects) {
             try {
-                Logger.getLogger(ProjectManager.class).info(project.getId() + "ثبت خواهد شد.");
-                ProjectMapper.getInstance().insertOrUpdate(project);
-                Logger.getLogger(ProjectManager.class).info(project.getId() + "ثبت شد.");
+                this.addProject(project);
             } catch (Exception ex) {
                 Logger.getLogger(ProjectManager.class).error(ex.getMessage());
+                ex.printStackTrace();
             }
         }
+
+    }
+
+    public void addProject(Project project) throws SQLException {
+//        Logger.getLogger(ProjectManager.class).info(project.getId() + "ثبت خواهد شد.");
+        ProjectMapper.getInstance().insertOrUpdate(project);
+        System.out.println(project.getSkillsPermanently().size());
+        for (ProjectSkill projectSkill : project.getSkillsPermanently()) {
+            projectSkill.setProject_id(project.getId());
+
+            System.out.println(projectSkill.getName());
+
+            ProjectSkillMapper.getInstance().insertOrUpdate(projectSkill);
+        }
+//        Logger.getLogger(ProjectManager.class).info(project.getId() + "ثبت شد.");
 
     }
 
