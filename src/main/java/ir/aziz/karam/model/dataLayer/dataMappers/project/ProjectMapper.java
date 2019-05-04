@@ -12,7 +12,7 @@ import java.sql.Statement;
 
 public class ProjectMapper extends Mapper<Project, String> implements IProjectMapper {
 
-    private static final String COLUMNS = " id, lastname, firstname, gpa ";
+    private static final String COLUMNS = " id, title, description, imageUrl, budget, deadline ";
     private static ProjectMapper instance;
 
     public static ProjectMapper getInstance() throws SQLException {

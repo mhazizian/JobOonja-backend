@@ -13,7 +13,7 @@ import java.util.List;
 
 public class UserMapper extends Mapper<User, String> implements IUserMapper {
 
-    private static final String COLUMNS = " id, fistName, lastName, jobTitle, pictureUrl, bio";
+    private static final String COLUMNS = " id, firstName, lastName, jobTitle, pictureUrl, bio";
     private static UserMapper instance;
 
     public static UserMapper getInstance() throws SQLException {
