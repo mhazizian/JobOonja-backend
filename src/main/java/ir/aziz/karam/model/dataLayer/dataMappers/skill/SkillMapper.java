@@ -37,7 +37,7 @@ public class SkillMapper extends Mapper<Skill, String> implements ISkillMapper {
     @Override
     protected String getFindStatement() {
         return "SELECT " + COLUMNS
-                + " FROM SkillUser"
+                + " FROM Skill"
                 + " WHERE name = ?";
     }
 
@@ -49,7 +49,7 @@ public class SkillMapper extends Mapper<Skill, String> implements ISkillMapper {
     @Override
     protected String getAllStatement() {
         return "SELECT " + COLUMNS
-                + " FROM SkillUser";
+                + " FROM Skill";
     }
 
     @Override
