@@ -5,6 +5,7 @@
  */
 package ir.aziz.karam.model.types;
 
+import ir.aziz.karam.model.dataLayer.dataMappers.bid.BidMapper;
 import ir.aziz.karam.model.dataLayer.dataMappers.projectSkill.ProjectSkillMapper;
 
 import java.sql.SQLException;
@@ -82,7 +83,8 @@ public class Project {
         this.imageUrl = imageURL;
     }
 
-    public List<Bid> getBids() {
+    public List<Bid> getBids() throws SQLException {
+        this.bids = BidMapper.getInstance().getAll();
         return bids;
     }
 
@@ -90,10 +92,11 @@ public class Project {
         this.bids = bids;
     }
 
-    public void addBid(Bid bid) {
-        if (this.bids == null)
-            this.bids = new ArrayList<>();
-        this.bids.add(bid);
+    public void addBid(Bid bid) throws SQLException {
+        BidMapper.getInstance().insert(bid);
+//        if (this.bids == null)
+//            this.bids = new ArrayList<>();
+//        this.bids.add(bid);
     }
 
     public long getDeadline() {
@@ -128,11 +131,15 @@ public class Project {
         this.deadline = deadline;
     }
 
-    public boolean hasBided(User user) {
-        if (this.bids == null)
+    public boolean hasBided(User user) throws SQLException {
+        this.bids = this.getBids();
+        if (this.bids == null) {
             return false;
+        }
 
+        System.out.println(this.bids.size());
         for (int i = 0; i < this.bids.size(); i++) {
+            System.out.println(this.bids.get(i).getBiddingUser());
             if (this.bids.get(i).getBiddingUser().equals(user.getId())) {
                return true;
             }

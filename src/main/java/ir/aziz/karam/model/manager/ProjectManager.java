@@ -95,7 +95,6 @@ public class ProjectManager {
         for (int i = 0; i < project.getSkills().size(); i++) {
             SkillUser skillOfUser = user.getUserSkillByName(project.getSkillsPermanently().get(i).getSkill_id());
 
-            System.out.println("check skill " + skillOfUser.getName() + "with" + project.getSkillsPermanently().get(i).getSkill_id());
             if (skillOfUser.getPoints() < project.getSkills().get(i).getReqPoints()) {
                 throw new SkillPointIsNotEnoghException(skillOfUser.getName() + " point is not enough for this project!");
             }

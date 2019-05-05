@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 
 @WebServlet("/bid")
 public class BidServlet extends HttpServlet {
@@ -34,21 +35,19 @@ public class BidServlet extends HttpServlet {
             Project projectById = ProjectManager.getInstance().getProjectById(projectId);
             User currentUser = UserManager.getInstance().getCurrentUser();
             ProjectManager.getInstance().userCanSolveProject(currentUser, projectById);
-            if (!projectById.hasBided(currentUser)) {
-                projectById.addBid(new Bid(currentUser.getId(), projectById.getId(), Integer.parseInt(amount)));
-                ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, "درخواست با موفقیت انجام شد.", null);
-                response.setCharacterEncoding("UTF-8");
-                response.setStatus(HttpServletResponse.SC_ACCEPTED);
-                response.getWriter().write(gson.toJson(responsePostMessage));
 
-            } else {
-                response.setStatus(400);
-                ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "این پروژه درخواست شده است.", null);
-                response.setCharacterEncoding("UTF-8");
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().write(gson.toJson(responsePostMessage));
-            }
-
+            projectById.addBid(new Bid(currentUser.getId(), projectById.getId(), Integer.parseInt(amount)));
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, "درخواست با موفقیت انجام شد.", null);
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpServletResponse.SC_ACCEPTED);
+            response.getWriter().write(gson.toJson(responsePostMessage));
+            
+        } catch (SQLException ex) {
+            response.setStatus(400);
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "این پروژه درخواست شده است.", null);
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write(gson.toJson(responsePostMessage));
         } catch (ProjectNotFoundException ex) {
             Logger.getLogger(AddSkillUserRequestServlet.class).error(ex, ex);
             response.setStatus(404);
