@@ -105,14 +105,19 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
     @Override
     protected void setInsertOrUpdateElementParameters(PreparedStatement st, User element) throws SQLException {
         this.setInsertElementParameters(st, element, 1);
-        this.setInsertElementParameters(st, element, 7);
+//        this.setInsertElementParameters(st, element, 7);
     }
 
     @Override
     protected String getInsertOrUpdateStatement() {
-        return "INSERT INTO User (id, firstName, lastName, jobTitle, pictureUrl, bio) VALUES (?, ?, ?, ?, ?, ?)\n"
-                + "ON DUPLICATE KEY UPDATE\n"
-                + "id=?, firstName=?, lastName=?, jobTitle=?, pictureUrl=?, bio=?";
+
+        return "INSERT OR IGNORE INTO User (id, firstName, lastName, jobTitle, pictureUrl, bio) VALUES (?, ?, ?, ?, ?, ?) \n"
+                ;
+
+//        return "INSERT INTO User (id, firstName, lastName, jobTitle, pictureUrl, bio) VALUES (?, ?, ?, ?, ?, ?) \n"
+//                + "ON CONFLICT DO UPDATE SET\n"
+//                + "id=?, firstName=?, lastName=?, jobTitle=?, pictureUrl=?, bio=?"
+//                ;
 
 //        return "IF EXISTS (SELECT * FROM User WHERE id=?)"
 //               + "    UPDATE User SET (id=?, firstName=?, lastName=?, jobTitle=?, pictureUrl=?, bio=?) WHERE id=?"

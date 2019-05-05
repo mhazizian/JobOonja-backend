@@ -15,7 +15,7 @@ import java.util.List;
 
 public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkillUserMapper {
 
-    private static final String COLUMNS = "skill_name, user_id";
+    private static final String COLUMNS = "skill_name, user_id, point";
     private static SkillUserMapper instance;
 
     @Override
@@ -71,7 +71,7 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
                 resultSet.next();
                 return convertResultSetToDomainModel(resultSet);
             } catch (SQLException ex) {
-                System.out.println("error in Mapper.findByID query.");
+                System.out.println("error in Mapper.findByID query. \n" + ex.getMessage());
                 throw ex;
             }
         }
@@ -122,7 +122,7 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
 
                 return skills;
             } catch (SQLException ex) {
-                System.out.println("error in Mapper.findByID query.");
+                System.out.println("error in Mapper.findByID query. SkillUser");
                 throw ex;
             }
         }
@@ -144,19 +144,23 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
 
     @Override
     protected void setInsertOrUpdateElementParameters(PreparedStatement st, SkillUser element) throws SQLException {
-        st.setString(4, element.getName());
-        st.setString(5, element.getUserId());
-        this.setInsertElementParameters(st, element, 3);
-        st.setString(6, element.getName());
-        st.setString(7, element.getUserId());
-        this.setInsertElementParameters(st, element, 8);
+        this.setInsertElementParameters(st, element, 1
+        );
+
+//        st.setString(4, element.getName());
+//        st.setString(5, element.getUserId());
+//        this.setInsertElementParameters(st, element, 3);
+//        st.setString(6, element.getName());
+//        st.setString(7, element.getUserId());
+//        this.setInsertElementParameters(st, element, 8);
     }
 
     @Override
     protected String getInsertOrUpdateStatement() {
-        return "INSERT INTO SkillUser (skill_name, user_id, point) VALUES (?, ?, ?)\n"
-                + "ON DUPLICATE KEY UPDATE\n"
-                + "skill_name=?, user_id=?, point=?";
+        return "INSERT OR IGNORE INTO SkillUser (skill_name, user_id, point) VALUES (?, ?, ?)\n";
+//        return "INSERT INTO SkillUser (skill_name, user_id, point) VALUES (?, ?, ?)\n"
+//                + "ON DUPLICATE KEY UPDATE\n"
+//                + "skill_name=?, user_id=?, point=?";
 
 //        return "IF EXISTS (SELECT * FROM SkillUser WHERE skill_name=? AND user_id=?)"
 //                + "    UPDATE SkillUser SET (skill_name=?, user_id=?, point=?) WHERE skill_name=? AND user_id=?"

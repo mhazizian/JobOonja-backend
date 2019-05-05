@@ -41,15 +41,20 @@ public class UserManager {
     }
 
     public User getCurrentUser() {
-        if (currentUser == null) {
-            List<SkillUser> tempSkills = new ArrayList<>();
-            tempSkills.add(new SkillUser("HTML", 5));
-            tempSkills.add(new SkillUser("Javascript", 4));
-            tempSkills.add(new SkillUser("C++", 3));
-            tempSkills.add(new SkillUser("Java", 3));
-            currentUser = new User("1", "علی", "شریف زاده", "برنامه نویس وب", null, tempSkills, "روی سنگ قبرم بنویسید: خدا بیامرز میخواست خیلی کارا بکنه  ولی پول نداشت");
+        try {
+            return UserMapper.getInstance().find("1");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
-        return currentUser;
+    }
+
+    public void addUser(User user) throws SQLException {
+        UserMapper.getInstance().insertOrUpdate(user);
+
+        for (SkillUser skillUser : user.getSkillsPermanently()) {
+            SkillUserMapper.getInstance().insertOrUpdate(skillUser);
+        }
     }
 
     public SkillUser getSkillOfUserBySkillName(User user, String skillName) throws SkillNotFoundException {

@@ -57,11 +57,9 @@ public class ProjectManager {
     public void addProject(Project project) throws SQLException {
 //        Logger.getLogger(ProjectManager.class).info(project.getId() + "ثبت خواهد شد.");
         ProjectMapper.getInstance().insertOrUpdate(project);
-        System.out.println(project.getSkillsPermanently().size());
         for (ProjectSkill projectSkill : project.getSkillsPermanently()) {
             projectSkill.setProject_id(project.getId());
 
-            System.out.println(projectSkill.getName());
 
             ProjectSkillMapper.getInstance().insertOrUpdate(projectSkill);
         }
@@ -71,7 +69,9 @@ public class ProjectManager {
 
     public List<Project> getAllProjectsFeasibleByUser(User user) throws IOException, SQLException {
         List<Project> projects = ProjectMapper.getInstance().getAll();
+        System.out.println(projects.size());
         List<Project> result = new ArrayList<>();
+
         for (Project project : projects) {
             try {
                 userCanSolveProject(user, project);
@@ -79,6 +79,7 @@ public class ProjectManager {
             } catch (SkillNotFoundException | SkillPointIsNotEnoghException ignored) {
             }
         }
+
         return result;
     }
 
@@ -92,7 +93,9 @@ public class ProjectManager {
 
     public void userCanSolveProject(User user, Project project) throws SkillNotFoundException, SkillPointIsNotEnoghException, SQLException {
         for (int i = 0; i < project.getSkills().size(); i++) {
-            SkillUser skillOfUser = user.getUserSkillByName(project.getSkills().get(i).getSkill_id());
+            SkillUser skillOfUser = user.getUserSkillByName(project.getSkillsPermanently().get(i).getSkill_id());
+
+            System.out.println("check skill " + skillOfUser.getName() + "with" + project.getSkillsPermanently().get(i).getSkill_id());
             if (skillOfUser.getPoints() < project.getSkills().get(i).getReqPoints()) {
                 throw new SkillPointIsNotEnoghException(skillOfUser.getName() + " point is not enough for this project!");
             }

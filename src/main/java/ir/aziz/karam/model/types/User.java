@@ -33,6 +33,10 @@ public class User implements Serializable {
         return this.skills;
     }
 
+    public List<SkillUser> getSkillsPermanently() throws SQLException {
+        return this.skills;
+    }
+
     public void setSkills(List<SkillUser> skills) {
         this.skills = skills;
     }
