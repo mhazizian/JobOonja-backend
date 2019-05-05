@@ -35,6 +35,7 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
                 + " WHERE user_id = ?";
     }
 
+
     public static SkillUserMapper getInstance() throws SQLException {
         if (instance == null) {
             instance = new SkillUserMapper();
@@ -130,11 +131,11 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
 
     public void deleteSkillUser(String skillName, String userId) throws SQLException {
         try (Connection con = DBCPDBConnectionPool.getConnection();
-             PreparedStatement st = con.prepareStatement(this.getSkillUserByUserIdStatement())) {
+             PreparedStatement st = con.prepareStatement(this.getDeleteSkillUserStatement())) {
             st.setString(1, userId);
             st.setString(2, skillName);
             try {
-                st.executeQuery();
+                st.execute();
             } catch (SQLException ex) {
                 System.out.println("error in Mapper.Delete query.");
                 throw ex;
