@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ProjectMapper extends Mapper<Project, String> implements IProjectMapper {
 
-    private static final String COLUMNS = " id, title, description, imageUrl, budget, deadline ";
+    private static final String COLUMNS = " id, title, description, imageUrl, budget, deadline, creationDate";
     private static ProjectMapper instance;
 
     public static ProjectMapper getInstance() throws SQLException {
@@ -33,7 +33,8 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
                 + "description TEXT, "
                 + "imageUrl TEXT, "
                 + "budget INTEGER, "
-                + "deadline BIGINT "
+                + "deadline BIGINT, "
+                + "creationDate BIGINT "
                 + ")");
         st.close();
         con.close();
@@ -44,25 +45,25 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
     protected String getFindStatement() {
         return "SELECT " + COLUMNS
                 + " FROM Project"
-                + " WHERE id = ?";
+                + " WHERE id = ? ";
     }
 
     @Override
     protected Project convertResultSetToDomainModel(ResultSet rs) throws SQLException {
-        return new Project(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getLong(6));
+        return new Project(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getLong(6), rs.getLong(7));
     }
 
     @Override
     protected String getAllStatement() {
         return "SELECT " + COLUMNS
-                + " FROM Project";
+                + " FROM Project ORDER by  Project.creationDate DESC LIMIT 30";
     }
 
     protected String getProjectsSearchedByNameStatement(String name) {
         return "SELECT " + COLUMNS
                 + " FROM Project"
                 + " WHERE title LIKE '%" + name + "%' OR"
-                + " description LIKE '%" + name + "%'";
+                + " description LIKE '%" + name + "%' ORDER by  Project.creationDate DESC LIMIT 30";
     }
 
     @Override
@@ -73,11 +74,12 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
         st.setString(3 + baseIndex, element.getImageURL());
         st.setInt(4 + baseIndex, element.getBudget());
         st.setLong(5 + baseIndex, element.getDeadline());
+        st.setLong(6 + baseIndex, element.getCreationDate());
     }
 
     @Override
     protected String getInsertStatement() {
-        return "INSERT INTO Project (id, title, description, imageUrl, budget, deadline) VALUES (?, ?, ?, ?, ?, ?)";
+        return "INSERT INTO Project (id, title, description, imageUrl, budget, deadline, creationDate) VALUES (?, ?, ?, ?, ?, ?, ?)";
     }
 
     @Override
@@ -91,7 +93,7 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 //        return "INSERT INTO Project (id, title, description, imageUrl, budget, deadline) VALUES (?, ?, ?, ?, ?, ?)\n"
 //                + "ON DUPLICATE KEY UPDATE\n"
 //                + "    id=?, title=?, description=?, imageUrl=?, budget=?, deadline=?";
-        return "INSERT OR IGNORE INTO Project (id, title, description, imageUrl, budget, deadline) VALUES (?, ?, ?, ?, ?, ?)";
+        return "INSERT OR IGNORE INTO Project (id, title, description, imageUrl, budget, deadline, creationDate) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
 //        return "UPDATE Project SET (id=?, title=?, description=?, imageUrl=?, budget=?, deadline=?) WHERE id=?\n"
 //                + "IF @@rowcount = 0\n"
