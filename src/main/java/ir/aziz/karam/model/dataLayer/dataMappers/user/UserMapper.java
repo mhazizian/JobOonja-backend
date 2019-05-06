@@ -55,7 +55,7 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
 
     public List<User> getAllUserWithoutCurrent(String userId) throws SQLException {
         try (Connection con = DBCPDBConnectionPool.getConnection();
-             PreparedStatement st = con.prepareStatement(getAllUserWithoutCurrentStatement())) {
+                PreparedStatement st = con.prepareStatement(getAllUserWithoutCurrentStatement())) {
             st.setString(1, userId);
             ResultSet resultSet;
             try {
@@ -110,34 +110,32 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
     protected String getUsersSearchedByNameStatement() {
         return "SELECT " + COLUMNS
                 + " FROM User"
-                + " WHERE firstName LIKE ? " + "OR\n"
-                + " lastName LIKE ?";
+                + " WHERE (firstName LIKE ? " + "OR\n"
+                + " lastName LIKE ?) AND id <> ?";
     }
 
     @Override
     protected String getInsertOrUpdateStatement() {
 
-        return "INSERT OR IGNORE INTO User (id, firstName, lastName, jobTitle, pictureUrl, bio) VALUES (?, ?, ?, ?, ?, ?) \n"
-                ;
+        return "INSERT OR IGNORE INTO User (id, firstName, lastName, jobTitle, pictureUrl, bio) VALUES (?, ?, ?, ?, ?, ?) \n";
 
 //        return "INSERT INTO User (id, firstName, lastName, jobTitle, pictureUrl, bio) VALUES (?, ?, ?, ?, ?, ?) \n"
 //                + "ON CONFLICT DO UPDATE SET\n"
 //                + "id=?, firstName=?, lastName=?, jobTitle=?, pictureUrl=?, bio=?"
 //                ;
-
 //        return "IF EXISTS (SELECT * FROM User WHERE id=?)"
 //               + "    UPDATE User SET (id=?, firstName=?, lastName=?, jobTitle=?, pictureUrl=?, bio=?) WHERE id=?"
 //               + "ELSE"
 //               + "    INSERT INTO User (id, firstName, lastName, jobTitle, pictureUrl, bio) VALUES (?, ?, ?, ?, ?, ?)"
 //        ;
-
     }
 
-    public List<User> getUsersSearchedByName(String name) throws SQLException {
+    public List<User> getUsersSearchedByName(String name, String currentUser) throws SQLException {
         try (Connection con = DBCPDBConnectionPool.getConnection();
-             PreparedStatement st = con.prepareStatement(getUsersSearchedByNameStatement())) {
+                PreparedStatement st = con.prepareStatement(getUsersSearchedByNameStatement())) {
             st.setString(1, "%" + name + "%");
             st.setString(2, "%" + name + "%");
+            st.setString(3, currentUser);
             ResultSet resultSet;
             try {
                 resultSet = st.executeQuery();

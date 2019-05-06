@@ -41,7 +41,7 @@ public class UserServlet extends HttpServlet {
                 if (userName == null || userName.equals(""))
                     allUsers = UserManager.getInstance().getAllUsersWithoutCurrentUser();
                 else
-                    allUsers = UserMapper.getInstance().getUsersSearchedByName(userName);
+                    allUsers = UserMapper.getInstance().getUsersSearchedByName(userName, UserManager.getInstance().getCurrentUser().getId());
                     // TODO : expect self in above query.
 
 
