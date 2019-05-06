@@ -40,8 +40,9 @@ public class ProjectServlet extends HttpServlet {
         String[] parts = request.getRequestURL().toString().split("/");
         try {
             if (parts.length == 5 || parts.length == 6 && parts[5].equals("")) {
+                String projectName = request.getParameter("name");
                 User currentUser = UserManager.getInstance().getCurrentUser();
-                List<Project> allProject = ProjectManager.getInstance().getAllProjectsFeasibleByUser(currentUser);
+                List<Project> allProject = ProjectManager.getInstance().getAllProjectsFeasibleByUser(currentUser, projectName);
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_OK);
                 String currentID = UserManager.getInstance().getCurrentUser().getId();
@@ -88,4 +89,3 @@ public class ProjectServlet extends HttpServlet {
         }
     }
 }
-

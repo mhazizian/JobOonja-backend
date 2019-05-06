@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 public class ProjectMapper extends Mapper<Project, String> implements IProjectMapper {
 
@@ -57,6 +58,13 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
                 + " FROM Project";
     }
 
+    protected String getProjectsSearchedByNameStatement(String name) {
+        return "SELECT " + COLUMNS
+                + " FROM Project"
+                + " WHERE title LIKE '%" + name + "%' OR"
+                + " description LIKE '%" + name + "%'";
+    }
+
     @Override
     protected void setInsertElementParameters(PreparedStatement st, Project element, int baseIndex) throws SQLException {
         st.setString(baseIndex, element.getId());
@@ -96,6 +104,23 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 //                + "    INSERT INTO Project (id, title, description, imageUrl, budget, deadline) VALUES (?, ?, ?, ?, ?, ?)\n"
 //                + "commit tran"
 //                ;
+    }
+
+    public List<Project> getProjectsSearchedByName(String name) throws SQLException {
+        try (Connection con = DBCPDBConnectionPool.getConnection();
+                PreparedStatement st = con.prepareStatement(getProjectsSearchedByNameStatement(name))) {
+//            st.setString(1, name);
+//            st.setString(2, name);
+            ResultSet resultSet;
+            try {
+                resultSet = st.executeQuery();
+                return convertResultSetToDomainModelList(resultSet);
+            } catch (SQLException ex) {
+                System.out.println("error in Mapper.getAll query.");
+                ex.printStackTrace();
+                throw ex;
+            }
+        }
     }
 
 }

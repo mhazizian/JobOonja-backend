@@ -60,15 +60,19 @@ public class ProjectManager {
         for (ProjectSkill projectSkill : project.getSkillsPermanently()) {
             projectSkill.setProject_id(project.getId());
 
-
             ProjectSkillMapper.getInstance().insertOrUpdate(projectSkill);
         }
 //        Logger.getLogger(ProjectManager.class).info(project.getId() + "ثبت شد.");
 
     }
 
-    public List<Project> getAllProjectsFeasibleByUser(User user) throws IOException, SQLException {
-        List<Project> projects = ProjectMapper.getInstance().getAll();
+    public List<Project> getAllProjectsFeasibleByUser(User user, String projectName) throws IOException, SQLException {
+        List<Project> projects;
+        if (projectName == null || projectName.equals("")) {
+            projects = ProjectMapper.getInstance().getAll();
+        } else {
+            projects = ProjectMapper.getInstance().getProjectsSearchedByName(projectName);
+        }
         List<Project> result = new ArrayList<>();
 
         for (Project project : projects) {
