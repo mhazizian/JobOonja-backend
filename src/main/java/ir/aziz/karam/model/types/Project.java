@@ -27,6 +27,7 @@ public class Project {
     private int budget;
     private long deadline;
     private User winner;
+    private long creationDate;
 
     public String getTitle() {
         return title;
@@ -44,8 +45,6 @@ public class Project {
     public List<ProjectSkill> getSkillsPermanently() {
         return this.skills;
     }
-
-
 
     public void setSkills(List<ProjectSkill> skills) {
         this.skills = skills;
@@ -115,6 +114,30 @@ public class Project {
         this.winner = winner;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public long getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(long creationDate) {
+        this.creationDate = creationDate;
+    }
+
     public Project(String title, List<ProjectSkill> skills, int budget) {
         this.title = title;
         this.skills = skills;
@@ -122,13 +145,22 @@ public class Project {
         this.bids = new ArrayList<>();
     }
 
-    public Project(String id, String title, String description, String imageUrl, int budget, long deadline) {
+//    public Project(String id, String title, String description, String imageUrl, int budget, long deadline) {
+//        this.id = id;
+//        this.title = title;
+//        this.description = description;
+//        this.imageUrl = imageUrl;
+//        this.budget = budget;
+//        this.deadline = deadline;
+//    }
+    public Project(String id, String title, String description, String imageUrl, int budget, long deadline, long creationDate) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.imageUrl = imageUrl;
         this.budget = budget;
         this.deadline = deadline;
+        this.creationDate = creationDate;
     }
 
     public boolean hasBided(User user) throws SQLException {
@@ -140,7 +172,7 @@ public class Project {
         System.out.println(this.bids.size());
         for (int i = 0; i < this.bids.size(); i++) {
             if (this.bids.get(i).getBiddingUser().equals(user.getId())) {
-               return true;
+                return true;
             }
         }
         return false;
