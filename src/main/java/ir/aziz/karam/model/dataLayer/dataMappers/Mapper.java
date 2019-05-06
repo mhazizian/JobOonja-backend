@@ -22,7 +22,6 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
     protected abstract String getInsertOrUpdateStatement();
 
     protected List<T> convertResultSetToDomainModelList(ResultSet rs) throws SQLException {
-        rs.next();
         List<T> results = new ArrayList<>();
         while (rs.next()) {
             results.add(this.convertResultSetToDomainModel(rs));
@@ -56,7 +55,6 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
             ResultSet resultSet;
             try {
                 resultSet = st.executeQuery();
-                resultSet.next();
                 return convertResultSetToDomainModelList(resultSet);
             } catch (SQLException ex) {
                 System.out.println("error in Mapper.getAll query.");
