@@ -6,6 +6,7 @@
 package ir.aziz.karam.controller;
 
 import com.google.gson.Gson;
+import ir.aziz.karam.model.dataLayer.dataMappers.user.UserMapper;
 import ir.aziz.karam.model.exception.UserNotFoundException;
 import ir.aziz.karam.model.manager.EndorseManager;
 import ir.aziz.karam.model.manager.SkillManager;
@@ -35,7 +36,15 @@ public class UserServlet extends HttpServlet {
         String[] parts = request.getRequestURL().toString().split("/");
         try {
             if (parts.length == 5) {
-                List<User> allUsers = UserManager.getInstance().getAllUsersWithoutCurrentUser();
+                String userName = request.getParameter("name");
+                List<User> allUsers;
+                if (userName == null || userName.equals(""))
+                    allUsers = UserManager.getInstance().getAllUsersWithoutCurrentUser();
+                else
+                    allUsers = UserMapper.getInstance().getUsersSearchedByName(userName);
+                    // TODO : expect self in above query.
+
+
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().write(gson.toJson(allUsers));
