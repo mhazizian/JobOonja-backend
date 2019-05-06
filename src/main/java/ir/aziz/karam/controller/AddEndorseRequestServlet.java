@@ -6,6 +6,7 @@
 package ir.aziz.karam.controller;
 
 import com.google.gson.Gson;
+import ir.aziz.karam.model.dataLayer.dataMappers.endorsment.EndorsmentMapper;
 import ir.aziz.karam.model.exception.SkillNotFoundException;
 import ir.aziz.karam.model.exception.UserNotFoundException;
 import ir.aziz.karam.model.manager.UserManager;
@@ -41,10 +42,9 @@ public class AddEndorseRequestServlet extends HttpServlet {
             User user = UserManager.getInstance().getUserById(userId);
             User currentUser = UserManager.getInstance().getUserById(currentUserId);
             if (!UserManager.getInstance().hasUserEndorsedThisUser(currentUser, user.getId(), skillName)) {
-                currentUser.addEndorses(new Endorse(userId, skillName));
                 SkillUser skillOfUserBySkillName = UserManager.getInstance().getSkillOfUserBySkillName(user, skillName);
                 skillOfUserBySkillName.setPoints(skillOfUserBySkillName.getPoints() + 1);
-
+                EndorsmentMapper.getInstance().insert(new Endorse(userId, skillName, currentUserId));
                 ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, "درخواست با موفقیت انجام شد.", null);
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_ACCEPTED);

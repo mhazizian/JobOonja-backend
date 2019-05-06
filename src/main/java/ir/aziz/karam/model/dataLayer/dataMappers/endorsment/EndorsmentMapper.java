@@ -13,7 +13,7 @@ import java.util.List;
 
 public class EndorsmentMapper extends Mapper<Endorse, String> implements IEndorsmentMapper {
 
-    private static final String COLUMNS = " endorser_id, endorsed_id, skill_id";
+    private static final String COLUMNS = " endorser_id, skill_id, endorsed_id";
     private static EndorsmentMapper instance;
 
     private String getSkillsEndorsedByUserOnUserStatement() {
