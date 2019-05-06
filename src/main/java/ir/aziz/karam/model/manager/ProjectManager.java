@@ -69,7 +69,6 @@ public class ProjectManager {
 
     public List<Project> getAllProjectsFeasibleByUser(User user) throws IOException, SQLException {
         List<Project> projects = ProjectMapper.getInstance().getAll();
-        System.out.println(projects.size());
         List<Project> result = new ArrayList<>();
 
         for (Project project : projects) {

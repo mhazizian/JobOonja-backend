@@ -41,7 +41,7 @@ public class BidServlet extends HttpServlet {
             response.setCharacterEncoding("UTF-8");
             response.setStatus(HttpServletResponse.SC_ACCEPTED);
             response.getWriter().write(gson.toJson(responsePostMessage));
-            
+
         } catch (SQLException ex) {
             response.setStatus(400);
             ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "این پروژه درخواست شده است.", null);
