@@ -67,7 +67,7 @@ public class InitializeListener implements ServletContextListener {
 
 
             Timer timer = new Timer();
-            timer.schedule(new UpdateDataCenterScheduler(), 0, 30000);
+            timer.schedule(new UpdateDataCenterScheduler(), 0, 300000);
 
         } catch (SQLException e) {
             Logger.getLogger(InitializeListener.class).error(e, e);
