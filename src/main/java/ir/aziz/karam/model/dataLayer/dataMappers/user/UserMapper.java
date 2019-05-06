@@ -107,6 +107,13 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
 //        this.setInsertElementParameters(st, element, 7);
     }
 
+    protected String getUsersSearchedByNameStatement() {
+        return "SELECT " + COLUMNS
+                + " FROM User"
+                + " WHERE firstName LIKE ? " + "OR\n"
+                + " lastName LIKE ?";
+    }
+
     @Override
     protected String getInsertOrUpdateStatement() {
 
@@ -124,6 +131,23 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
 //               + "    INSERT INTO User (id, firstName, lastName, jobTitle, pictureUrl, bio) VALUES (?, ?, ?, ?, ?, ?)"
 //        ;
 
+    }
+
+    public List<User> getUsersSearchedByName(String name) throws SQLException {
+        try (Connection con = DBCPDBConnectionPool.getConnection();
+             PreparedStatement st = con.prepareStatement(getUsersSearchedByNameStatement())) {
+            st.setString(1, "%" + name + "%");
+            st.setString(2, "%" + name + "%");
+            ResultSet resultSet;
+            try {
+                resultSet = st.executeQuery();
+                return convertResultSetToDomainModelList(resultSet);
+            } catch (SQLException ex) {
+                System.out.println("error in Mapper.getAll query.");
+                ex.printStackTrace();
+                throw ex;
+            }
+        }
     }
 
 }
