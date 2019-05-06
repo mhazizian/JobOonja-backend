@@ -33,7 +33,7 @@ public class BidMapper extends Mapper<Bid, String> implements IBidMapper {
                 resultSet.next();
                 return convertResultSetToDomainModel(resultSet);
             } catch (SQLException ex) {
-                System.out.println("error in Mapper.findByID query.");
+                System.out.println("error in Mapper.findByID query. BidMapper\n" + ex.getMessage());
                 throw ex;
             }
         }

@@ -49,8 +49,8 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
                 = con.createStatement();
 
         st.executeUpdate("CREATE TABLE IF NOT EXISTS " + "SkillUser" + " ("
-                + "skill_name VARCHAR(200), "
-                + "user_id VARCHAR(200), "
+                + "skill_name VARCHAR(200) NOT NULL, "
+                + "user_id VARCHAR(200) NOT NULL, "
                 + "point INTEGER, "
                 + "PRIMARY KEY (skill_name, user_id), "
                 + "FOREIGN KEY (user_id) REFERENCES User(id), "
@@ -72,7 +72,8 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
                 resultSet.next();
                 return convertResultSetToDomainModel(resultSet);
             } catch (SQLException ex) {
-                System.out.println("error in Mapper.findByID query. \n" + ex.getMessage());
+//                System.out.println("error in Mapper.findByID query. skillUserMapper\n" + ex.getMessage());
+//                ex.printStackTrace();
                 throw ex;
             }
         }

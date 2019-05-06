@@ -60,7 +60,6 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
             ResultSet resultSet;
             try {
                 resultSet = st.executeQuery();
-                resultSet.next();
                 return super.convertResultSetToDomainModelList(resultSet);
             } catch (SQLException ex) {
                 System.out.println("error in Mapper.getAll query.");

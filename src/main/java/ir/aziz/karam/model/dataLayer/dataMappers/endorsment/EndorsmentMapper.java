@@ -44,7 +44,7 @@ public class EndorsmentMapper extends Mapper<Endorse, String> implements IEndors
                 resultSet.next();
                 return convertResultSetToDomainModel(resultSet);
             } catch (SQLException ex) {
-                System.out.println("error in Mapper.findByID query.");
+                System.out.println("error in Mapper.findByID query. Endorsment\n" + ex.getMessage());
                 throw ex;
             }
         }
@@ -130,7 +130,7 @@ public class EndorsmentMapper extends Mapper<Endorse, String> implements IEndors
 
                 return skills;
             } catch (SQLException ex) {
-                System.out.println("error in Mapper.findByID query.");
+                System.out.println("error in Mapper.findByID query.  Endorsmernt\n" + ex.getMessage());
                 throw ex;
             }
         }

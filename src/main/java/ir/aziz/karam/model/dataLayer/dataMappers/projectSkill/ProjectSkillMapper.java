@@ -60,7 +60,7 @@ public class ProjectSkillMapper extends Mapper<ProjectSkill, String> implements 
                 resultSet.next();
                 return convertResultSetToDomainModel(resultSet);
             } catch (SQLException ex) {
-                System.out.println("error in Mapper.findByID query.");
+                System.out.println("error in Mapper.findByID query. ProjectSkillMapper \n" + ex.getMessage());
                 throw ex;
             }
         }
@@ -130,7 +130,7 @@ public class ProjectSkillMapper extends Mapper<ProjectSkill, String> implements 
 
                 return skills;
             } catch (SQLException ex) {
-                System.out.println("error in Mapper.findByID query.");
+                System.out.println("error in Mapper.findByID query. ProjectSkillMapper\n" + ex.getMessage());
                 throw ex;
             }
         }

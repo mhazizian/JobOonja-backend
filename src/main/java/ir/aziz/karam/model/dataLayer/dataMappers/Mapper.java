@@ -41,7 +41,8 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
                 resultSet.next();
                 return convertResultSetToDomainModel(resultSet);
             } catch (SQLException ex) {
-                System.out.println("error in Mapper.findByID query.");
+                System.out.println("error in Mapper.findByID query. \n" + ex.getMessage());
+                ex.printStackTrace();
                 throw ex;
             }
         }
@@ -58,6 +59,7 @@ public abstract class Mapper<T, I> implements IMapper<T, I> {
                 return convertResultSetToDomainModelList(resultSet);
             } catch (SQLException ex) {
                 System.out.println("error in Mapper.getAll query.");
+                ex.printStackTrace();
                 throw ex;
             }
         }
