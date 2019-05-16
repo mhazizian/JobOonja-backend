@@ -27,10 +27,10 @@ public class DeleteSkillUserRequestServlet extends HttpServlet {
         Gson gson = new Gson();
         try {
             Map<String, String[]> parameterMap = request.getParameterMap();
-            String userId = parameterMap.get("user")[0];
+            String currentUserId = (String) request.getAttribute("currentUserId");
+            User currentUser = UserManager.getInstance().getUserById(currentUserId);
             String skillName = parameterMap.get("skill")[0];
-            User userById = UserManager.getInstance().getUserById(userId);
-            UserManager.getInstance().deleteASkillFromAUser(userById, skillName);
+            UserManager.getInstance().deleteASkillFromAUser(currentUser, skillName);
             ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, "درخواست با موفقیت انجام شد.", null);
             response.setCharacterEncoding("UTF-8");
             response.setStatus(HttpServletResponse.SC_ACCEPTED);

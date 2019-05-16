@@ -41,17 +41,18 @@ public class ProjectServlet extends HttpServlet {
         try {
             if (parts.length == 5 || parts.length == 6 && parts[5].equals("")) {
                 String projectName = request.getParameter("name");
-                User currentUser = UserManager.getInstance().getCurrentUser();
+                String currentUserId = (String) request.getAttribute("currentUserId");
+                User currentUser = UserManager.getInstance().getUserById(currentUserId);
                 List<Project> allProject = ProjectManager.getInstance().getAllProjectsFeasibleByUser(currentUser, projectName);
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_OK);
-                String currentID = UserManager.getInstance().getCurrentUser().getId();
-                ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, allProject, new projectsDetails(currentID));
+                ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, allProject, new projectsDetails(currentUserId));
                 response.getWriter().write(gson.toJson(responsePostMessage));
             } else {
                 String projectId = parts[5];
                 Project projectById = ProjectManager.getInstance().getProjectById(projectId); // 404 maybe happend
-                User currentUser = UserManager.getInstance().getCurrentUser();
+                String currentUserId = (String) request.getAttribute("currentUserId");
+                User currentUser = UserManager.getInstance().getUserById(currentUserId);
                 ProjectManager.getInstance().userCanSolveProject(currentUser, projectById);
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_OK);

@@ -42,17 +42,8 @@ public class UserManager {
         return UserMapper.getInstance().getAll();
     }
 
-    public List<User> getAllUsersWithoutCurrentUser() throws IOException, SQLException {
-        return UserMapper.getInstance().getAllUserWithoutCurrent(getCurrentUser().getId());
-    }
-
-    public User getCurrentUser() {
-        try {
-            return UserMapper.getInstance().find("1");
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public List<User> getAllUsersWithoutCurrentUser(String currentUserId) throws IOException, SQLException {
+        return UserMapper.getInstance().getAllUserWithoutCurrent(currentUserId);
     }
 
     public void addUser(User user) throws SQLException {

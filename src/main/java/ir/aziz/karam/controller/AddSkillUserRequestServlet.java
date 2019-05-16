@@ -10,11 +10,9 @@ import ir.aziz.karam.model.dataLayer.dataMappers.skill.SkillMapper;
 import ir.aziz.karam.model.exception.ReapeatSkillAddedToUserException;
 import ir.aziz.karam.model.exception.SkillNotFoundException;
 import ir.aziz.karam.model.exception.UserNotFoundException;
-import ir.aziz.karam.model.manager.SkillManager;
 import ir.aziz.karam.model.manager.UserManager;
 import ir.aziz.karam.model.types.ResponsePostMessage;
 import ir.aziz.karam.model.types.User;
-
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
@@ -37,17 +35,16 @@ public class AddSkillUserRequestServlet extends HttpServlet {
         Gson gson = new Gson();
         try {
             Map<String, String[]> parameterMap = request.getParameterMap();
-            String userId = parameterMap.get("user")[0];
+            String currentUserId = (String) request.getAttribute("currentUserId");
+            User currentUser = UserManager.getInstance().getUserById(currentUserId);
             String skillName = parameterMap.get("skill")[0];
-            User userById = UserManager.getInstance().getUserById(userId);
             try {
                 try {
                     SkillMapper.getInstance().find(skillName);
                 } catch (SQLException ex) {
                     throw new SkillNotFoundException("مهارت داده شده وجود ندارد");
                 }
-
-                UserManager.getInstance().addASkillFromAUser(userById, skillName);
+                UserManager.getInstance().addASkillFromAUser(currentUser, skillName);
                 ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, "درخواست با موفقیت انجام شد.", null);
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_ACCEPTED);
