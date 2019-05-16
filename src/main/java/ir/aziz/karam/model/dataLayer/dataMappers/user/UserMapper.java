@@ -33,7 +33,9 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
                 + "lastName TEXT, "
                 + "jobTitle TEXT, "
                 + "pictureUrl TEXT, "
-                + "bio TEXT"
+                + "bio TEXT,"
+                + "username TEXT,"
+                + "password TEXT"
                 + ")");
         st.close();
         con.close();
@@ -94,11 +96,13 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
         st.setString(3 + baseIndex, element.getJobTitle());
         st.setString(4 + baseIndex, element.getPictureUrl());
         st.setString(5 + baseIndex, element.getBio());
+        st.setString(6 + baseIndex, element.getUsername());
+        st.setString(7 + baseIndex, element.getPassword());
     }
 
     @Override
     protected String getInsertStatement() {
-        return "INSERT INTO User (id, firstName, lastName, jobTitle, pictureUrl, bio) VALUES (?, ?, ?, ?, ?, ?)";
+        return "INSERT INTO User (id, firstName, lastName, jobTitle, pictureUrl, bio, username, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     }
 
     @Override
@@ -117,7 +121,7 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
     @Override
     protected String getInsertOrUpdateStatement() {
 
-        return "INSERT OR IGNORE INTO User (id, firstName, lastName, jobTitle, pictureUrl, bio) VALUES (?, ?, ?, ?, ?, ?) \n";
+        return "INSERT OR IGNORE INTO User (id, firstName, lastName, jobTitle, pictureUrl, bio, username, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?) \n";
 
 //        return "INSERT INTO User (id, firstName, lastName, jobTitle, pictureUrl, bio) VALUES (?, ?, ?, ?, ?, ?) \n"
 //                + "ON CONFLICT DO UPDATE SET\n"

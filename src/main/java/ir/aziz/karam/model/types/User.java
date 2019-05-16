@@ -26,6 +26,8 @@ public class User implements Serializable {
     private List<SkillUser> skills;
     private String bio;
     private List<Endorse> endorses = new ArrayList<>();
+    private String username;
+    private String password;
 
     public List<SkillUser> getSkills() throws SQLException {
         this.skills = SkillUserMapper.getInstance().getSkillOfUser(this);
@@ -101,7 +103,23 @@ public class User implements Serializable {
         this.endorses.add(endorse);
     }
 
-    public SkillUser getUserSkillByName(String skillName) throws SkillNotFoundException{
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public SkillUser getUserSkillByName(String skillName) throws SkillNotFoundException {
         try {
             return SkillUserMapper.getInstance().find(this.getId(), skillName);
 
@@ -127,6 +145,17 @@ public class User implements Serializable {
         this.jobTitle = jobTitle;
         this.PictureUrl = PictureUrl;
         this.bio = bio;
+    }
+
+    public User(String id, String firstName, String lastName, String jobTitle, String PictureUrl, String bio, String username, String password) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.jobTitle = jobTitle;
+        this.PictureUrl = PictureUrl;
+        this.bio = bio;
+        this.username = username;
+        this.password = password;
     }
 
 }
