@@ -5,6 +5,9 @@
  */
 package ir.aziz.karam.controller;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTCreationException;
 import com.google.gson.Gson;
 import ir.aziz.karam.model.dataLayer.dataMappers.user.UserMapper;
 import ir.aziz.karam.model.manager.UserManager;
@@ -14,6 +17,7 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Map;
 import java.util.Random;
 import javax.servlet.ServletException;
@@ -23,36 +27,35 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
-@WebServlet("/addUserRequestServlet")
-public class AddUserRequestServlet extends HttpServlet {
+@WebServlet("/loginUserRequestServlet")
+public class LoginUserRequestServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Gson gson = new Gson();
         try {
             Map<String, String[]> parameterMap = request.getParameterMap();
-            String name = parameterMap.get("name")[0];
-            String familyName = parameterMap.get("familyName")[0];
             String username = parameterMap.get("username")[0];
-            String password = parameterMap.get("pass")[0];
-            password = UserManager.getInstance().convertPasswordToHash(password);
-            String jobTitle = parameterMap.get("jobTitle")[0];
-            String profileLink = parameterMap.get("profileLink")[0];
-            String bio = parameterMap.get("bio")[0];
-            Random id = new Random(System.currentTimeMillis());
-            String idString = new Integer(id.nextInt()).toString();
-            User element = new User(idString, name, familyName, jobTitle, profileLink, bio, username, password);
-            UserMapper.getInstance().insert(element);
-            ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, "درخواست با موفقیت انجام شد.", null);
+            String password = parameterMap.get("password")[0];
+            User user = UserMapper.getInstance().getUserByUsernameAndPassword(username, UserManager.getInstance().convertPasswordToHash(password));
+            String token = UserManager.getInstance().createJWTToken(user.getId());
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, "درخواست با موفقیت انجام شد.", token);
             response.setCharacterEncoding("UTF-8");
             response.setStatus(HttpServletResponse.SC_ACCEPTED);
             response.getWriter().write(gson.toJson(responsePostMessage));
-        } catch (SQLException ex) {
-            Logger.getLogger(AddUserRequestServlet.class).error(ex, ex);
+        } catch (JWTCreationException ex) {
+            Logger.getLogger(this.getClass()).error(ex, ex);
             response.setStatus(400);
-            ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "این کاربر ساخته شده است.", null);
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(400, "خطا در فراخوانی عملیات", null);
             response.setCharacterEncoding("UTF-8");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write(gson.toJson(responsePostMessage));
+        } catch (SQLException ex) {
+            Logger.getLogger(this.getClass()).error(ex, ex);
+            response.setStatus(403);
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(403, "خطا در فراخوانی عملیات", null);
+            response.setCharacterEncoding("UTF-8");
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.getWriter().write(gson.toJson(responsePostMessage));
         } catch (Exception ex) {
             Logger.getLogger(this.getClass()).error(ex, ex);

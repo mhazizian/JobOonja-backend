@@ -118,6 +118,13 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
                 + " lastName LIKE ?) AND id <> ?";
     }
 
+    protected String getUserByUsernameAndPasswordStatement() {
+        return "SELECT " + COLUMNS
+                + " FROM User"
+                + " WHERE username = ? " + "AND\n"
+                + " password = ?";
+    }
+
     @Override
     protected String getInsertOrUpdateStatement() {
 
@@ -152,4 +159,20 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
         }
     }
 
+    public User getUserByUsernameAndPassword(String username, String password) throws SQLException {
+        try (Connection con = DBCPDBConnectionPool.getConnection();
+                PreparedStatement st = con.prepareStatement(getUserByUsernameAndPasswordStatement())) {
+            st.setString(1, username);
+            st.setString(2, password);
+            ResultSet resultSet;
+            try {
+                resultSet = st.executeQuery();
+                return convertResultSetToDomainModel(resultSet);
+            } catch (SQLException ex) {
+                System.out.println("error in Mapper.getAll query.");
+                ex.printStackTrace();
+                throw ex;
+            }
+        }
+    }
 }

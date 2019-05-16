@@ -5,6 +5,9 @@
  */
 package ir.aziz.karam.model.manager;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTCreationException;
 import ir.aziz.karam.model.dataLayer.dataMappers.endorsment.EndorsmentMapper;
 import ir.aziz.karam.model.dataLayer.dataMappers.skillUser.SkillUserMapper;
 import ir.aziz.karam.model.dataLayer.dataMappers.user.UserMapper;
@@ -20,6 +23,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class UserManager {
@@ -123,4 +127,18 @@ public class UserManager {
         }
         return generatedPassword;
     }
+
+    public String createJWTToken(String userId) throws IllegalArgumentException, JWTCreationException {
+        Date expiresAt = new Date(System.currentTimeMillis() + 1000 * 3600 * 24);
+        Date currentDate = new Date();
+        Algorithm algorithm = Algorithm.HMAC256("joboonja");
+        String token = JWT.create()
+                .withIssuer("joboonja.com")
+                .withExpiresAt(expiresAt)
+                .withIssuedAt(currentDate)
+                .withClaim("userId", userId)
+                .sign(algorithm);
+        return token;
+    }
+
 }
