@@ -32,11 +32,11 @@ public class EndorsmentMapper extends Mapper<Endorse, String> implements IEndors
         return instance;
     }
 
-    public Endorse find(String endorser_id, String endorsed_id, String skill_id) throws SQLException {
+    public Endorse find(int endorser_id, int endorsed_id, String skill_id) throws SQLException {
         try (Connection con = DBCPDBConnectionPool.getConnection();
                 PreparedStatement st = con.prepareStatement(getFindStatement())) {
-            st.setString(1, endorser_id);
-            st.setString(2, endorsed_id);
+            st.setInt(1, endorser_id);
+            st.setInt(2, endorsed_id);
             st.setString(3, skill_id);
             ResultSet resultSet;
             try {
@@ -55,8 +55,8 @@ public class EndorsmentMapper extends Mapper<Endorse, String> implements IEndors
         Statement st
                 = con.createStatement();
         st.executeUpdate("CREATE TABLE IF NOT EXISTS " + "Endorse" + " ("
-                + "endorser_id VARCHAR(200), "
-                + "endorsed_id VARCHAR(200), "
+                + "endorser_id INTEGER , "
+                + "endorsed_id INTEGER , "
                 + "skill_id VARCHAR(200), "
                 + "PRIMARY KEY (endorser_id, endorsed_id, skill_id), "
                 + "FOREIGN KEY (endorser_id) REFERENCES User(id), "
@@ -80,7 +80,11 @@ public class EndorsmentMapper extends Mapper<Endorse, String> implements IEndors
 
     @Override
     protected Endorse convertResultSetToDomainModel(ResultSet rs) throws SQLException {
-        return new Endorse(rs.getString(1), rs.getString(2), rs.getString(3));
+        return new Endorse(
+                rs.getInt(1),
+                rs.getString(2),
+                rs.getInt(3)
+        );
     }
 
     @Override
@@ -91,8 +95,8 @@ public class EndorsmentMapper extends Mapper<Endorse, String> implements IEndors
 
     @Override
     protected void setInsertElementParameters(PreparedStatement st, Endorse element, int baseIndex) throws SQLException {
-        st.setString(baseIndex, element.getEndorser_id());
-        st.setString(1 + baseIndex, element.getUserIsEndorsed());
+        st.setInt(baseIndex, element.getEndorser_id());
+        st.setInt(1 + baseIndex, element.getUserIsEndorsed());
         st.setString(2 + baseIndex, element.getSkill());
 
     }
@@ -114,13 +118,13 @@ public class EndorsmentMapper extends Mapper<Endorse, String> implements IEndors
 
 
 
-    public List<Endorse> getSkillsEndorsedByUserOnUser(String endorser, String endorsed) throws SQLException {
+    public List<Endorse> getSkillsEndorsedByUserOnUser(int endorser, int endorsed) throws SQLException {
         List<Endorse> skills = new ArrayList<>();
 
         try (Connection con = DBCPDBConnectionPool.getConnection();
              PreparedStatement st = con.prepareStatement(this.getSkillsEndorsedByUserOnUserStatement())) {
-            st.setString(1,endorser);
-            st.setString(2, endorsed);
+            st.setInt(1,endorser);
+            st.setInt(2, endorsed);
             ResultSet resultSet;
             try {
                 resultSet = st.executeQuery();

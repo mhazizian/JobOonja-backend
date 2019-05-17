@@ -32,7 +32,7 @@ public class UserServlet extends HttpServlet {
     ) throws ServletException, IOException {
         Gson gson = new Gson();
         String[] parts = request.getRequestURL().toString().split("/");
-        String currentUserId = (String) request.getAttribute("currentUserId");
+        int currentUserId = Integer.valueOf((String) request.getAttribute("currentUserId"));
         try {
             if (parts.length == 5) {
                 String userName = request.getParameter("name");
@@ -48,7 +48,7 @@ public class UserServlet extends HttpServlet {
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().write(gson.toJson(allUsers));
             } else {
-                String userId = parts[5];
+                int userId = Integer.valueOf(parts[5]);
                 User userById = UserManager.getInstance().getUserById(userId);
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_OK);

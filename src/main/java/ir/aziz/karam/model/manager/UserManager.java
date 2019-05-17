@@ -42,7 +42,7 @@ public class UserManager {
         return UserMapper.getInstance().getAll();
     }
 
-    public List<User> getAllUsersWithoutCurrentUser(String currentUserId) throws IOException, SQLException {
+    public List<User> getAllUsersWithoutCurrentUser(int currentUserId) throws IOException, SQLException {
         return UserMapper.getInstance().getAllUserWithoutCurrent(currentUserId);
     }
 
@@ -58,7 +58,7 @@ public class UserManager {
         return user.getUserSkillByName(skillName);
     }
 
-    public User getUserById(String id) throws UserNotFoundException {
+    public User getUserById(int id) throws UserNotFoundException {
         try {
             return UserMapper.getInstance().find(id);
         } catch (SQLException e) {
@@ -86,10 +86,10 @@ public class UserManager {
         }
     }
 
-    public boolean hasUserEndorsedThisUser(User endorser, String userName, String skillName) {
+    public boolean hasUserEndorsedThisUser(User endorser, int userId, String skillName) {
         try {
 
-            EndorsmentMapper.getInstance().find(endorser.getId(), userName, skillName);
+            EndorsmentMapper.getInstance().find(endorser.getId(), userId, skillName);
             return true;
         } catch (SQLException e) {
             return false;
@@ -119,7 +119,7 @@ public class UserManager {
         return generatedPassword;
     }
 
-    public String createJWTToken(String userId) throws IllegalArgumentException, JWTCreationException {
+    public String createJWTToken(int userId) throws IllegalArgumentException, JWTCreationException {
         Date expiresAt = new Date(System.currentTimeMillis() + 1000 * 3600 * 24);
         Date currentDate = new Date();
         Algorithm algorithm = Algorithm.HMAC256("joboonja");

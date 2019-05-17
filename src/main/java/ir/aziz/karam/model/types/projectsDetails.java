@@ -7,17 +7,17 @@ package ir.aziz.karam.model.types;
 
 public class projectsDetails {
 
-    private String currentID;
+    private int currentID;
 
-    public String getCurrentID() {
+    public int getCurrentID() {
         return currentID;
     }
 
-    public void setCurrentID(String currentID) {
+    public void setCurrentID(int currentID) {
         this.currentID = currentID;
     }
 
-    public projectsDetails(String currentID) {
+    public projectsDetails(int currentID) {
         this.currentID = currentID;
     }
 

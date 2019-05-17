@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-public class UserMapper extends Mapper<User, String> implements IUserMapper {
+public class UserMapper extends Mapper<User, Integer> implements IUserMapper {
 
     private static final String COLUMNS = " id, firstName, lastName, jobTitle, pictureUrl, bio";
     private static UserMapper instance;
@@ -28,7 +28,7 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
         Statement st
                 = con.createStatement();
         st.executeUpdate("CREATE TABLE IF NOT EXISTS " + "User" + " ("
-                + "id VARCHAR(200) PRIMARY KEY, "
+                + "id INTEGER AUTOINCREMENT PRIMARY KEY, "
                 + "firstName TEXT, "
                 + "lastName TEXT, "
                 + "jobTitle TEXT, "
@@ -55,10 +55,10 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
                 + " WHERE id <> ?";
     }
 
-    public List<User> getAllUserWithoutCurrent(String userId) throws SQLException {
+    public List<User> getAllUserWithoutCurrent(int userId) throws SQLException {
         try (Connection con = DBCPDBConnectionPool.getConnection();
                 PreparedStatement st = con.prepareStatement(getAllUserWithoutCurrentStatement())) {
-            st.setString(1, userId);
+            st.setInt(1, userId);
             ResultSet resultSet;
             try {
                 resultSet = st.executeQuery();
@@ -73,7 +73,7 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
     @Override
     protected User convertResultSetToDomainModel(ResultSet rs) throws SQLException {
         return new User(
-                rs.getString(1),
+                rs.getInt(1),
                 rs.getString(2),
                 rs.getString(3),
                 rs.getString(4),
@@ -90,19 +90,19 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
 
     @Override
     protected void setInsertElementParameters(PreparedStatement st, User element, int baseIndex) throws SQLException {
-        st.setString(baseIndex, element.getId());
-        st.setString(1 + baseIndex, element.getFirstName());
-        st.setString(2 + baseIndex, element.getLastName());
-        st.setString(3 + baseIndex, element.getJobTitle());
-        st.setString(4 + baseIndex, element.getPictureUrl());
-        st.setString(5 + baseIndex, element.getBio());
-        st.setString(6 + baseIndex, element.getUsername());
-        st.setString(7 + baseIndex, element.getPassword());
+//        st.setInt(baseIndex, element.getId());
+        st.setString(baseIndex, element.getFirstName());
+        st.setString(1 + baseIndex, element.getLastName());
+        st.setString(2 + baseIndex, element.getJobTitle());
+        st.setString(3 + baseIndex, element.getPictureUrl());
+        st.setString(4 + baseIndex, element.getBio());
+        st.setString(5 + baseIndex, element.getUsername());
+        st.setString(6 + baseIndex, element.getPassword());
     }
 
     @Override
     protected String getInsertStatement() {
-        return "INSERT INTO User (id, firstName, lastName, jobTitle, pictureUrl, bio, username, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        return "INSERT INTO User (firstName, lastName, jobTitle, pictureUrl, bio, username, password) VALUES (?, ?, ?, ?, ?, ?, ?)";
     }
 
     @Override
@@ -128,7 +128,7 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
     @Override
     protected String getInsertOrUpdateStatement() {
 
-        return "INSERT OR IGNORE INTO User (id, firstName, lastName, jobTitle, pictureUrl, bio, username, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?) \n";
+        return "INSERT OR IGNORE INTO User (firstName, lastName, jobTitle, pictureUrl, bio, username, password) VALUES (?, ?, ?, ?, ?, ?, ?) \n";
 
 //        return "INSERT INTO User (id, firstName, lastName, jobTitle, pictureUrl, bio) VALUES (?, ?, ?, ?, ?, ?) \n"
 //                + "ON CONFLICT DO UPDATE SET\n"
@@ -141,12 +141,12 @@ public class UserMapper extends Mapper<User, String> implements IUserMapper {
 //        ;
     }
 
-    public List<User> getUsersSearchedByName(String name, String currentUser) throws SQLException {
+    public List<User> getUsersSearchedByName(String name, int currentUser) throws SQLException {
         try (Connection con = DBCPDBConnectionPool.getConnection();
                 PreparedStatement st = con.prepareStatement(getUsersSearchedByNameStatement())) {
             st.setString(1, "%" + name + "%");
             st.setString(2, "%" + name + "%");
-            st.setString(3, currentUser);
+            st.setInt(3, currentUser);
             ResultSet resultSet;
             try {
                 resultSet = st.executeQuery();

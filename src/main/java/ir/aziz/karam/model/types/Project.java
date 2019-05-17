@@ -171,7 +171,7 @@ public class Project {
 
         System.out.println(this.bids.size());
         for (int i = 0; i < this.bids.size(); i++) {
-            if (this.bids.get(i).getBiddingUser().equals(user.getId())) {
+            if (this.bids.get(i).getBiddingUser() == user.getId()) {
                 return true;
             }
         }

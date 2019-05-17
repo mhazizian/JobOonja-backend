@@ -9,15 +9,15 @@ import java.util.List;
 
 public class UserDetails {
 
-    private String currentID;
+    private int currentID;
     private List<Skill> otherSkills;
     private List<String> endorseSkills;
 
-    public String getCurrentID() {
+    public int getCurrentID() {
         return currentID;
     }
 
-    public void setCurrentID(String currentID) {
+    public void setCurrentID(int currentID) {
         this.currentID = currentID;
     }
 
@@ -37,7 +37,7 @@ public class UserDetails {
         this.endorseSkills = endorseSkills;
     }
 
-    public UserDetails(String currentID, List<Skill> otherSkills, List<String> endorseSkills) {
+    public UserDetails(int currentID, List<Skill> otherSkills, List<String> endorseSkills) {
         this.currentID = currentID;
         this.otherSkills = otherSkills;
         this.endorseSkills = endorseSkills;

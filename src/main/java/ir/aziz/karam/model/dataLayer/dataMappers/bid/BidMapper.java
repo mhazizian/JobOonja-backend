@@ -44,7 +44,7 @@ public class BidMapper extends Mapper<Bid, String> implements IBidMapper {
         Statement st
                 = con.createStatement();
         st.executeUpdate("CREATE TABLE IF NOT EXISTS " + "Bid" + " ("
-                + "user_id VARCHAR(200), "
+                + "user_id INTEGER, "
                 + "project_id VARCHAR(200), "
                 + "bidAmount INTEGER, "
                 + "PRIMARY KEY (user_id, project_id), "
@@ -67,7 +67,11 @@ public class BidMapper extends Mapper<Bid, String> implements IBidMapper {
 
     @Override
     protected Bid convertResultSetToDomainModel(ResultSet rs) throws SQLException {
-        return new Bid(rs.getString(1), rs.getString(2), rs.getInt(3));
+        return new Bid(
+                rs.getInt(1),
+                rs.getString(2),
+                rs.getInt(3)
+        );
     }
 
     @Override
@@ -78,7 +82,7 @@ public class BidMapper extends Mapper<Bid, String> implements IBidMapper {
 
     @Override
     protected void setInsertElementParameters(PreparedStatement st, Bid element, int baseIndex) throws SQLException {
-        st.setString(baseIndex, element.getBiddingUser());
+        st.setInt(baseIndex, element.getBiddingUser());
         st.setString(1 + baseIndex, element.getProjectTitle());
         st.setInt(2 + baseIndex, element.getBidAmount());
 

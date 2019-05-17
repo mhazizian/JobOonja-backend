@@ -36,8 +36,8 @@ public class AddEndorseRequestServlet extends HttpServlet {
         Gson gson = new Gson();
         try {
             Map<String, String[]> parameterMap = request.getParameterMap();
-            String userId = parameterMap.get("userId")[0];
-            String currentUserId = parameterMap.get("currentUserId")[0];
+            int userId = Integer.valueOf(parameterMap.get("userId")[0]);
+            int currentUserId = Integer.valueOf(parameterMap.get("currentUserId")[0]);
             String skillName = parameterMap.get("skillName")[0];
             User user = UserManager.getInstance().getUserById(userId);
             User currentUser = UserManager.getInstance().getUserById(currentUserId);

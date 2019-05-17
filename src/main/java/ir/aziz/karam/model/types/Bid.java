@@ -12,21 +12,21 @@ import java.io.Serializable;
  * @author karam
  */
 public class Bid implements Serializable{
-    private String biddingUser;
+    private int biddingUser;
     private String projectTitle;
     private int bidAmount;
 
-    public Bid(String biddingUser, String projectTitle, int bidAmount) {
+    public Bid(int biddingUser, String projectTitle, int bidAmount) {
         this.biddingUser = biddingUser;
         this.projectTitle = projectTitle;
         this.bidAmount = bidAmount;
     }
 
-    public String getBiddingUser() {
+    public int getBiddingUser() {
         return biddingUser;
     }
 
-    public void setBiddingUser(String biddingUser) {
+    public void setBiddingUser(int biddingUser) {
         this.biddingUser = biddingUser;
     }
 

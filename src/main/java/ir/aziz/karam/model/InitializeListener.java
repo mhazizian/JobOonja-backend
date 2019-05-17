@@ -43,25 +43,23 @@ public class InitializeListener implements ServletContextListener {
 
 
             List<SkillUser> tempSkills = new ArrayList<>();
-            tempSkills.add(new SkillUser("HTML", "1", 5));
-            tempSkills.add(new SkillUser("Javascript","1", 4));
-            tempSkills.add(new SkillUser("MySQL","1", 4));
-            tempSkills.add(new SkillUser("SQL","1", 4));
-            tempSkills.add(new SkillUser("C", "1",3));
-            tempSkills.add(new SkillUser("Java", "1",3));
-            User user = new User("1", "علی", "شریف زاده", "برنامه نویس وب", null, tempSkills, "روی سنگ قبرم بنویسید: خدا بیامرز میخواست خیلی کارا بکنه  ولی پول نداشت");
+            tempSkills.add(new SkillUser("HTML", 1, 5));
+            tempSkills.add(new SkillUser("Javascript",1, 4));
+            tempSkills.add(new SkillUser("MySQL",1, 4));
+            tempSkills.add(new SkillUser("SQL",1, 4));
+            tempSkills.add(new SkillUser("C", 1,3));
+            tempSkills.add(new SkillUser("Java", 1,3));
+            User user = new User(1, "علی", "شریف زاده", "برنامه نویس وب", null, tempSkills, "روی سنگ قبرم بنویسید: خدا بیامرز میخواست خیلی کارا بکنه  ولی پول نداشت");
 
 
             UserManager.getInstance().addUser(user);
 
             List<SkillUser> tempSkills2 = new ArrayList<>();
-            tempSkills2.add(new SkillUser("HTML", "1", 5));
-            tempSkills2.add(new SkillUser("Javascript","1", 4));
-//            tempSkills2.add(new SkillUser("MySQL","1", 4));
-//            tempSkills2.add(new SkillUser("SQL","1", 4));
-            tempSkills2.add(new SkillUser("C", "1",3));
-            tempSkills2.add(new SkillUser("Java", "1",3));
-            user = new User("2", "مهدی", "کرمی", "برنامه نویس فول استک!!", null, tempSkills, "روی سنگ قبرم ننویسید: خدا بیامرز میخواست خیلی کارا بکنه  ولی پول نداشت");
+            tempSkills2.add(new SkillUser("HTML", 2, 5));
+            tempSkills2.add(new SkillUser("Javascript",2, 4));
+            tempSkills2.add(new SkillUser("C", 2,3));
+            tempSkills2.add(new SkillUser("Java", 2,3));
+            user = new User(2, "مهدی", "کرمی", "برنامه نویس فول استک!!", null, tempSkills2, "روی سنگ قبرم ننویسید: خدا بیامرز میخواست خیلی کارا بکنه  ولی پول نداشت");
 
             UserManager.getInstance().addUser(user);
 

@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 public class SkillUser implements Serializable{
     private String name; // skill name
-    private String userId;
+    private int userId;
     private int point;
 
     public String getName() {
@@ -37,17 +37,17 @@ public class SkillUser implements Serializable{
         this.point = points;
     }
 
-    public SkillUser(String name,String userId, int points) {
+    public SkillUser(String name,int userId, int points) {
         this.name = name;
         this.userId = userId;
         this.point = points;
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 }

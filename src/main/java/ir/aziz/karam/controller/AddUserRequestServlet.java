@@ -40,8 +40,7 @@ public class AddUserRequestServlet extends HttpServlet {
             String profileLink = parameterMap.get("profileLink")[0];
             String bio = parameterMap.get("bio")[0];
             Random id = new Random(System.currentTimeMillis());
-            String idString = new Integer(id.nextInt()).toString();
-            User element = new User(idString, name, familyName, jobTitle, profileLink, bio, username, password);
+            User element = new User(0, name, familyName, jobTitle, profileLink, bio, username, password);
             UserMapper.getInstance().insert(element);
             ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, "درخواست با موفقیت انجام شد.", null);
             response.setCharacterEncoding("UTF-8");

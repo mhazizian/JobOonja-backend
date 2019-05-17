@@ -35,6 +35,8 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
                 + "budget INTEGER, "
                 + "deadline BIGINT, "
                 + "creationDate BIGINT "
+                + "winnerUser INTEGER "
+                + "FOREIGN KEY (winnerUser) REFERENCES User(id) "
                 + ")");
         st.close();
         con.close();
@@ -64,6 +66,14 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
                 + " FROM Project"
                 + " WHERE title LIKE '%" + name + "%' OR"
                 + " description LIKE '%" + name + "%' ORDER by  Project.creationDate DESC LIMIT 30";
+    }
+
+    protected String getProjectsToAuctStatement() {
+        return "SELECT " + COLUMNS
+                + " FROM Project"
+                + " WHERE winnerUser = NULL AND"
+                + " deadline < ? "
+                + "ORDER by  Project.creationDate DESC LIMIT 30";
     }
 
     @Override
@@ -110,9 +120,26 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 
     public List<Project> getProjectsSearchedByName(String name) throws SQLException {
         try (Connection con = DBCPDBConnectionPool.getConnection();
-                PreparedStatement st = con.prepareStatement(getProjectsSearchedByNameStatement(name))) {
+             PreparedStatement st = con.prepareStatement(getProjectsSearchedByNameStatement(name))) {
 //            st.setString(1, name);
 //            st.setString(2, name);
+            ResultSet resultSet;
+            try {
+                resultSet = st.executeQuery();
+                return convertResultSetToDomainModelList(resultSet);
+            } catch (SQLException ex) {
+                System.out.println("error in Mapper.getAll query.");
+                ex.printStackTrace();
+                throw ex;
+            }
+        }
+    }
+
+
+    public List<Project> getProjectsToAuct() throws SQLException {
+        try (Connection con = DBCPDBConnectionPool.getConnection();
+             PreparedStatement st = con.prepareStatement(getProjectsToAuctStatement())) {
+            st.setLong(1, System.currentTimeMillis());
             ResultSet resultSet;
             try {
                 resultSet = st.executeQuery();

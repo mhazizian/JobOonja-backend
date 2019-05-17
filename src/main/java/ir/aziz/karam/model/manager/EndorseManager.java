@@ -27,7 +27,7 @@ public class EndorseManager {
         return instance;
     }
     
-    public List<String> getEndorses(String endorsedUser, String endorser) {
+    public List<String> getEndorses(int endorsedUser, int endorser) {
         try {
 
 

@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class User implements Serializable {
 
-    private String id;
+    private int id;
     private String firstName;
     private String lastName;
     private String jobTitle;
@@ -43,11 +43,11 @@ public class User implements Serializable {
         this.skills = skills;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -128,7 +128,7 @@ public class User implements Serializable {
         }
     }
 
-    public User(String id, String firstName, String lastName, String jobTitle, String PictureUrl, List<SkillUser> skills, String bio) {
+    public User(int id, String firstName, String lastName, String jobTitle, String PictureUrl, List<SkillUser> skills, String bio) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -138,7 +138,7 @@ public class User implements Serializable {
         this.bio = bio;
     }
 
-    public User(String id, String firstName, String lastName, String jobTitle, String PictureUrl, String bio) {
+    public User(int id, String firstName, String lastName, String jobTitle, String PictureUrl, String bio) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -147,7 +147,7 @@ public class User implements Serializable {
         this.bio = bio;
     }
 
-    public User(String id, String firstName, String lastName, String jobTitle, String PictureUrl, String bio, String username, String password) {
+    public User(int id, String firstName, String lastName, String jobTitle, String PictureUrl, String bio, String username, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

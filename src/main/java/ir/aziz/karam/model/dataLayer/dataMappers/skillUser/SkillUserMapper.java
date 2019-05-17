@@ -50,7 +50,7 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
 
         st.executeUpdate("CREATE TABLE IF NOT EXISTS " + "SkillUser" + " ("
                 + "skill_name VARCHAR(200) NOT NULL, "
-                + "user_id VARCHAR(200) NOT NULL, "
+                + "user_id INTEGER NOT NULL, "
                 + "point INTEGER, "
                 + "PRIMARY KEY (skill_name, user_id), "
                 + "FOREIGN KEY (user_id) REFERENCES User(id), "
@@ -61,11 +61,11 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
 
     }
 
-    public SkillUser find(String userId, String skillId) throws SQLException {
+    public SkillUser find(int userId, String skillId) throws SQLException {
         try (Connection con = DBCPDBConnectionPool.getConnection();
              PreparedStatement st = con.prepareStatement(getFindStatement())) {
             st.setString(1, skillId);
-            st.setString(2, userId);
+            st.setInt(2, userId);
             ResultSet resultSet;
             try {
                 resultSet = st.executeQuery();
@@ -103,7 +103,7 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
     @Override
     protected void setInsertElementParameters(PreparedStatement st, SkillUser element, int baseIndex) throws SQLException {
         st.setString(baseIndex, element.getName());
-        st.setString(1 + baseIndex, element.getUserId());
+        st.setInt(1 + baseIndex, element.getUserId());
         st.setInt(2 + baseIndex, element.getPoints());
 
     }
@@ -114,7 +114,7 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
 
         try (Connection con = DBCPDBConnectionPool.getConnection();
              PreparedStatement st = con.prepareStatement(this.getSkillUserByUserIdStatement())) {
-            st.setString(1, user.getId());
+            st.setInt(1, user.getId());
             ResultSet resultSet;
             try {
                 resultSet = st.executeQuery();
@@ -130,10 +130,10 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
         }
     }
 
-    public void deleteSkillUser(String skillName, String userId) throws SQLException {
+    public void deleteSkillUser(String skillName, int userId) throws SQLException {
         try (Connection con = DBCPDBConnectionPool.getConnection();
              PreparedStatement st = con.prepareStatement(this.getDeleteSkillUserStatement())) {
-            st.setString(1, userId);
+            st.setInt(1, userId);
             st.setString(2, skillName);
             try {
                 st.execute();
