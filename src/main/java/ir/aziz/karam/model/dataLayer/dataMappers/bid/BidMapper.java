@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 public class BidMapper extends Mapper<Bid, String> implements IBidMapper {
 
@@ -22,16 +23,14 @@ public class BidMapper extends Mapper<Bid, String> implements IBidMapper {
         return instance;
     }
 
-    public Bid find(String project_id, String user_id) throws SQLException {
+    public List<Bid> getProjectBids(String project_id) throws SQLException {
         try (Connection con = DBCPDBConnectionPool.getConnection();
                 PreparedStatement st = con.prepareStatement(getFindStatement())) {
             st.setString(1, project_id);
-            st.setString(2, user_id);
             ResultSet resultSet;
             try {
                 resultSet = st.executeQuery();
-                resultSet.next();
-                return convertResultSetToDomainModel(resultSet);
+                return convertResultSetToDomainModelList(resultSet);
             } catch (SQLException ex) {
                 System.out.println("error in Mapper.findByID query. BidMapper\n" + ex.getMessage());
                 throw ex;
@@ -61,7 +60,6 @@ public class BidMapper extends Mapper<Bid, String> implements IBidMapper {
         return "SELECT " + COLUMNS
                 + " FROM Bid"
                 + " WHERE "
-                + " user_id = ? AND"
                 + " project_id = ?";
     }
 

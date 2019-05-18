@@ -67,6 +67,9 @@ public class InitializeListener implements ServletContextListener {
             Timer timer = new Timer();
             timer.schedule(new UpdateDataCenterScheduler(), 0, 300000);
 
+            Timer timerAuct = new Timer();
+            timerAuct.schedule(new RunAuctionScheduler(), 0, 60000);
+
         } catch (SQLException e) {
             Logger.getLogger(InitializeListener.class).error(e, e);
         }
@@ -85,6 +88,19 @@ public class InitializeListener implements ServletContextListener {
                 SkillManager.getInstance().updateSkillListFromServer();
                 ProjectManager.getInstance().updateProjectListFromServer();
             } catch (IOException | SQLException e) {
+                Logger.getLogger(InitializeListener.class).error(e, e);
+            }
+        }
+    }
+
+    class RunAuctionScheduler extends TimerTask {
+
+        @Override
+        public void run() {
+            try {
+
+                ProjectManager.getInstance().runAuction();
+            } catch (SQLException e) {
                 Logger.getLogger(InitializeListener.class).error(e, e);
             }
         }

@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ProjectMapper extends Mapper<Project, String> implements IProjectMapper {
 
-    private static final String COLUMNS = " id, title, description, imageUrl, budget, deadline, creationDate";
+    private static final String COLUMNS = " id, title, description, imageUrl, budget, deadline, creationDate, winnerUSer";
     private static ProjectMapper instance;
 
     public static ProjectMapper getInstance() throws SQLException {
@@ -52,7 +52,16 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 
     @Override
     protected Project convertResultSetToDomainModel(ResultSet rs) throws SQLException {
-        return new Project(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5), rs.getLong(6), rs.getLong(7));
+        return new Project(
+                rs.getString(1),
+                rs.getString(2),
+                rs.getString(3),
+                rs.getString(4),
+                rs.getInt(5),
+                rs.getLong(6),
+                rs.getLong(7),
+                rs.getInt(8)
+        );
     }
 
     @Override
@@ -92,10 +101,28 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
         return "INSERT INTO Project (id, title, description, imageUrl, budget, deadline, creationDate) VALUES (?, ?, ?, ?, ?, ?, ?)";
     }
 
+    protected String getUpdateStatement() {
+        return "UPDATE Project "
+                + " SET id = ?, title = ?, description = ?, imageUrl = ?, budget = ?, deadline = ?, creationDate = ?, winnerUser = ?"
+                + "WHERE id = ?";
+    }
+
     @Override
     protected void setInsertOrUpdateElementParameters(PreparedStatement st, Project element) throws SQLException {
         this.setInsertElementParameters(st, element, 1);
 //        this.setInsertElementParameters(st, element, 7);
+    }
+
+    protected void setUpdateElementParameters(PreparedStatement st, Project element) throws SQLException {
+        st.setString(1, element.getId());
+        st.setString(2, element.getTitle());
+        st.setString(3, element.getDescrption());
+        st.setString(4, element.getImageURL());
+        st.setInt(5, element.getBudget());
+        st.setLong(6, element.getDeadline());
+        st.setLong(7, element.getCreationDate());
+        st.setLong(8, element.getCreationDate());
+        st.setInt(8, element.getWinnerId());
     }
 
     @Override
@@ -152,4 +179,15 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
         }
     }
 
-}
+
+    public void update(Project project) throws SQLException {
+        String sql = getUpdateStatement();
+        Connection con = DBCPDBConnectionPool.getConnection();
+        try (PreparedStatement st = con.prepareStatement(sql)) {
+            setUpdateElementParameters(st, project);
+            st.executeUpdate();
+        }
+        con.close();
+
+
+    }

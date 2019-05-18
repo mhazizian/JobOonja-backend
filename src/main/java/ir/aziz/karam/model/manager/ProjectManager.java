@@ -103,4 +103,11 @@ public class ProjectManager {
             }
         }
     }
+
+    public void runAuction() throws SQLException {
+        List<Project> projectsToAuct = ProjectMapper.getInstance().getProjectsToAuct();
+        for (Project project: projectsToAuct) {
+            project.runAuction();
+        }
+    }
 }
