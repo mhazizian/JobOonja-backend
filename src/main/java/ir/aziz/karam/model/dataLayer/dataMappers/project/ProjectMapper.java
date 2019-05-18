@@ -188,6 +188,5 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
             st.executeUpdate();
         }
         con.close();
-
-
     }
+}
