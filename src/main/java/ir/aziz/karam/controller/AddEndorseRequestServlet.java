@@ -7,6 +7,7 @@ package ir.aziz.karam.controller;
 
 import com.google.gson.Gson;
 import ir.aziz.karam.model.dataLayer.dataMappers.endorsment.EndorsmentMapper;
+import ir.aziz.karam.model.dataLayer.dataMappers.skillUser.SkillUserMapper;
 import ir.aziz.karam.model.exception.SkillNotFoundException;
 import ir.aziz.karam.model.exception.UserNotFoundException;
 import ir.aziz.karam.model.manager.UserManager;
@@ -39,12 +40,20 @@ public class AddEndorseRequestServlet extends HttpServlet {
             int userId = Integer.valueOf(parameterMap.get("userId")[0]);
             int currentUserId = Integer.valueOf(parameterMap.get("currentUserId")[0]);
             String skillName = parameterMap.get("skillName")[0];
+
             User user = UserManager.getInstance().getUserById(userId);
             User currentUser = UserManager.getInstance().getUserById(currentUserId);
             if (!UserManager.getInstance().hasUserEndorsedThisUser(currentUser, user.getId(), skillName)) {
+
                 SkillUser skillOfUserBySkillName = UserManager.getInstance().getSkillOfUserBySkillName(user, skillName);
                 skillOfUserBySkillName.setPoints(skillOfUserBySkillName.getPoints() + 1);
+                SkillUserMapper.getInstance().update(skillOfUserBySkillName);
+                System.out.println("updated with point: " + skillOfUserBySkillName.getPoints());
+                System.out.println("updated with skill name: " + skillOfUserBySkillName.getName());
+                System.out.println("updated with userId: " + skillOfUserBySkillName.getUserId());
+
                 EndorsmentMapper.getInstance().insert(new Endorse(userId, skillName, currentUserId));
+
                 ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, "درخواست با موفقیت انجام شد.", null);
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_ACCEPTED);

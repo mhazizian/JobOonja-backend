@@ -90,6 +90,7 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
     protected SkillUser convertResultSetToDomainModel(ResultSet rs) throws SQLException {
         return new SkillUser(
                 rs.getString(1),
+                rs.getInt(2),
                 rs.getInt(3)
         );
     }
@@ -148,26 +149,33 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
     protected void setInsertOrUpdateElementParameters(PreparedStatement st, SkillUser element) throws SQLException {
         this.setInsertElementParameters(st, element, 1
         );
-
-//        st.setString(4, element.getName());
-//        st.setString(5, element.getUserId());
-//        this.setInsertElementParameters(st, element, 3);
-//        st.setString(6, element.getName());
-//        st.setString(7, element.getUserId());
-//        this.setInsertElementParameters(st, element, 8);
     }
 
     @Override
     protected String getInsertOrUpdateStatement() {
         return "INSERT OR IGNORE INTO SkillUser (skill_name, user_id, point) VALUES (?, ?, ?)\n";
-//        return "INSERT INTO SkillUser (skill_name, user_id, point) VALUES (?, ?, ?)\n"
-//                + "ON DUPLICATE KEY UPDATE\n"
-//                + "skill_name=?, user_id=?, point=?";
+    }
 
-//        return "IF EXISTS (SELECT * FROM SkillUser WHERE skill_name=? AND user_id=?)"
-//                + "    UPDATE SkillUser SET (skill_name=?, user_id=?, point=?) WHERE skill_name=? AND user_id=?"
-//                + "ELSE"
-//                + "    INSERT INTO SkillUser (skill_name, user_id, point) VALUES (?, ?, ?)";
+    private String getUpdateStatement() {
+        return "UPDATE SkillUser "
+                + " SET point = ?"
+                + "WHERE user_id = ? AND skill_name = ?";
+    }
+
+
+    public void update(SkillUser element) throws SQLException {
+        try (Connection con = DBCPDBConnectionPool.getConnection();
+             PreparedStatement st = con.prepareStatement(this.getUpdateStatement())) {
+            st.setInt(1, element.getPoints());
+            st.setInt(2, element.getUserId());
+            st.setString(3, element.getName());
+            try {
+                st.execute();
+            } catch (SQLException ex) {
+                System.out.println("error in Mapper.Delete query.");
+                throw ex;
+            }
+        }
     }
 
 }
