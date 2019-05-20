@@ -34,8 +34,8 @@ public class InitializeListener implements ServletContextListener {
         try {
             SkillMapper.getInstance();
 
-            ProjectMapper.getInstance();
             UserMapper.getInstance();
+            ProjectMapper.getInstance();
 
             SkillUserMapper.getInstance();
             EndorsmentMapper.getInstance();
@@ -77,7 +77,7 @@ public class InitializeListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        Logger.getLogger(InitializeListener.class).info("On sutdown web app");
+        Logger.getLogger(InitializeListener.class).info("On shutdown web app");
     }
 
     class UpdateDataCenterScheduler extends TimerTask {

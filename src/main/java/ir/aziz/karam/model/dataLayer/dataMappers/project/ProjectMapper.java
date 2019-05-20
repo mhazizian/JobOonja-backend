@@ -34,8 +34,8 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
                 + "imageUrl TEXT, "
                 + "budget INTEGER, "
                 + "deadline BIGINT, "
-                + "creationDate BIGINT "
-                + "winnerUser INTEGER "
+                + "creationDate BIGINT, "
+                + "winnerUser INTEGER, "
                 + "FOREIGN KEY (winnerUser) REFERENCES User(id) "
                 + ")");
         st.close();

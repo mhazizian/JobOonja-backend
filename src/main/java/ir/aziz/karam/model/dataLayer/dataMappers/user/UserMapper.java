@@ -28,7 +28,7 @@ public class UserMapper extends Mapper<User, Integer> implements IUserMapper {
         Statement st
                 = con.createStatement();
         st.executeUpdate("CREATE TABLE IF NOT EXISTS " + "User" + " ("
-                + "id INTEGER AUTOINCREMENT PRIMARY KEY, "
+                + "id INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + "firstName TEXT, "
                 + "lastName TEXT, "
                 + "jobTitle TEXT, "
