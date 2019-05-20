@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author karam
  */
 public class Project {
@@ -176,14 +175,18 @@ public class Project {
 
     public void runAuction() throws SQLException {
         this.getBids();
-        int maxAmout = 0, userId = 0;
+        int maxAmount = -1, userId = 0;
         for (Bid bid : this.bids) {
-            if (bid.getBidAmount() > maxAmout) {
-                maxAmout = bid.getBidAmount();
+            if (bid.getBidAmount() > maxAmount) {
+                maxAmount = bid.getBidAmount();
                 userId = bid.getBiddingUser();
             }
         }
-        this.winnerId = userId;
-        ProjectMapper.getInstance().update(this);
+        if (maxAmount >= 0) {
+            this.winnerId = userId;
+            ProjectMapper.getInstance().update(this);
+
+            System.out.println("Aucted on " + this.id);
+        }
     }
 }

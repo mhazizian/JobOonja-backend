@@ -80,9 +80,8 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
     protected String getProjectsToAuctStatement() {
         return "SELECT " + COLUMNS
                 + " FROM Project"
-                + " WHERE winnerUser = NULL AND"
-                + " deadline < ? "
-                + "ORDER by  Project.creationDate DESC LIMIT 30";
+                + " WHERE winnerUser IS NULL AND"
+                + " deadline < ? ";
     }
 
     @Override
@@ -103,7 +102,7 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 
     protected String getUpdateStatement() {
         return "UPDATE Project "
-                + " SET id = ?, title = ?, description = ?, imageUrl = ?, budget = ?, deadline = ?, creationDate = ?, winnerUser = ?"
+                + " SET title = ?, description = ?, imageUrl = ?, budget = ?, deadline = ?, creationDate = ?, winnerUser = ?"
                 + "WHERE id = ?";
     }
 
@@ -114,15 +113,15 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
     }
 
     protected void setUpdateElementParameters(PreparedStatement st, Project element) throws SQLException {
-        st.setString(1, element.getId());
-        st.setString(2, element.getTitle());
-        st.setString(3, element.getDescrption());
-        st.setString(4, element.getImageURL());
-        st.setInt(5, element.getBudget());
-        st.setLong(6, element.getDeadline());
-        st.setLong(7, element.getCreationDate());
-        st.setLong(8, element.getCreationDate());
-        st.setInt(8, element.getWinnerId());
+        st.setString(1, element.getTitle());
+        st.setString(2, element.getDescrption());
+        st.setString(3, element.getImageURL());
+        st.setInt(4, element.getBudget());
+        st.setLong(5, element.getDeadline());
+        st.setLong(6, element.getCreationDate());
+        st.setInt(7, element.getWinnerId());
+
+        st.setString(8, element.getId());
     }
 
     @Override
@@ -131,25 +130,11 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 //                + "ON DUPLICATE KEY UPDATE\n"
 //                + "    id=?, title=?, description=?, imageUrl=?, budget=?, deadline=?";
         return "INSERT OR IGNORE INTO Project (id, title, description, imageUrl, budget, deadline, creationDate) VALUES (?, ?, ?, ?, ?, ?, ?)";
-
-//        return "UPDATE Project SET (id=?, title=?, description=?, imageUrl=?, budget=?, deadline=?) WHERE id=?\n"
-//                + "IF @@rowcount = 0\n"
-//                + "INSERT INTO Project (id, title, description, imageUrl, budget, deadline) VALUES (?, ?, ?, ?, ?, ?)\n"
-//                ;
-//        return "begin tran\n"
-//                +"IF EXISTS (SELECT * FROM Project WHERE id=?)\n"
-//                + "    UPDATE Project SET (id=?, title=?, description=?, imageUrl=?, budget=?, deadline=?) WHERE id=?\n"
-//                + "ELSE\n"
-//                + "    INSERT INTO Project (id, title, description, imageUrl, budget, deadline) VALUES (?, ?, ?, ?, ?, ?)\n"
-//                + "commit tran"
-//                ;
     }
 
     public List<Project> getProjectsSearchedByName(String name) throws SQLException {
         try (Connection con = DBCPDBConnectionPool.getConnection();
              PreparedStatement st = con.prepareStatement(getProjectsSearchedByNameStatement(name))) {
-//            st.setString(1, name);
-//            st.setString(2, name);
             ResultSet resultSet;
             try {
                 resultSet = st.executeQuery();
@@ -167,6 +152,9 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
         try (Connection con = DBCPDBConnectionPool.getConnection();
              PreparedStatement st = con.prepareStatement(getProjectsToAuctStatement())) {
             st.setLong(1, System.currentTimeMillis());
+
+            System.out.println("Time: " + System.currentTimeMillis());
+
             ResultSet resultSet;
             try {
                 resultSet = st.executeQuery();
