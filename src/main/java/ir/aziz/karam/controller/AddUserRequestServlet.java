@@ -10,6 +10,7 @@ import ir.aziz.karam.model.dataLayer.dataMappers.user.UserMapper;
 import ir.aziz.karam.model.manager.UserManager;
 import ir.aziz.karam.model.types.ResponsePostMessage;
 import ir.aziz.karam.model.types.User;
+
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -21,6 +22,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.log4j.Logger;
 
 @WebServlet("/addUserRequestServlet")
@@ -42,7 +44,11 @@ public class AddUserRequestServlet extends HttpServlet {
             Random id = new Random(System.currentTimeMillis());
             User element = new User(0, name, familyName, jobTitle, profileLink, bio, username, password);
             UserMapper.getInstance().insert(element);
-            ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, "درخواست با موفقیت انجام شد.", null);
+
+            User user = UserMapper.getInstance().getUserByUsernameAndPassword(username, password);
+            String token = UserManager.getInstance().createJWTToken(user.getId());
+
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(202, "درخواست با موفقیت انجام شد.", token);
             response.setCharacterEncoding("UTF-8");
             response.setStatus(HttpServletResponse.SC_ACCEPTED);
             response.getWriter().write(gson.toJson(responsePostMessage));
