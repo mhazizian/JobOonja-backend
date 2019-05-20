@@ -63,7 +63,7 @@ public class IEFilter implements Filter {
                         .withIssuer("joboonja.com")
                         .build();
                 DecodedJWT jwt = verifier.verify(jwtHeader);
-                String userId = jwt.getClaim("userId").asString();
+                int userId = jwt.getClaim("userId").asInt();
                 request.setAttribute("currentUserId", userId);
             }
             long st = System.currentTimeMillis();

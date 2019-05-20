@@ -32,7 +32,7 @@ public class UserServlet extends HttpServlet {
     ) throws ServletException, IOException {
         Gson gson = new Gson();
         String[] parts = request.getRequestURL().toString().split("/");
-        int currentUserId = Integer.valueOf((String) request.getAttribute("currentUserId"));
+        int currentUserId = (int) request.getAttribute("currentUserId");
         try {
             if (parts.length == 5) {
                 String userName = request.getParameter("name");

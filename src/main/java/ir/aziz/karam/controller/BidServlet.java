@@ -33,7 +33,7 @@ public class BidServlet extends HttpServlet {
         String projectId = request.getParameter("projectId");
         try {
             Project projectById = ProjectManager.getInstance().getProjectById(projectId);
-            int currentUserId = Integer.valueOf((String) request.getAttribute("currentUserId"));
+            int currentUserId = (int) request.getAttribute("currentUserId");
             User currentUser = UserManager.getInstance().getUserById(currentUserId);
             ProjectManager.getInstance().userCanSolveProject(currentUser, projectById);
 

@@ -13,7 +13,7 @@ import java.util.List;
 
 public class UserMapper extends Mapper<User, Integer> implements IUserMapper {
 
-    private static final String COLUMNS = " id, firstName, lastName, jobTitle, pictureUrl, bio";
+    private static final String COLUMNS = " id, firstName, lastName, jobTitle, pictureUrl, bio, username";
     private static UserMapper instance;
 
     public static UserMapper getInstance() throws SQLException {
@@ -34,7 +34,7 @@ public class UserMapper extends Mapper<User, Integer> implements IUserMapper {
                 + "jobTitle TEXT, "
                 + "pictureUrl TEXT, "
                 + "bio TEXT,"
-                + "username TEXT,"
+                + "username VARCHAR(200) UNIQUE,"
                 + "password TEXT"
                 + ")");
         st.close();
@@ -78,7 +78,8 @@ public class UserMapper extends Mapper<User, Integer> implements IUserMapper {
                 rs.getString(3),
                 rs.getString(4),
                 rs.getString(5),
-                rs.getString(6)
+                rs.getString(6),
+                rs.getString(7)
         );
     }
 
@@ -167,10 +168,11 @@ public class UserMapper extends Mapper<User, Integer> implements IUserMapper {
             ResultSet resultSet;
             try {
                 resultSet = st.executeQuery();
+                resultSet.next();
                 return convertResultSetToDomainModel(resultSet);
             } catch (SQLException ex) {
-                System.out.println("error in Mapper.getAll query.");
-                ex.printStackTrace();
+                System.out.println("error in Mapper.getUserByUsernameAndPassword query.");
+//                ex.printStackTrace();
                 throw ex;
             }
         }
