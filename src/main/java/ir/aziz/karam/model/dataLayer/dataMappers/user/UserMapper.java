@@ -129,7 +129,7 @@ public class UserMapper extends Mapper<User, Integer> implements IUserMapper {
     @Override
     protected String getInsertOrUpdateStatement() {
 
-        return "INSERT OR IGNORE INTO User (firstName, lastName, jobTitle, pictureUrl, bio, username, password) VALUES (?, ?, ?, ?, ?, ?, ?) \n";
+        return "INSERT IGNORE INTO User (firstName, lastName, jobTitle, pictureUrl, bio, username, password) VALUES (?, ?, ?, ?, ?, ?, ?) \n";
 
 //        return "INSERT INTO User (id, firstName, lastName, jobTitle, pictureUrl, bio) VALUES (?, ?, ?, ?, ?, ?) \n"
 //                + "ON CONFLICT DO UPDATE SET\n"

@@ -153,7 +153,7 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
 
     @Override
     protected String getInsertOrUpdateStatement() {
-        return "INSERT OR IGNORE INTO SkillUser (skill_name, user_id, point) VALUES (?, ?, ?)\n";
+        return "INSERT IGNORE INTO SkillUser (skill_name, user_id, point) VALUES (?, ?, ?)\n";
     }
 
     private String getUpdateStatement() {

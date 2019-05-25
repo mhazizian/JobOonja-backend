@@ -129,7 +129,7 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 //        return "INSERT INTO Project (id, title, description, imageUrl, budget, deadline) VALUES (?, ?, ?, ?, ?, ?)\n"
 //                + "ON DUPLICATE KEY UPDATE\n"
 //                + "    id=?, title=?, description=?, imageUrl=?, budget=?, deadline=?";
-        return "INSERT OR IGNORE INTO Project (id, title, description, imageUrl, budget, deadline, creationDate) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        return "INSERT IGNORE INTO Project (id, title, description, imageUrl, budget, deadline, creationDate) VALUES (?, ?, ?, ?, ?, ?, ?)";
     }
 
     public List<Project> getProjectsSearchedByName(String name) throws SQLException {
