@@ -59,11 +59,11 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
                 + " FROM Project ORDER by  Project.creationDate DESC LIMIT 30";
     }
 
-    protected String getProjectsSearchedByNameStatement(String name) {
+    protected String getProjectsSearchedByNameStatement() {
         return "SELECT " + COLUMNS
                 + " FROM Project"
-                + " WHERE title LIKE '%" + name + "%' OR"
-                + " description LIKE '%" + name + "%' ORDER by  Project.creationDate DESC LIMIT 30";
+                + " WHERE title LIKE ? OR"
+                + " description LIKE ? ORDER by  Project.creationDate DESC LIMIT 30";
     }
 
     @Override
@@ -110,9 +110,9 @@ public class ProjectMapper extends Mapper<Project, String> implements IProjectMa
 
     public List<Project> getProjectsSearchedByName(String name) throws SQLException {
         try (Connection con = DBCPDBConnectionPool.getConnection();
-                PreparedStatement st = con.prepareStatement(getProjectsSearchedByNameStatement(name))) {
-//            st.setString(1, name);
-//            st.setString(2, name);
+                PreparedStatement st = con.prepareStatement(getProjectsSearchedByNameStatement())) {
+            st.setString(1, "%" + name + "%");
+            st.setString(2, "%" + name + "%");
             ResultSet resultSet;
             try {
                 resultSet = st.executeQuery();
