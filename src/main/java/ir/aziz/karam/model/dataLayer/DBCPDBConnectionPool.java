@@ -34,17 +34,17 @@ public class DBCPDBConnectionPool {
     }
 
     public static Connection getConnection() throws SQLException {
-        return ds.getConnection();
+//        return ds.getConnection();
 
-//        Connection conn = null;
-//        try {
-//            Class.forName("com.mysql.jdbc.Driver");
-//            conn = DriverManager.getConnection("jdbc:mysql://localhost/IE", "root", "rootroot");
-//
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        return conn;
+        Connection conn = null;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection("jdbc:mysql://mysql:3306/IE", "root", "test");
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return conn;
     }
 
     private DBCPDBConnectionPool() {
