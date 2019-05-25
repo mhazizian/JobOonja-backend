@@ -8,7 +8,7 @@ package ir.aziz.karam.model.types;
 public class ProjectDetails {
 
     private boolean hasBided;
-    private String currentID;
+    private int currentID;
 
     public boolean isHasBided() {
         return hasBided;
@@ -18,15 +18,15 @@ public class ProjectDetails {
         this.hasBided = hasBided;
     }
 
-    public String getCurrentID() {
+    public int getCurrentID() {
         return currentID;
     }
 
-    public void setCurrentID(String currentID) {
+    public void setCurrentID(int currentID) {
         this.currentID = currentID;
     }
 
-    public ProjectDetails(boolean hasBided, String currentID) {
+    public ProjectDetails(boolean hasBided, int currentID) {
         this.hasBided = hasBided;
         this.currentID = currentID;
     }

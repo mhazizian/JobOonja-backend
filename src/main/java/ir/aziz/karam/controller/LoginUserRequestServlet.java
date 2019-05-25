@@ -53,7 +53,7 @@ public class LoginUserRequestServlet extends HttpServlet {
         } catch (SQLException ex) {
             Logger.getLogger(this.getClass()).error(ex, ex);
             response.setStatus(403);
-            ResponsePostMessage responsePostMessage = new ResponsePostMessage(403, "خطا در فراخوانی عملیات", null);
+            ResponsePostMessage responsePostMessage = new ResponsePostMessage(403, "نام کاربری یا رمز عبور اشتباه است", null);
             response.setCharacterEncoding("UTF-8");
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.getWriter().write(gson.toJson(responsePostMessage));

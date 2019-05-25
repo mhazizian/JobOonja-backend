@@ -41,8 +41,9 @@ public class ProjectServlet extends HttpServlet {
         try {
             if (parts.length == 5 || parts.length == 6 && parts[5].equals("")) {
                 String projectName = request.getParameter("name");
-                String currentUserId = (String) request.getAttribute("currentUserId");
+                int currentUserId = (int) request.getAttribute("currentUserId");
                 User currentUser = UserManager.getInstance().getUserById(currentUserId);
+                System.out.println("given user: " + currentUser.getUsername() + ", " + currentUser.getFirstName());
                 List<Project> allProject = ProjectManager.getInstance().getAllProjectsFeasibleByUser(currentUser, projectName);
                 response.setCharacterEncoding("UTF-8");
                 response.setStatus(HttpServletResponse.SC_OK);
@@ -51,7 +52,7 @@ public class ProjectServlet extends HttpServlet {
             } else {
                 String projectId = parts[5];
                 Project projectById = ProjectManager.getInstance().getProjectById(projectId); // 404 maybe happend
-                String currentUserId = (String) request.getAttribute("currentUserId");
+                int currentUserId = (int) request.getAttribute("currentUserId");
                 User currentUser = UserManager.getInstance().getUserById(currentUserId);
                 ProjectManager.getInstance().userCanSolveProject(currentUser, projectById);
                 response.setCharacterEncoding("UTF-8");

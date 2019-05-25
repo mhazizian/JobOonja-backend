@@ -7,15 +7,15 @@ package ir.aziz.karam.model.types;
 
 public class Endorse {
 
-    private String userIsEndorsed;
+    private int userIsEndorsed;
     private String skill;
-    private String endorser_id;
+    private int endorser_id;
 
-    public String getUserIsEndorsed() {
+    public int getUserIsEndorsed() {
         return userIsEndorsed;
     }
 
-    public void setUserIsEndorsed(String userIsEndorsed) {
+    public void setUserIsEndorsed(int userIsEndorsed) {
         this.userIsEndorsed = userIsEndorsed;
     }
 
@@ -27,7 +27,7 @@ public class Endorse {
         this.skill = skill;
     }
 
-    public Endorse(String userIsEndorsed, String skill) {
+    public Endorse(int userIsEndorsed, String skill) {
         this.userIsEndorsed = userIsEndorsed;
         this.skill = skill;
     }
@@ -35,15 +35,15 @@ public class Endorse {
     public Endorse() {
     }
 
-    public String getEndorser_id() {
+    public int getEndorser_id() {
         return endorser_id;
     }
 
-    public void setEndorser_id(String endorser_id) {
+    public void setEndorser_id(int endorser_id) {
         this.endorser_id = endorser_id;
     }
 
-    public Endorse(String userIsEndorsed, String skill, String endorser_id) {
+    public Endorse(int userIsEndorsed, String skill, int endorser_id) {
         this.userIsEndorsed = userIsEndorsed;
         this.skill = skill;
         this.endorser_id = endorser_id;

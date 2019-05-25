@@ -6,6 +6,7 @@
 package ir.aziz.karam.model.types;
 
 import ir.aziz.karam.model.dataLayer.dataMappers.bid.BidMapper;
+import ir.aziz.karam.model.dataLayer.dataMappers.project.ProjectMapper;
 import ir.aziz.karam.model.dataLayer.dataMappers.projectSkill.ProjectSkillMapper;
 
 import java.sql.SQLException;
@@ -13,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author karam
  */
 public class Project {
@@ -22,12 +22,13 @@ public class Project {
     private String title;
     private String description;
     private String imageUrl;
-    private List<ProjectSkill> skills;
-    private List<Bid> bids;
+    private int winnerId;
     private int budget;
     private long deadline;
-    private User winner;
     private long creationDate;
+
+    private List<ProjectSkill> skills;
+    private List<Bid> bids;
 
     public String getTitle() {
         return title;
@@ -83,7 +84,7 @@ public class Project {
     }
 
     public List<Bid> getBids() throws SQLException {
-        this.bids = BidMapper.getInstance().getAll();
+        this.bids = BidMapper.getInstance().getProjectBids(this.id);
         return bids;
     }
 
@@ -106,12 +107,12 @@ public class Project {
         this.deadline = deadline;
     }
 
-    public User getWinner() {
-        return winner;
+    public int getWinnerId() {
+        return winnerId;
     }
 
-    public void setWinner(User winner) {
-        this.winner = winner;
+    public void setWinnerId(int winnerId) {
+        this.winnerId = winnerId;
     }
 
     public String getDescription() {
@@ -145,15 +146,8 @@ public class Project {
         this.bids = new ArrayList<>();
     }
 
-//    public Project(String id, String title, String description, String imageUrl, int budget, long deadline) {
-//        this.id = id;
-//        this.title = title;
-//        this.description = description;
-//        this.imageUrl = imageUrl;
-//        this.budget = budget;
-//        this.deadline = deadline;
-//    }
-    public Project(String id, String title, String description, String imageUrl, int budget, long deadline, long creationDate) {
+
+    public Project(String id, String title, String description, String imageUrl, int budget, long deadline, long creationDate, int winnerId) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -161,6 +155,7 @@ public class Project {
         this.budget = budget;
         this.deadline = deadline;
         this.creationDate = creationDate;
+        this.winnerId = winnerId;
     }
 
     public boolean hasBided(User user) throws SQLException {
@@ -171,10 +166,27 @@ public class Project {
 
         System.out.println(this.bids.size());
         for (int i = 0; i < this.bids.size(); i++) {
-            if (this.bids.get(i).getBiddingUser().equals(user.getId())) {
+            if (this.bids.get(i).getBiddingUser() == user.getId()) {
                 return true;
             }
         }
         return false;
+    }
+
+    public void runAuction() throws SQLException {
+        this.getBids();
+        int maxAmount = -1, userId = 0;
+        for (Bid bid : this.bids) {
+            if (bid.getBidAmount() > maxAmount) {
+                maxAmount = bid.getBidAmount();
+                userId = bid.getBiddingUser();
+            }
+        }
+        if (maxAmount >= 0) {
+            this.winnerId = userId;
+            ProjectMapper.getInstance().update(this);
+
+            System.out.println("Aucted on " + this.id);
+        }
     }
 }

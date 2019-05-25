@@ -35,7 +35,7 @@ public class AddSkillUserRequestServlet extends HttpServlet {
         Gson gson = new Gson();
         try {
             Map<String, String[]> parameterMap = request.getParameterMap();
-            String currentUserId = (String) request.getAttribute("currentUserId");
+            int currentUserId = (int) request.getAttribute("currentUserId");
             User currentUser = UserManager.getInstance().getUserById(currentUserId);
             String skillName = parameterMap.get("skill")[0];
             try {

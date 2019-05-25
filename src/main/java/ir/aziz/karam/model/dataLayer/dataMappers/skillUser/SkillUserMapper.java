@@ -50,7 +50,7 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
 
         st.executeUpdate("CREATE TABLE IF NOT EXISTS " + "SkillUser" + " ("
                 + "skill_name VARCHAR(200) NOT NULL, "
-                + "user_id VARCHAR(200) NOT NULL, "
+                + "user_id INTEGER NOT NULL, "
                 + "point INTEGER, "
                 + "PRIMARY KEY (skill_name, user_id), "
                 + "FOREIGN KEY (user_id) REFERENCES User(id), "
@@ -61,11 +61,11 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
 
     }
 
-    public SkillUser find(String userId, String skillId) throws SQLException {
+    public SkillUser find(int userId, String skillId) throws SQLException {
         try (Connection con = DBCPDBConnectionPool.getConnection();
              PreparedStatement st = con.prepareStatement(getFindStatement())) {
             st.setString(1, skillId);
-            st.setString(2, userId);
+            st.setInt(2, userId);
             ResultSet resultSet;
             try {
                 resultSet = st.executeQuery();
@@ -90,6 +90,7 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
     protected SkillUser convertResultSetToDomainModel(ResultSet rs) throws SQLException {
         return new SkillUser(
                 rs.getString(1),
+                rs.getInt(2),
                 rs.getInt(3)
         );
     }
@@ -103,7 +104,7 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
     @Override
     protected void setInsertElementParameters(PreparedStatement st, SkillUser element, int baseIndex) throws SQLException {
         st.setString(baseIndex, element.getName());
-        st.setString(1 + baseIndex, element.getUserId());
+        st.setInt(1 + baseIndex, element.getUserId());
         st.setInt(2 + baseIndex, element.getPoints());
 
     }
@@ -114,7 +115,7 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
 
         try (Connection con = DBCPDBConnectionPool.getConnection();
              PreparedStatement st = con.prepareStatement(this.getSkillUserByUserIdStatement())) {
-            st.setString(1, user.getId());
+            st.setInt(1, user.getId());
             ResultSet resultSet;
             try {
                 resultSet = st.executeQuery();
@@ -130,10 +131,10 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
         }
     }
 
-    public void deleteSkillUser(String skillName, String userId) throws SQLException {
+    public void deleteSkillUser(String skillName, int userId) throws SQLException {
         try (Connection con = DBCPDBConnectionPool.getConnection();
              PreparedStatement st = con.prepareStatement(this.getDeleteSkillUserStatement())) {
-            st.setString(1, userId);
+            st.setInt(1, userId);
             st.setString(2, skillName);
             try {
                 st.execute();
@@ -148,26 +149,33 @@ public class SkillUserMapper extends Mapper<SkillUser, String> implements ISkill
     protected void setInsertOrUpdateElementParameters(PreparedStatement st, SkillUser element) throws SQLException {
         this.setInsertElementParameters(st, element, 1
         );
-
-//        st.setString(4, element.getName());
-//        st.setString(5, element.getUserId());
-//        this.setInsertElementParameters(st, element, 3);
-//        st.setString(6, element.getName());
-//        st.setString(7, element.getUserId());
-//        this.setInsertElementParameters(st, element, 8);
     }
 
     @Override
     protected String getInsertOrUpdateStatement() {
         return "INSERT OR IGNORE INTO SkillUser (skill_name, user_id, point) VALUES (?, ?, ?)\n";
-//        return "INSERT INTO SkillUser (skill_name, user_id, point) VALUES (?, ?, ?)\n"
-//                + "ON DUPLICATE KEY UPDATE\n"
-//                + "skill_name=?, user_id=?, point=?";
+    }
 
-//        return "IF EXISTS (SELECT * FROM SkillUser WHERE skill_name=? AND user_id=?)"
-//                + "    UPDATE SkillUser SET (skill_name=?, user_id=?, point=?) WHERE skill_name=? AND user_id=?"
-//                + "ELSE"
-//                + "    INSERT INTO SkillUser (skill_name, user_id, point) VALUES (?, ?, ?)";
+    private String getUpdateStatement() {
+        return "UPDATE SkillUser "
+                + " SET point = ?"
+                + "WHERE user_id = ? AND skill_name = ?";
+    }
+
+
+    public void update(SkillUser element) throws SQLException {
+        try (Connection con = DBCPDBConnectionPool.getConnection();
+             PreparedStatement st = con.prepareStatement(this.getUpdateStatement())) {
+            st.setInt(1, element.getPoints());
+            st.setInt(2, element.getUserId());
+            st.setString(3, element.getName());
+            try {
+                st.execute();
+            } catch (SQLException ex) {
+                System.out.println("error in Mapper.Delete query.");
+                throw ex;
+            }
+        }
     }
 
 }
