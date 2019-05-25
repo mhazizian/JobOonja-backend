@@ -1,0 +1,23 @@
+version: '2'
+services:
+    backend:
+        build: .
+        ports: 
+            - "8080:8080"
+        depends_on:
+            - mysql
+    mysql:
+        image: mysql
+        environment:
+            MYSQL_DATABASE: IE
+            MYSQL_USER: root
+            MYSQL_PASSWORD: test
+            MYSQL_ROOT_PASSWORD: test
+    frontend:
+        build: /home/mahdi/IENOW/JobOonja-Client/.
+        ports: 
+            - "3000:5000"
+        depends_on:
+            - backend
+            
+          

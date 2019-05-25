@@ -1,11 +1,8 @@
-FROM maven:3.5-jdk-8 AS build  
-COPY src /usr/src/app/src  
-COPY pom.xml /usr/src/app  
-RUN mvn -f /usr/src/app/pom.xml clean package
+FROM maven:3.5-jdk-8 AS builder  
+COPY . /usr/src/mymaven
+WORKDIR /usr/src/mymaven
+RUN mvn clean install -f /usr/src/mymaven && mkdir /usr/src/wars/
+RUN find /usr/src/mymaven/ -iname '*.war' -exec cp {} /usr/src/wars/ \;
 
-# Base Alpine Linux based image with OpenJDK JRE only
-#FROM openjdk:8-jre-alpine
-# copy application WAR (with libraries inside)
-#COPY target/spring-boot-*.war /app.war
-# specify default command
-#CMD ["/usr/bin/java", "-jar", "/app.war"]
+FROM tomcat:7.0.90-jre8
+COPY --from=builder /usr/src/wars/* /usr/local/tomcat/webapps/
