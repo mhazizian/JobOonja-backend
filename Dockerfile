@@ -6,3 +6,4 @@ RUN find /usr/src/mymaven/ -iname '*.war' -exec cp {} /usr/src/wars/ \;
 
 FROM tomcat:7.0.90-jre8
 COPY --from=builder /usr/src/wars/* /usr/local/tomcat/webapps/
+EXPOSE 8080
