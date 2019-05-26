@@ -40,6 +40,7 @@ public class DBCPDBConnectionPool {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection("jdbc:mysql://db:3306/IE", "root", "test");
+//            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/IE", "root", "rootroot");
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
