@@ -2,7 +2,7 @@ version: '2'
 services:
     frontend:
         # build: /home/mahdi/IENOW/JobOonja-Client/.
-        build: ../JobOnja-client/
+        build: ../../IENOW/JobOonja-Client/
         ports: 
             - "3000:5000"
         depends_on:
@@ -20,3 +20,9 @@ services:
             # MYSQL_USER: root
             # MYSQL_PASSWORD: test
             MYSQL_ROOT_PASSWORD: test
+        command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+        volumes:
+            - my-datavolume:/var/lib/mysql
+volumes:
+     my-datavolume:
+
